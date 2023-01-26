@@ -1,16 +1,18 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import React, {useEffect} from 'react';
-import {RootStackParamList} from '../types/navigator';
-import {LoginScreen, OtpVerificationScreen, RegisterScreen} from '../screens';
-import MainTabNavigator from './MainTabNavigator';
-import {theme} from 'utils';
 import MainTab from './MainTabNavigator';
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import {
+  LoginScreen,
+  OtpVerificationScreen,
+  RegisterScreen,
+  TaskDetailScreen,
+} from '../screens';
+import {RootStackParamList} from '../types/navigator';
+import { theme } from 'utils';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const MainStack: React.FC = () => {
-
-
   return (
     <RootStack.Navigator
       screenOptions={{
@@ -20,9 +22,21 @@ const MainStack: React.FC = () => {
       initialRouteName="MainTab">
       <>
         <RootStack.Screen name="MainTab" component={MainTab} />
+        <RootStack.Screen
+          name="TaskDetail"
+          component={TaskDetailScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: theme.colors.navy,
+            },
+          }}
+        />
         <RootStack.Screen name="Login" component={LoginScreen} />
         <RootStack.Screen name="Register" component={RegisterScreen} />
-        <RootStack.Screen name="OtpVerification" component={OtpVerificationScreen} />
+        <RootStack.Screen
+          name="OtpVerification"
+          component={OtpVerificationScreen}
+        />
       </>
     </RootStack.Navigator>
   );

@@ -8,7 +8,7 @@ type RootStackParamList = {
   Auth: undefined;
   OtpVerification: undefined;
   Register: undefined;
-  
+  TaskDetail: undefined;
 };
 
 type RootTabParamList = {

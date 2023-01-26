@@ -21,16 +21,18 @@ interface IButton {
   lineColor?: string;
 }
 
-type ITheme = 'navy' |'grey';
+type ITheme = 'navy' |'grey' | 'green';
 
 const BUTTON_COLORS = {
   navy: theme.colors.navy,
   grey: theme.colors.grey5,
+  green: '#299B0A'
 };
 
 const TEXT_COLORS = {
   navy: theme.colors.white,
   grey: theme.colors.white,
+  green: theme.colors.white
 };
 
 const Button = ({
