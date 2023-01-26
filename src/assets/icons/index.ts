@@ -13,3 +13,5 @@ export const ic_check = require('./ic_check.png');
 export const ic_error = require('./ic_error.png');
 export const ic_close = require('./ic_close.png');
 export const ic_warning = require('./ic_warning.png');
+export const ic_arrow_left = require('./ic_arrow_left.png');
+export const ic_arrow_left_white = require('./ic_arrow_left_white.png');

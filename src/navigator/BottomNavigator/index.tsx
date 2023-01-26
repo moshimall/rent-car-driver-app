@@ -1,10 +1,15 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {colors} from 'theme/colors';
-import {boxShadow} from 'utils/mixins';
 import TabItem from './TabItem';
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
+import {boxShadow} from 'utils/mixins';
+import {colors} from 'theme/colors';
+import {StyleSheet, View} from 'react-native';
 
-const BottomNavigator = ({state, descriptors, navigation}) => {
+const BottomNavigator = ({
+  state,
+  descriptors,
+  navigation,
+}: BottomTabBarProps) => {
   return (
     <View
       style={[
@@ -44,7 +49,7 @@ const BottomNavigator = ({state, descriptors, navigation}) => {
         return (
           <TabItem
             key={index}
-            title={label}
+            title={label as any}
             active={isFocused}
             onPress={onPress}
             onLongPress={onLongPress}

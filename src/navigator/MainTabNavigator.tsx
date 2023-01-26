@@ -3,7 +3,6 @@ import React from 'react';
 import {RootTabParamList} from '../types/navigator';
 import {
   HomeScreen,
-  LoginScreen,
   MessageScreen,
   MyAccountScreen,
   TaskScreen,
