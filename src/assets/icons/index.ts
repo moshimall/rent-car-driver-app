@@ -1,0 +1,15 @@
+export const ic_home_active = require('./ic_home_active.png');
+export const ic_home_inactive = require('./ic_home_inactive.png');
+export const ic_document_active = require('./ic_document_active.png');
+export const ic_document_inactive = require('./ic_document_inactive.png');
+export const ic_message_active = require('./ic_message_active.png');
+export const ic_message_inactive = require('./ic_message_inactive.png');
+export const ic_profile_active = require('./ic_profile_active.png');
+export const ic_profile_inactive = require('./ic_profile_inactive.png');
+export const ic_main_icon = require('./ic_main_icon.png');
+export const ic_pinpoin = require('./ic_pinpoin.png');
+export const ic_calendar = require('./ic_calendar.png');
+export const ic_check = require('./ic_check.png');
+export const ic_error = require('./ic_error.png');
+export const ic_close = require('./ic_close.png');
+export const ic_warning = require('./ic_warning.png');
