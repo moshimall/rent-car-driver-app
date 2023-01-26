@@ -1,8 +1,13 @@
+import {h1, h4} from 'utils/styles';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {ImagePickerResponse, launchCamera} from 'react-native-image-picker';
+import {showToast} from 'utils/Toast';
+import {theme} from 'utils';
 import {
-  ic_image_file,
   ic_info_error,
   ic_rounded_close,
   ic_rounded_image_file,
+  ic_take_photo,
 } from 'assets/icons';
 import {
   View,
@@ -11,13 +16,11 @@ import {
   Text,
   StyleSheet,
   ViewStyle,
+  PermissionsAndroid,
 } from 'react-native';
-import {theme} from 'utils';
-import {iconCustomSize, rowCenter} from 'utils/mixins';
-import {h1} from 'utils/styles';
 
 interface IProps {
-  onPress: () => void;
+  onCameraChange: (res: ImagePickerResponse['assets']) => void;
   onDelete: () => void;
   selected?: string;
   errorMessage?: string;
@@ -27,32 +30,66 @@ interface IProps {
 }
 
 const UploadImageInput: React.FC<IProps> = ({
-  onPress,
   selected,
   errorMessage,
   onDelete,
   label,
   selectedImageLabel,
   containerStyle = {marginTop: 10},
+  onCameraChange,
 }) => {
+  const onOpenCamera = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'App Camera Permission',
+          message: 'App needs access to your camera ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        const result: ImagePickerResponse = await launchCamera({
+          mediaType: 'photo',
+          quality: 0.5,
+          includeBase64: true,
+        });
+
+        if (Number(result.assets?.[0]?.fileSize) > 2097152) {
+          throw new Error('Maaf, ukuran file tidak boleh lebih dari 2MB!');
+        } else {
+          onCameraChange(result.assets);
+        }
+      } else {
+        throw new Error('Camera permission denied');
+      }
+    } catch (error: any) {
+      showToast({
+        title: 'Gagal',
+        type: 'error',
+        message: error?.message || 'Terjadi kesalahan',
+      });
+    }
+  };
+
   return (
     <View style={containerStyle}>
       {label && (
         <View style={[rowCenter]}>
-          <Text style={[h1, {fontSize: 12, marginBottom: 10, marginTop: 15}]}>
+          <Text style={[h4, {fontSize: 12, marginBottom: 10, marginTop: 15}]}>
             {label}
           </Text>
         </View>
       )}
 
-      <TouchableOpacity style={styles.uploadInputContainer} onPress={onPress}>
-        <Image source={ic_image_file} style={{width: 29, height: 37}} />
-        <Text>
-          Upload your image here, or{' '}
-          <Text style={[h1, {fontSize: 14, color: theme.colors.blue}]}>
-            browse
-          </Text>
-        </Text>
+      <TouchableOpacity
+        style={styles.uploadInputContainer}
+        onPress={onOpenCamera}>
+        <Text style={[h4, {fontSize: 12}]}>Ambil Foto</Text>
+        <Image source={ic_take_photo} style={iconCustomSize(53)} />
       </TouchableOpacity>
 
       {selected && (

@@ -5,3 +5,4 @@ export { default as HomeScreen} from './HomeScreen';
 export { default as TaskScreen} from './TaskScreen';
 export { default as MessageScreen} from './MessageScreen';
 export { default as MyAccountScreen} from './MyAccountScreen';
+export { default as TaskDetailScreen } from './TaskDetailScreen';

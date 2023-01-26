@@ -1,9 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
 import {ic_pinpoin} from 'assets/icons';
 import Button from 'components/Button';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 
 const MyTaskCard: React.FC = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={[styles.cardWrapper]}>
       <Text style={styles.textOrderId}>
@@ -56,7 +59,9 @@ const MyTaskCard: React.FC = () => {
       <Button
         _theme="navy"
         title="Detail Tugas"
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('TaskDetail');
+        }}
         styleWrapper={{
           width: '95%',
           alignSelf: 'center',
