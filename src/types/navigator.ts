@@ -4,6 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 type RootStackParamList = {
   ProductDetail: {productId: string};
   MainTab?: RootTabParamList;
+  CodepushUpdateManager: {failedInstall: boolean};
   Login: undefined;
   Auth: undefined;
   OtpVerification: undefined;

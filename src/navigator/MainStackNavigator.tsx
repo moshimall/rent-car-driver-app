@@ -1,18 +1,44 @@
+import CodePush from 'react-native-code-push';
+import CodepushUpdateManager from 'screens/CodepushUpdateManager';
+import DeviceInfo from 'react-native-device-info';
 import MainTab from './MainTabNavigator';
-import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, {useEffect} from 'react';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {RootStackParamList} from '../types/navigator';
+import {theme} from 'utils';
+import {useNavigation} from '@react-navigation/native';
 import {
   LoginScreen,
   OtpVerificationScreen,
   RegisterScreen,
   TaskDetailScreen,
 } from '../screens';
-import {RootStackParamList} from '../types/navigator';
-import { theme } from 'utils';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
-const MainStack: React.FC = () => {
+const Main: React.FC = () => {
+  const navigation = useNavigation();
+
+  const checkCodepushUpdate = () => {
+    CodePush.checkForUpdate()
+      .then(async update => {
+        if (update) {
+          navigation.navigate('CodepushUpdateManager', {
+            failedInstall: update.failedInstall,
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    const bundleId = DeviceInfo.getBundleId();
+    console.log(bundleId);
+    checkCodepushUpdate();
+  }, []);
+
   return (
     <RootStack.Navigator
       screenOptions={{
@@ -22,6 +48,13 @@ const MainStack: React.FC = () => {
       initialRouteName="MainTab">
       <>
         <RootStack.Screen name="MainTab" component={MainTab} />
+        <RootStack.Screen
+          name="CodepushUpdateManager"
+          component={CodepushUpdateManager}
+          options={{
+            ...TransitionPresets.ModalSlideFromBottomIOS,
+          }}
+        />
         <RootStack.Screen
           name="TaskDetail"
           component={TaskDetailScreen}
@@ -42,4 +75,6 @@ const MainStack: React.FC = () => {
   );
 };
 
+const codePushOptions = {checkFrequency: CodePush.CheckFrequency.MANUAL};
+const MainStack = CodePush(codePushOptions)(Main);
 export default MainStack;
