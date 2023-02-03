@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CodePushDeploymentKey</key> 
+	<string>yHgDjYJNbROzszzl_p7C23Mhg3_gaHGCoQoYm</string>
 	<key>CFBundleDisplayName</key>
 	<string>getRideDriver</string>
 	<key>CFBundleExecutable</key>
