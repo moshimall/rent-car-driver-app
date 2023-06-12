@@ -9,13 +9,15 @@ type RootStackParamList = {
   Auth: undefined;
   OtpVerification: undefined;
   Register: undefined;
-  TaskDetail: undefined;
+  TaskDetailAntarMobil: undefined;
+  TaskDetailAmbilMobil: undefined;
+  TaskDetailParkirMobil: undefined;
 };
 
 type RootTabParamList = {
   Home: undefined;
-  Task: undefined;
-  Inbox: undefined;
+  Done: undefined;
+  // Inbox: undefined;
   Account: undefined;
 };
 

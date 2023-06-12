@@ -1,5 +1,7 @@
 import {
   Image,
+  KeyboardEvent,
+  KeyboardTypeOptions,
   StyleProp,
   StyleSheet,
   Text,
@@ -33,6 +35,7 @@ interface ITextInput {
   leftIcon?: any;
   disabled?: boolean;
   styleTitle?: TextStyle
+  keyboardType?: KeyboardTypeOptions
 }
 
 const CustomTextInput = ({
@@ -44,7 +47,8 @@ const CustomTextInput = ({
   errorMessage,
   leftIcon,
   disabled,
-  styleTitle
+  styleTitle,
+  keyboardType
 }: ITextInput) => {
   const [showText, setShowText] = useState<boolean>(deepClone(secureTextEntry));
   const shake = useSharedValue(0);
@@ -86,6 +90,7 @@ const CustomTextInput = ({
           onChangeText={v => onChangeText(v)}
           value={value}
           editable={!disabled}
+          keyboardType={keyboardType}
         />
 
         {secureTextEntry && (

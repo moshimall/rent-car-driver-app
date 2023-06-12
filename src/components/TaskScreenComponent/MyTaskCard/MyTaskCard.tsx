@@ -1,14 +1,43 @@
-import { useNavigation } from '@react-navigation/native';
-import {ic_pinpoin} from 'assets/icons';
+import {useNavigation} from '@react-navigation/native';
+import {ic_car, ic_check, ic_pinpoin} from 'assets/icons';
 import Button from 'components/Button';
 import {View, Text, Image, StyleSheet} from 'react-native';
-import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {theme} from 'utils';
+import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
+import {h2} from 'utils/styles';
 
-const MyTaskCard: React.FC = () => {
+const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
   const navigation = useNavigation();
 
   return (
     <View style={[styles.cardWrapper]}>
+      <View
+        style={[
+          rowCenter,
+          {justifyContent: 'space-between', alignItems: 'flex-start'},
+        ]}>
+        <View>
+          <Image
+            source={ic_car}
+            style={iconCustomSize(20)}
+            resizeMode="stretch"
+          />
+          <Text>03 Juli 2022 09:08 AM</Text>
+        </View>
+
+        <View style={[rowCenter, styles.taskDoneWrapper]}>
+          <Image source={ic_check} style={iconCustomSize(15)} />
+          <Text
+            style={[
+              h2,
+              {color: 'rgba(41, 155, 10, 1)', fontSize: 10, marginLeft: 5},
+            ]}>
+            Tugas Selesai
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.lineHorizontal} />
       <Text style={styles.textOrderId}>
         Order ID: <Text style={{fontWeight: '500'}}>0129389283</Text>
       </Text>
@@ -35,15 +64,17 @@ const MyTaskCard: React.FC = () => {
       <View style={styles.lineHorizontal} />
 
       <View style={{marginTop: 0}}>
-        <View style={rowCenter}>
-          <Image source={ic_pinpoin} style={iconCustomSize(45)} />
-          <View style={{marginLeft: 10}}>
-            <Text style={styles.textTitle}>Mulai Sewa</Text>
-            <Text style={styles.textLocation}>01 Juli 2022 | 09:00 AM</Text>
+        {status === 0 && (
+          <View style={rowCenter}>
+            <Image source={ic_pinpoin} style={iconCustomSize(45)} />
+            <View style={{marginLeft: 10}}>
+              <Text style={styles.textTitle}>Mulai Sewa</Text>
+              <Text style={styles.textLocation}>01 Juli 2022 | 09:00 AM</Text>
+            </View>
           </View>
-        </View>
+        )}
 
-        <View style={styles.lineVertical} />
+        {status === 0 && <View style={styles.lineVertical} />}
 
         <View style={rowCenter}>
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
@@ -125,4 +156,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginVertical: 20,
   },
-})
+  taskDoneWrapper: {
+    backgroundColor: 'rgba(227, 255, 232, 1)',
+    padding: 10,
+    borderRadius: 40,
+  },
+});

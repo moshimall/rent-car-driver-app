@@ -9,17 +9,19 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {iconSize, rowCenter} from 'utils/mixins';
+import {WINDOW_WIDTH, iconSize, rowCenter} from 'utils/mixins';
 import {useNavigation} from '@react-navigation/native';
-import {img_car_2, img_ktp, img_license} from 'assets/images';
+import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
 import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
 import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
+import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 
-const TaskDetailScreen = () => {
+const TaskDetailAntarMobil = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -37,7 +39,9 @@ const TaskDetailScreen = () => {
                 marginLeft: 16,
               }}
             />
-            <Text style={[h1, {color: 'white', marginLeft: 10}]}>Detail</Text>
+            <Text style={[h1, {color: 'white', marginLeft: 10}]}>
+              Antar Mobil
+            </Text>
           </TouchableOpacity>
         ),
       }),
@@ -60,37 +64,57 @@ const TaskDetailScreen = () => {
       <View style={styles.dashedLine} />
 
       <View style={styles.descriptionContainer}>
-        <View style={{flexBasis: '50%'}}>
+        <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>No. Order</Text>
           <Text style={styles.boldText}>12N34567</Text>
         </View>
 
-        <View style={{flexBasis: '50%'}}>
-          <Text style={[h4, styles.text]}>Metode Pembayaran</Text>
-          <Text style={styles.boldText}>Card Payment</Text>
+        <View style={{flexBasis: '33%'}}>
+          <Text style={[h4, styles.text]}>Plat Nomor</Text>
+          <Text style={styles.boldText}>DK 12345 LA</Text>
+        </View>
+
+        <View style={{flexBasis: '33%'}}>
+          <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
+          <Text style={styles.boldText}>0 - 4 Kursi</Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
 
       <View style={styles.descriptionContainer}>
-        <View style={{flexBasis: '60%', flexDirection: 'row'}}>
-          <View style={styles.roundedImage}>
-            <Image
-              source={img_car_2}
-              style={styles.imgCar}
-              resizeMode="cover"
-            />
-          </View>
-
+        <View style={{}}>
           <View>
             <Text style={[h4, styles.text]}>Mobil</Text>
             <Text style={styles.boldText}>Suzuki Ertiga</Text>
           </View>
-        </View>
-
-        <View style={{flexBasis: '50%'}}>
-          <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
-          <Text style={styles.boldText}>4 Kursi</Text>
+          <View style={{marginBottom: 10}} />
+          <CustomCarousel
+            data={[...Array(4)]}
+            paginationSize={7}
+            paginationPosition={-10}
+            // renderCarouselTitle={
+            //   <View style={styles.carouselTitleContainer}>
+            //     <Text style={{fontWeight: 'bold'}}>
+            //       {vehicleById.brand_name} {vehicleById.name}
+            //     </Text>
+            //   </View>
+            // }
+            renderItem={({item, index}: any) => (
+              <View
+                style={
+                  {
+                    // alignItems: 'center',
+                    // alignSelf: 'center',
+                  }
+                }>
+                <Image source={img_car_1} style={{height: 250, width: '90%'}} />
+              </View>
+            )}
+            containerStyle={{
+              width: '100%',
+              alignItems: 'center',
+            }}
+          />
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -181,11 +205,27 @@ const TaskDetailScreen = () => {
           selectedImageLabel=""
         />
 
+        <Text style={[h4, styles.text, {marginVertical: 10}]}>
+          Keterangan
+        </Text>
+
+          <TextInput
+            style={{
+              borderWidth: 1,
+              borderColor: '#6666',
+              borderRadius: 6,
+              height: 100,
+              textAlignVertical: 'top'
+
+            }}
+            
+            placeholder='Tulis Keterangan..'
+          />
         <Button
           title="Selesaikan Tugas"
           onPress={() => {
             Alert.alert(
-              'Selesaikan Pesanan',
+              'Konfirmasi Antar Mobil',
               'Apakah anda yakin menyelesaikan Tugas?',
               [
                 {
@@ -214,7 +254,7 @@ const TaskDetailScreen = () => {
   );
 };
 
-export default hoc(TaskDetailScreen);
+export default hoc(TaskDetailAntarMobil);
 
 const styles = StyleSheet.create({
   container: {

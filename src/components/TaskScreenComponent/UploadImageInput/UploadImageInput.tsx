@@ -1,6 +1,6 @@
 import {h1, h4} from 'utils/styles';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
-import {ImagePickerResponse, launchCamera} from 'react-native-image-picker';
+import {ImagePickerResponse, launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {showToast} from 'utils/Toast';
 import {theme} from 'utils';
 import {
@@ -17,6 +17,7 @@ import {
   StyleSheet,
   ViewStyle,
   PermissionsAndroid,
+  Alert,
 } from 'react-native';
 
 interface IProps {
@@ -75,6 +76,46 @@ const UploadImageInput: React.FC<IProps> = ({
     }
   };
 
+  const onOpenGalery = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'App Camera Permission',
+          message: 'App needs access to your camera ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        const result: ImagePickerResponse = await launchImageLibrary({
+          mediaType: 'photo',
+          quality: 0.5,
+          includeBase64: true,
+          selectionLimit: 3,
+        });
+
+        // console.log('result = ', result.assets[0].base64)
+
+        if (Number(result.assets?.[0]?.fileSize) > 2097152) {
+          throw new Error('Maaf, ukuran file tidak boleh lebih dari 2MB!');
+        } else {
+          onCameraChange(result.assets);
+        }
+      } else {
+        throw new Error('Camera permission denied');
+      }
+    } catch (error: any) {
+      showToast({
+        title: 'Gagal',
+        type: 'error',
+        message: error?.message || 'Terjadi kesalahan',
+      });
+    }
+  };
+
   return (
     <View style={containerStyle}>
       {label && (
@@ -87,7 +128,22 @@ const UploadImageInput: React.FC<IProps> = ({
 
       <TouchableOpacity
         style={styles.uploadInputContainer}
-        onPress={onOpenCamera}>
+        onPress={()=> {
+          Alert.alert('Upload File', 'Silahkan pilih opsi untuk mengambil Foto', [
+            {
+              text: 'Batal'
+            },
+            {
+              text: 'Buka Kamera',
+              onPress: onOpenCamera
+            },
+            {
+              text: 'Buka Galery',
+              onPress: onOpenGalery
+            }
+            
+          ])
+        }}>
         <Text style={[h4, {fontSize: 12}]}>Ambil Foto</Text>
         <Image source={ic_take_photo} style={iconCustomSize(53)} />
       </TouchableOpacity>

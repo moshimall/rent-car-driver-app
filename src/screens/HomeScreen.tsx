@@ -7,143 +7,162 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
-import {boxShadow, container, iconCustomSize, rowCenter} from 'utils/mixins';
-import {ic_main_icon, ic_pinpoin} from 'assets/icons';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {
+  WINDOW_HEIGHT,
+  boxShadow,
+  container,
+  iconCustomSize,
+  iconSize,
+  rowCenter,
+} from 'utils/mixins';
+import {
+  ic_calendar,
+  ic_car,
+  ic_check,
+  ic_checkblue,
+  ic_filter,
+  ic_main_icon,
+  ic_pinpoin,
+} from 'assets/icons';
 import {theme} from 'utils';
 import Button from 'components/Button';
 import {useHelperStore} from 'store/helpersStore';
 import {IHelpers} from 'types/store.types';
-import { showToast } from 'utils/Toast';
+import {showToast} from 'utils/Toast';
+import {h1, h3} from 'utils/styles';
+import {useNavigation} from '@react-navigation/native';
+import BottomSheet from '@gorhom/bottom-sheet';
+import CardAntarMobil from 'components/Cards/CardAntarMobil';
+import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
+import CardParkirMobil from 'components/Cards/CardParkirMobil';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
+  const [selected, setSelected] = useState<number>(0);
+  const navigation = useNavigation();
 
   useEffect(() => {
     console.log('lerprs = ', helpers.isShowToast);
   }, [helpers.isShowToast]);
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['50%', '80%'], []);
+
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <View style={{backgroundColor: '#fff', padding: 16}}>
+      <View style={{padding: 16, backgroundColor: '#fff'}}>
         <View style={[rowCenter, {justifyContent: 'space-between'}]}>
           <View style={rowCenter}>
             <Image source={ic_main_icon} style={iconCustomSize(45)} />
             <Text style={styles.textName}>Driver</Text>
           </View>
-          <View style={styles.rightIcon} />
+          <Text style={[styles.textName, {}]}>Halo, Driver</Text>
         </View>
-
-        <Text style={[styles.textName, {marginTop: 28}]}>Halo, Driver</Text>
       </View>
 
-      <View style={[rowCenter, {padding: 16, justifyContent: 'space-between'}]}>
-        <TouchableOpacity style={styles.activeButton}>
-          <Text style={styles.activeText}>Pengantaran</Text>
-        </TouchableOpacity>
+      <View
+        style={[
+          rowCenter,
+          {
+            justifyContent: 'space-between',
+            marginHorizontal: 20,
+            marginTop: 20,
+          },
+        ]}>
+        <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
+          Tugas Driver
+        </Text>
 
-        <TouchableOpacity style={styles.inactiveButton}>
-          <Text style={styles.inactiveText}>Dengan Supir</Text>
+        <TouchableOpacity
+          onPress={() => bottomSheetRef.current?.snapToIndex(0)}
+          style={[rowCenter, {justifyContent: 'space-between'}]}>
+          <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
+            Filter
+          </Text>
+          <Image source={ic_filter} style={iconCustomSize(14)} />
         </TouchableOpacity>
       </View>
       <View style={{margin: 16}}>
         <FlatList
           // data={[]}
-          data={[...Array(6).fill(1)]}
-          renderItem={() => (
-            <View style={[styles.cardWrapper]}>
-              <Text style={styles.textOrderId}>
-                Order ID: <Text style={{fontWeight: '500'}}>0129389283</Text>
-              </Text>
-
-              <View style={{marginTop: 20}}>
-                <View style={rowCenter}>
-                  <Image source={ic_pinpoin} style={iconCustomSize(45)} />
-                  <View style={{marginLeft: 10}}>
-                    <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-                    <Text style={styles.textLocation}>Cafe Bali</Text>
-                  </View>
-                </View>
-
-                <View style={styles.lineVertical} />
-
-                <View style={rowCenter}>
-                  <Image source={ic_pinpoin} style={iconCustomSize(45)} />
-                  <View style={{marginLeft: 10}}>
-                    <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-                    <Text style={styles.textLocation}>Cafe Bali</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.lineHorizontal} />
-
-              <View style={{marginTop: 0}}>
-                <View style={rowCenter}>
-                  <Image source={ic_pinpoin} style={iconCustomSize(45)} />
-                  <View style={{marginLeft: 10}}>
-                    <Text style={styles.textTitle}>Mulai Sewa</Text>
-                    <Text style={styles.textLocation}>
-                      01 Juli 2022 | 09:00 AM
-                    </Text>
-                  </View>
-                </View>
-
-                <View style={styles.lineVertical} />
-
-                <View style={rowCenter}>
-                  <Image source={ic_pinpoin} style={iconCustomSize(45)} />
-                  <View style={{marginLeft: 10}}>
-                    <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
-                    <Text style={styles.textLocation}>
-                      03 Juli 2022 | 09:00 AM
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              <Text style={styles.textComment}>Comment : </Text>
-
-              <Button
-                _theme="navy"
-                title="Terima Tugas"
-                onPress={() => {
-                  Alert.alert(
-                    'Terima Tugas',
-                    'Apakah anda yakin untuk menerima Tugas?',
-                    [
-                      {
-                        text: 'Tidak',
-                        onPress(value) {},
-                      },
-                      {
-                        text: 'Ya',
-                        onPress(value) {
-                          showToast({
-                            message: 'Berhasil Menerima Tugas',
-                            title: 'Sukses',
-                            type: 'success'
-                          })
-                        },
-                      },
-                    ],
-                  );
-                }}
-                styleWrapper={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  marginVertical: 20,
-                }}
-              />
-            </View>
+          data={['Antar', 'Ambil', 'Parkir']}
+          renderItem={({item}) => (
+            <>
+              {item === 'Antar' && <CardAntarMobil/>}
+              {item === 'Ambil' && <CardAmbilMobil/>}
+              {item === 'Parkir' && <CardParkirMobil/>}
+            </>
           )}
-          ListEmptyComponent={()=> (
-            <Text style={{alignSelf: 'center', marginTop: '50%'}}>Belum ada tugas</Text>
+          ListEmptyComponent={() => (
+            <Text style={{alignSelf: 'center', marginTop: '50%'}}>
+              Belum ada tugas
+            </Text>
+          )}
+          keyExtractor={(x, i)=> i.toString()}
+          ListFooterComponent={()=> (
+            <View style={{marginBottom: 120}} />
           )}
         />
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        enablePanDownToClose={true}
+        containerStyle={{
+          // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}>
+        <View style={styles.contentContainer}>
+          <Text style={[h1, {fontSize: 20}]}>Filter Berdasarkan</Text>
+
+          <Text style={[h1, {fontSize: 15, marginTop: 20, marginBottom: 10}]}>
+            Sort
+          </Text>
+
+          {SORT.map((x, i) => (
+            <View
+              style={[
+                rowCenter,
+                {justifyContent: 'space-between', marginBottom: 10},
+              ]}>
+              <Text>{x}</Text>
+
+              <Image source={ic_checkblue} style={iconSize} />
+            </View>
+          ))}
+
+          <Text style={[h1, {fontSize: 15, marginTop: 20, marginBottom: 10}]}>
+            Jobdesk
+          </Text>
+
+          {JOBDESK.map((x, i) => (
+            <View
+              style={[
+                rowCenter,
+                {justifyContent: 'space-between', marginBottom: 10},
+              ]}>
+              <Text>{x}</Text>
+
+              <Image source={ic_checkblue} style={iconSize} />
+            </View>
+          ))}
+        </View>
+      </BottomSheet>
     </View>
   );
 };
+
+const SORT = ['Paling Baru', 'Paling Lama'];
+const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi']
 
 export default HomeScreen;
 
@@ -162,29 +181,33 @@ const styles = StyleSheet.create({
   },
   container: {backgroundColor: '#F5F6FA', flex: 1},
   activeButton: {
-    backgroundColor: theme.colors.navy,
-    width: '48%',
+    backgroundColor: theme.colors.white,
+    width: '33.3%',
     padding: 12,
     alignItems: 'center',
-    borderRadius: 20,
+    borderBottomColor: theme.colors.navy,
+    borderBottomWidth: 2,
+    // borderRadius: 20,
   },
   activeText: {
     fontSize: 12,
-    color: '#fff',
+    color: theme.colors.navy,
     fontWeight: 'bold',
   },
 
   inactiveButton: {
     backgroundColor: theme.colors.white,
-    width: '48%',
+    width: '33.3%',
     padding: 12,
     alignItems: 'center',
-    borderRadius: 20,
+    borderBottomColor: theme.colors.white,
+    borderBottomWidth: 2,
+    // borderRadius: 20,
   },
   inactiveText: {
     fontSize: 12,
     color: '#B5B5B5',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   textOrderId: {fontSize: 12, fontWeight: 'bold'},
   textTitle: {
@@ -237,5 +260,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '400',
     marginVertical: 20,
+  },
+  container2: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
+    margin: 20,
+    // alignItems: 'center',
   },
 });

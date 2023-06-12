@@ -2,12 +2,15 @@ import React from 'react';
 import theme from 'utils/theme';
 import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {
+  ic_check_tab,
+  ic_check_tab_active,
   ic_document_active,
   ic_document_inactive,
   ic_home_active,
   ic_home_inactive,
   ic_message_active,
   ic_message_inactive,
+  ic_profile,
   ic_profile_active,
   ic_profile_inactive,
 } from 'assets/icons';
@@ -39,22 +42,22 @@ const TabItem: React.FC<TabItemProps> = ({
       );
     }
     
-    if (title === 'Pesan') {
+    if (title === 'Selesai') {
       return active ? (
         <Image
-          source={ic_message_active}
+          source={ic_check_tab_active}
           style={iconCustomSize(25)}
           resizeMode="contain"
         />
       ) : (
-        <Image source={ic_message_inactive} style={iconCustomSize(25)} />
+        <Image source={ic_check_tab} style={iconCustomSize(25)} />
       );
     }
 
     if (title === 'Akun Saya') {
       return active ? (
         <Image
-          source={ic_profile_active}
+          source={ic_profile}
           style={iconCustomSize(25)}
           resizeMode="contain"
         />

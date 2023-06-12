@@ -62,25 +62,16 @@ const MainTab: React.FC = () => {
         }}
       />
       <RootTab.Screen
-        name="Task"
+        name="Done"
         component={TaskScreen}
         options={{
-          tabBarLabel: 'Tugas',
+          tabBarLabel: 'Selesai',
           headerStyle: {
             backgroundColor: theme.colors.navy,
           },
         }}
       />
-      <RootTab.Screen
-        name="Inbox"
-        component={MessageScreen}
-        options={{
-          tabBarLabel: 'Pesan',
-          headerStyle: {
-            backgroundColor: theme.colors.navy,
-          },
-        }}
-      />
+      
       <RootTab.Screen
         name="Account"
         component={MyAccountScreen}

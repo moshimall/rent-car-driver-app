@@ -11,7 +11,9 @@ import {
   LoginScreen,
   OtpVerificationScreen,
   RegisterScreen,
-  TaskDetailScreen,
+  TaskDetailAmbilMobilScreen,
+  TaskDetailAntarMobilScreen,
+  TaskDetailParkirMobilScreen,
 } from '../screens';
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -45,7 +47,7 @@ const Main: React.FC = () => {
         headerShown: false,
         animationTypeForReplace: 'push',
       }}
-      initialRouteName="MainTab">
+      initialRouteName="Login">
       <>
         <RootStack.Screen name="MainTab" component={MainTab} />
         <RootStack.Screen
@@ -56,8 +58,26 @@ const Main: React.FC = () => {
           }}
         />
         <RootStack.Screen
-          name="TaskDetail"
-          component={TaskDetailScreen}
+          name="TaskDetailAntarMobil"
+          component={TaskDetailAntarMobilScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: theme.colors.navy,
+            },
+          }}
+        />
+        <RootStack.Screen
+          name="TaskDetailAmbilMobil"
+          component={TaskDetailAmbilMobilScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: theme.colors.navy,
+            },
+          }}
+        />
+        <RootStack.Screen
+          name="TaskDetailParkirMobil"
+          component={TaskDetailParkirMobilScreen}
           options={{
             headerStyle: {
               backgroundColor: theme.colors.navy,
