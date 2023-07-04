@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 import {deepClone, theme} from 'utils';
 import {ic_eye_close, ic_warning} from 'assets/icons';
 import {FONT_SIZE_12} from 'utils/typography';
-import {h1, radius} from 'utils/styles';
+import {h1, h4, radius} from 'utils/styles';
 import {iconSize} from 'utils/mixins';
 import Animated, {
   useAnimatedStyle,
@@ -74,7 +74,7 @@ const CustomTextInput = ({
 
   return (
     <View>
-      {title && <Text style={[styles.title, h1, styleTitle]}>{title}</Text>}
+      {title && <Text style={[styles.title, h4, styleTitle]}>{title}</Text>}
       <View
         style={[
           styles.inputWrapper,

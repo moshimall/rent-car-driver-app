@@ -12,6 +12,7 @@ type RootStackParamList = {
   TaskDetailAntarMobil: undefined;
   TaskDetailAmbilMobil: undefined;
   TaskDetailParkirMobil: undefined;
+  Splash: undefined;
 };
 
 type RootTabParamList = {

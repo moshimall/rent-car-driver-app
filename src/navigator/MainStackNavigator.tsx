@@ -15,6 +15,7 @@ import {
   TaskDetailAntarMobilScreen,
   TaskDetailParkirMobilScreen,
 } from '../screens';
+import SplashScreen from 'screens/SplashScreen';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -47,7 +48,7 @@ const Main: React.FC = () => {
         headerShown: false,
         animationTypeForReplace: 'push',
       }}
-      initialRouteName="Login">
+      initialRouteName="Splash">
       <>
         <RootStack.Screen name="MainTab" component={MainTab} />
         <RootStack.Screen
@@ -84,6 +85,7 @@ const Main: React.FC = () => {
             },
           }}
         />
+        <RootStack.Screen name="Splash" component={SplashScreen} />
         <RootStack.Screen name="Login" component={LoginScreen} />
         <RootStack.Screen name="Register" component={RegisterScreen} />
         <RootStack.Screen

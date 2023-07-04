@@ -48,6 +48,9 @@ const LoginScreen: FC = () => {
           <View style={{marginRight: 20, marginTop: 20}}>
             <Image source={ic_main_icon2} style={iconCustomSize(100)} resizeMode='contain' />
           </View>
+        ),
+        leading:(
+          <View/>
         )
       }),
     );

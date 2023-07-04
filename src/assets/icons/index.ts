@@ -37,4 +37,5 @@ export const ic_question = require('./ic_question.png');
 export const ic_eye_close = require('./ic_eye_close.png');
 export const ic_car_key = require('./ic_car_key.png');
 export const ic_park = require('./ic_park.png');
-
+export const ic_selected_radio_button = require('./ic_selected_radio_button.png');
+export const ic_radio_button = require('./ic_radio_button.png');

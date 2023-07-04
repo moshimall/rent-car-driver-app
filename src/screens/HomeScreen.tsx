@@ -24,8 +24,11 @@ import {
   ic_filter,
   ic_main_icon,
   ic_pinpoin,
+  ic_radio_button,
+  ic_selected_radio_button,
+  ic_uncheckblue,
 } from 'assets/icons';
-import {theme} from 'utils';
+import {deepClone, theme} from 'utils';
 import Button from 'components/Button';
 import {useHelperStore} from 'store/helpersStore';
 import {IHelpers} from 'types/store.types';
@@ -41,6 +44,9 @@ const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
   const [selected, setSelected] = useState<number>(0);
   const navigation = useNavigation();
+  const [changebg, setChangebg] = useState(true);
+  const [sorting, setSorting] = useState(-1);
+  const [jobdesk, setJobdesk] = useState<number[]>([]);
 
   useEffect(() => {
     console.log('lerprs = ', helpers.isShowToast);
@@ -54,6 +60,11 @@ const HomeScreen = () => {
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
+    if (index === -1) {
+      setChangebg(true);
+    } else {
+      setChangebg(false);
+    }
   }, []);
 
   return (
@@ -96,9 +107,9 @@ const HomeScreen = () => {
           data={['Antar', 'Ambil', 'Parkir']}
           renderItem={({item}) => (
             <>
-              {item === 'Antar' && <CardAntarMobil/>}
-              {item === 'Ambil' && <CardAmbilMobil/>}
-              {item === 'Parkir' && <CardParkirMobil/>}
+              {item === 'Antar' && <CardAntarMobil />}
+              {item === 'Ambil' && <CardAmbilMobil />}
+              {item === 'Parkir' && <CardParkirMobil />}
             </>
           )}
           ListEmptyComponent={() => (
@@ -106,10 +117,8 @@ const HomeScreen = () => {
               Belum ada tugas
             </Text>
           )}
-          keyExtractor={(x, i)=> i.toString()}
-          ListFooterComponent={()=> (
-            <View style={{marginBottom: 120}} />
-          )}
+          keyExtractor={(x, i) => i.toString()}
+          ListFooterComponent={() => <View style={{marginBottom: 120}} />}
         />
       </View>
       <BottomSheet
@@ -117,7 +126,7 @@ const HomeScreen = () => {
         index={-1}
         enablePanDownToClose={true}
         containerStyle={{
-          // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: changebg ? 'transparent' : 'rgba(0, 0, 0, 0.5)',
         }}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}>
@@ -129,15 +138,21 @@ const HomeScreen = () => {
           </Text>
 
           {SORT.map((x, i) => (
-            <View
+            <TouchableOpacity
+              onPress={() => setSorting(i)}
               style={[
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
               <Text>{x}</Text>
 
-              <Image source={ic_checkblue} style={iconSize} />
-            </View>
+              <Image
+                source={
+                  sorting === i ? ic_selected_radio_button : ic_radio_button
+                }
+                style={iconSize}
+              />
+            </TouchableOpacity>
           ))}
 
           <Text style={[h1, {fontSize: 15, marginTop: 20, marginBottom: 10}]}>
@@ -145,16 +160,42 @@ const HomeScreen = () => {
           </Text>
 
           {JOBDESK.map((x, i) => (
-            <View
+            <TouchableOpacity
+              onPress={() => {
+                let _ = deepClone(jobdesk);
+                let idx = jobdesk.findIndex(y => y === i);
+                if (idx === -1) {
+                  _.push(i);
+                  
+                } else {
+                  _.splice(idx, 1);
+                }
+                setJobdesk(_);
+                console.log('_ = ', _);
+              }}
               style={[
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
               <Text>{x}</Text>
 
-              <Image source={ic_checkblue} style={iconSize} />
-            </View>
+              <Image
+                source={
+                  jobdesk.filter(z => z === i)?.length === 1
+                    ? ic_checkblue
+                    : ic_uncheckblue
+                }
+                style={iconSize}
+              />
+            </TouchableOpacity>
           ))}
+
+          <Button 
+            _theme='navy'
+            title={'Konfirmasi'}
+            onPress={()=> {bottomSheetRef.current.close()}}
+            styleWrapper={{marginTop: 10}}
+          />
         </View>
       </BottomSheet>
     </View>
@@ -162,7 +203,7 @@ const HomeScreen = () => {
 };
 
 const SORT = ['Paling Baru', 'Paling Lama'];
-const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi']
+const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi'];
 
 export default HomeScreen;
 
@@ -179,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     borderRadius: 50,
   },
-  container: {backgroundColor: '#F5F6FA', flex: 1},
+  container: {backgroundColor: '#F5F6FA', flex: 1, zIndex: 99},
   activeButton: {
     backgroundColor: theme.colors.white,
     width: '33.3%',
@@ -269,6 +310,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     margin: 20,
+
     // alignItems: 'center',
   },
 });
