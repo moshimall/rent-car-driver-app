@@ -60,11 +60,16 @@ const TaskScreen = () => {
       </View>
 
       {DATA.map((x, i) => (
-        <View key={i} style={[rowCenter, {
-          borderBottomColor: 'rgba(217, 217, 217, 1)',
-          borderBottomWidth: 1,
-          padding: 20
-        }]}>
+        <View
+          key={`index_${i}`}
+          style={[
+            rowCenter,
+            {
+              borderBottomColor: 'rgba(217, 217, 217, 1)',
+              borderBottomWidth: 1,
+              padding: 20,
+            },
+          ]}>
           <Image source={x.ic} style={iconSize} />
           <Text style={[h4, {marginLeft: 10}]}>{x.text}</Text>
         </View>

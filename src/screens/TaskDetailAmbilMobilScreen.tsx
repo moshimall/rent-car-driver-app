@@ -137,25 +137,42 @@ const TaskDetailAmbilMobilScreen = () => {
                 }, 0),
               },
             ].map((x, i) => (
-              <View>
-                {(denda.length) === i && <View style={{borderBottomWidth: 1, borderBottomColor: '#A8A8A8', marginBottom: 10}} />}
-                <View style={[rowCenter, {justifyContent: 'space-between', marginBottom: 10}]}>
+              <View key={`index_${i}`}>
+                {denda.length === i && (
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#A8A8A8',
+                      marginBottom: 10,
+                    }}
+                  />
+                )}
+                <View
+                  style={[
+                    rowCenter,
+                    {justifyContent: 'space-between', marginBottom: 10},
+                  ]}>
                   <Text>{x.keterangan}</Text>
 
                   <View style={[rowCenter]}>
                     <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
-                    {denda.length !== i  ? <TouchableOpacity onPress={()=> {
-                      let array = deepClone(denda);
-                      // let index = 2;
-                      
-                      array.splice(i, 1);
-                      setDenda(array);
-                    }}>
-                      <Image
-                        source={ic_close}
-                        style={[iconCustomSize(8), {marginLeft: 5}]}
-                      />
-                    </TouchableOpacity>: <View style={{ width: 13}} />}
+                    {denda.length !== i ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          let array = deepClone(denda);
+                          // let index = 2;
+
+                          array.splice(i, 1);
+                          setDenda(array);
+                        }}>
+                        <Image
+                          source={ic_close}
+                          style={[iconCustomSize(8), {marginLeft: 5}]}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={{width: 13}} />
+                    )}
                   </View>
                 </View>
               </View>
@@ -247,8 +264,8 @@ const TaskDetailAmbilMobilScreen = () => {
               bottomSheetRef?.current?.close();
               setTempDenda({
                 keterangan: '',
-                jumlah: ''
-              })
+                jumlah: '',
+              });
             }}
           />
         </View>

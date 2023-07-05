@@ -34,7 +34,7 @@ const appBar = ({
             style={{
               height: 30,
               width: 30,
-              marginLeft:16
+              marginLeft: 16,
             }}
           />
         </TouchableOpacity>
@@ -44,8 +44,8 @@ const appBar = ({
   headerRight: ({}) => (
     <View style={styles.rightSection}>
       {trailing}
-      {trailingIcons.map(e => (
-        <TouchableOpacity onPress={e.onPress}>
+      {trailingIcons.map((e, i) => (
+        <TouchableOpacity key={`index_${i}`} onPress={e.onPress}>
           <Image style={[styles.headerIcon, {marginLeft: 0}]} source={e.icon} />
         </TouchableOpacity>
       ))}

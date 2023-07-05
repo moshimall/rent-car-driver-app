@@ -30,7 +30,7 @@ const TopTabs: React.FC<TopTabsProps> = ({onChangeTab}) => {
     <View style={[rowCenter, {padding: 16, justifyContent: 'space-between'}]}>
       {tabList.map((tab, i) => (
         <TouchableOpacity
-          key={i}
+          key={`index_${i}`}
           style={selected === i ? styles.activeButton : styles.inactiveButton}
           onPress={() => {
             setSelected(i);

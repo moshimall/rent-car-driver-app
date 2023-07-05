@@ -139,6 +139,7 @@ const HomeScreen = () => {
 
           {SORT.map((x, i) => (
             <TouchableOpacity
+              key={`index_${i}`}
               onPress={() => setSorting(i)}
               style={[
                 rowCenter,
@@ -161,12 +162,12 @@ const HomeScreen = () => {
 
           {JOBDESK.map((x, i) => (
             <TouchableOpacity
+              key={`index_${i}`}
               onPress={() => {
                 let _ = deepClone(jobdesk);
                 let idx = jobdesk.findIndex(y => y === i);
                 if (idx === -1) {
                   _.push(i);
-                  
                 } else {
                   _.splice(idx, 1);
                 }
@@ -190,10 +191,12 @@ const HomeScreen = () => {
             </TouchableOpacity>
           ))}
 
-          <Button 
-            _theme='navy'
+          <Button
+            _theme="navy"
             title={'Konfirmasi'}
-            onPress={()=> {bottomSheetRef.current.close()}}
+            onPress={() => {
+              bottomSheetRef?.current?.close();
+            }}
             styleWrapper={{marginTop: 10}}
           />
         </View>
