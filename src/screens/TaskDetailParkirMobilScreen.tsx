@@ -1,6 +1,6 @@
 import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {h1, h4} from 'utils/styles';
 import {ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
 import {
@@ -23,6 +23,7 @@ import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 
 const TaskDetailAmbilMobilScreen = () => {
   const navigation = useNavigation();
+  const [bulkImage, setBulkImage] = useState([]);
 
   useEffect(() => {
     navigation.setOptions(
@@ -51,16 +52,29 @@ const TaskDetailAmbilMobilScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{marginHorizontal: 20}}>
-        <UploadImageInput
+      <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
+            console.log('ress = ', res);
+            let _: any = [];
+            res?.map((x)=> {
+              _.push(x.uri)
+            })
+            setBulkImage(_);
             showToast({
               title: 'Berhasil',
               type: 'success',
               message: 'Berhasil Upload Foto',
             });
           }}
-          onDelete={() => {}}
+          onDelete={(i) => {
+            console.log('x = ', i)
+            let _ = deepClone(bulkImage);
+            _.splice(i, 1);
+            setBulkImage(_);
+          }}
+          bulkImage={bulkImage}
+          setBulkImage={setBulkImage}
           selectedImageLabel=""
         />
 

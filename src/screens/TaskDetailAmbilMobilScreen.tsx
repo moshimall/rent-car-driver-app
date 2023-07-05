@@ -26,9 +26,10 @@ import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 import {deepClone, theme} from 'utils';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet';
 import CustomTextInput from 'components/TextInput';
 import {currencyFormat} from 'utils/currencyFormat';
+import CustomBackdrop from 'components/CustomBackdrop';
 
 interface Denda {
   keterangan: string;
@@ -37,7 +38,8 @@ interface Denda {
 const TaskDetailAmbilMobilScreen = () => {
   const navigation = useNavigation();
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [bulkImage, setBulkImage] = useState([]);
 
   const [denda, setDenda] = useState<Denda[]>([]);
   const [tempDenda, setTempDenda] = useState<Denda>({
@@ -80,16 +82,29 @@ const TaskDetailAmbilMobilScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{marginHorizontal: 20}}>
-        <UploadImageInput
+          <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
+            console.log('ress = ', res);
+            let _: any = [];
+            res?.map((x)=> {
+              _.push(x.uri)
+            })
+            setBulkImage(_);
             showToast({
               title: 'Berhasil',
               type: 'success',
               message: 'Berhasil Upload Foto',
             });
           }}
-          onDelete={() => {}}
+          onDelete={(i) => {
+            console.log('x = ', i)
+            let _ = deepClone(bulkImage);
+            _.splice(i, 1);
+            setBulkImage(_);
+          }}
+          bulkImage={bulkImage}
+          setBulkImage={setBulkImage}
           selectedImageLabel=""
         />
 
@@ -142,7 +157,7 @@ const TaskDetailAmbilMobilScreen = () => {
               <View>
                 {(denda.length) === i && <View style={{borderBottomWidth: 1, borderBottomColor: '#A8A8A8', marginBottom: 10}} />}
                 <View style={[rowCenter, {justifyContent: 'space-between', marginBottom: 10}]}>
-                  <Text>{x.keterangan}</Text>
+                  <Text style={{width: '60%'}}>{x.keterangan}</Text>
 
                   <View style={[rowCenter]}>
                     <Text>{currencyFormat(parseInt(x.jumlah))}</Text>
@@ -204,15 +219,38 @@ const TaskDetailAmbilMobilScreen = () => {
 
       <BottomSheet
         ref={bottomSheetRef}
-        index={-1}
-        enablePanDownToClose={true}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
         containerStyle={
           {
             // backgroundColor: 'rgba(0, 0, 0, 0.5)',
           }
         }
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}>
+        // in
+        index={-1}
+        // backgroundStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', }}
+        enablePanDownToClose={true}
+        backdropComponent={backdropProps => (
+          <CustomBackdrop
+            {...backdropProps}
+            disappearsOnIndex={-1}
+            enableTouchThrough={true}
+            pressBehavior={'close'}
+          />
+        )}
+        backgroundStyle={{backgroundColor: theme.colors.white}}
+        handleStyle={{marginBottom: 8, marginTop: 4}}
+        style={{
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 7,
+          },
+          shadowOpacity: 0.75,
+          shadowRadius: 24,
+
+          elevation: 24,
+        }}>
         <View style={styles.contentContainer}>
           <Text style={[h1, {fontSize: 20}]}>Tambah Denda</Text>
           <CustomTextInput

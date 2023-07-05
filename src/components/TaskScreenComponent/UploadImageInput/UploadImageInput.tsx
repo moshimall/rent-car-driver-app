@@ -1,6 +1,10 @@
 import {h1, h4} from 'utils/styles';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
-import {ImagePickerResponse, launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {
+  ImagePickerResponse,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import {showToast} from 'utils/Toast';
 import {theme} from 'utils';
 import {
@@ -22,12 +26,14 @@ import {
 
 interface IProps {
   onCameraChange: (res: ImagePickerResponse['assets']) => void;
-  onDelete: () => void;
+  onDelete: (i: number) => void;
   selected?: string;
   errorMessage?: string;
   label?: string;
   selectedImageLabel: string;
   containerStyle?: ViewStyle;
+  bulkImage: any[];
+  setBulkImage: any;
 }
 
 const UploadImageInput: React.FC<IProps> = ({
@@ -38,6 +44,8 @@ const UploadImageInput: React.FC<IProps> = ({
   selectedImageLabel,
   containerStyle = {marginTop: 10},
   onCameraChange,
+  bulkImage,
+  setBulkImage,
 }) => {
   const onOpenCamera = async () => {
     try {
@@ -128,42 +136,56 @@ const UploadImageInput: React.FC<IProps> = ({
 
       <TouchableOpacity
         style={styles.uploadInputContainer}
-        onPress={()=> {
-          Alert.alert('Upload File', 'Silahkan pilih opsi untuk mengambil Foto', [
-            {
-              text: 'Batal'
-            },
-            {
-              text: 'Buka Kamera',
-              onPress: onOpenCamera
-            },
-            {
-              text: 'Buka Galery',
-              onPress: onOpenGalery
-            }
-            
-          ])
+        onPress={() => {
+          Alert.alert(
+            'Upload File',
+            'Silahkan pilih opsi untuk mengambil Foto',
+            [
+              {
+                text: 'Batal',
+              },
+              {
+                text: 'Buka Kamera',
+                onPress: onOpenCamera,
+              },
+              {
+                text: 'Buka Galery',
+                onPress: onOpenGalery,
+              },
+            ],
+          );
         }}>
         <Text style={[h4, {fontSize: 12}]}>Ambil Foto</Text>
         <Image source={ic_take_photo} style={iconCustomSize(53)} />
       </TouchableOpacity>
+      <View style={[rowCenter]}>
+        {bulkImage?.length > 0 &&
+          bulkImage?.map((x, i) => (
+            <View style={styles.uploadedImage} key={i}>
+              <View style={styles.imageDetail}>
+                <Image
+                  source={{uri: x}}
+                  style={{width: 58, height: 58, marginRight: 10, borderRadius: 10}}
+                  resizeMode="cover"
+                />
+                <Text style={[h1, {fontSize: 14}]}>{selectedImageLabel}</Text>
+              </View>
 
-      {selected && (
-        <View style={styles.uploadedImage}>
-          <View style={styles.imageDetail}>
-            <Image
-              source={ic_rounded_image_file}
-              style={{width: 28, height: 28, marginRight: 10}}
-              resizeMode="contain"
-            />
-            <Text style={[h1, {fontSize: 14}]}>{selectedImageLabel}</Text>
-          </View>
-
-          <TouchableOpacity onPress={onDelete}>
-            <Image source={ic_rounded_close} style={{width: 15, height: 15}} />
-          </TouchableOpacity>
-        </View>
-      )}
+              <TouchableOpacity
+                onPress={()=> onDelete(i)}
+                style={{
+                  position: 'absolute',
+                  top: -5,
+                  right: -5,
+                }}>
+                <Image
+                  source={ic_rounded_close}
+                  style={{width: 15, height: 15, tintColor: '#000'}}
+                />
+              </TouchableOpacity>
+            </View>
+          ))}
+      </View>
 
       {errorMessage && (
         <View style={[rowCenter, {marginTop: 5}]}>
@@ -192,12 +214,14 @@ const styles = StyleSheet.create({
   },
   uploadedImage: {
     marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: 58,
+    marginRight: 10
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // alignItems: 'center',
   },
   imageDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    // flexDirection: 'row',
+    // alignItems: 'center',
   },
 });

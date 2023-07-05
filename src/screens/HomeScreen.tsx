@@ -35,24 +35,28 @@ import {IHelpers} from 'types/store.types';
 import {showToast} from 'utils/Toast';
 import {h1, h3} from 'utils/styles';
 import {useNavigation} from '@react-navigation/native';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+} from '@gorhom/bottom-sheet';
 import CardAntarMobil from 'components/Cards/CardAntarMobil';
 import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
 import CardParkirMobil from 'components/Cards/CardParkirMobil';
+import CustomBackdrop from 'components/CustomBackdrop';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
   const [selected, setSelected] = useState<number>(0);
   const navigation = useNavigation();
   const [changebg, setChangebg] = useState(true);
-  const [sorting, setSorting] = useState(-1);
-  const [jobdesk, setJobdesk] = useState<number[]>([]);
+  const [sorting, setSorting] = useState(0);
+  const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
 
   useEffect(() => {
     console.log('lerprs = ', helpers.isShowToast);
   }, [helpers.isShowToast]);
   // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   // variables
   const snapPoints = useMemo(() => ['50%', '80%'], []);
@@ -121,15 +125,49 @@ const HomeScreen = () => {
           ListFooterComponent={() => <View style={{marginBottom: 120}} />}
         />
       </View>
-      <BottomSheet
+      {/* <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         enablePanDownToClose={true}
         containerStyle={{
-          backgroundColor: changebg ? 'transparent' : 'rgba(0, 0, 0, 0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}>
+        onChange={handleSheetChanges}> */}
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        containerStyle={
+          {
+            // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }
+        }
+        // in
+        index={-1}
+        // backgroundStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', }}
+        enablePanDownToClose={true}
+        backdropComponent={backdropProps => (
+          <CustomBackdrop
+            {...backdropProps}
+            disappearsOnIndex={-1}
+            enableTouchThrough={true}
+            pressBehavior={'close'}
+          />
+        )}
+        backgroundStyle={{backgroundColor: theme.colors.white}}
+        handleStyle={{marginBottom: 8, marginTop: 4}}
+        style={{
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 7,
+          },
+          shadowOpacity: 0.75,
+          shadowRadius: 24,
+
+          elevation: 24,
+        }}>
         <View style={styles.contentContainer}>
           <Text style={[h1, {fontSize: 20}]}>Filter Berdasarkan</Text>
 
@@ -166,7 +204,6 @@ const HomeScreen = () => {
                 let idx = jobdesk.findIndex(y => y === i);
                 if (idx === -1) {
                   _.push(i);
-                  
                 } else {
                   _.splice(idx, 1);
                 }
@@ -190,10 +227,12 @@ const HomeScreen = () => {
             </TouchableOpacity>
           ))}
 
-          <Button 
-            _theme='navy'
+          <Button
+            _theme="navy"
             title={'Konfirmasi'}
-            onPress={()=> {bottomSheetRef.current.close()}}
+            onPress={() => {
+              if (bottomSheetRef?.current) bottomSheetRef?.current.close();
+            }}
             styleWrapper={{marginTop: 10}}
           />
         </View>
@@ -206,6 +245,7 @@ const SORT = ['Paling Baru', 'Paling Lama'];
 const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi'];
 
 export default HomeScreen;
+
 
 const styles = StyleSheet.create({
   textName: {

@@ -1,6 +1,6 @@
 import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {h1, h4} from 'utils/styles';
 import {ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
 import {
@@ -20,9 +20,11 @@ import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/Up
 import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
+import { deepClone } from 'utils';
 
 const TaskDetailAntarMobil = () => {
   const navigation = useNavigation();
+  const [bulkImage, setBulkImage] = useState([]);
 
   useEffect(() => {
     navigation.setOptions(
@@ -195,13 +197,26 @@ const TaskDetailAntarMobil = () => {
         <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
+            console.log('ress = ', res);
+            let _: any = [];
+            res?.map((x)=> {
+              _.push(x.uri)
+            })
+            setBulkImage(_);
             showToast({
               title: 'Berhasil',
               type: 'success',
               message: 'Berhasil Upload Foto',
             });
           }}
-          onDelete={() => {}}
+          onDelete={(i) => {
+            console.log('x = ', i)
+            let _ = deepClone(bulkImage);
+            _.splice(i, 1);
+            setBulkImage(_);
+          }}
+          bulkImage={bulkImage}
+          setBulkImage={setBulkImage}
           selectedImageLabel=""
         />
 
