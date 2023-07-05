@@ -79,6 +79,7 @@ const MyTaskSection: React.FC = () => {
 
           {SORT.map((x, i) => (
             <View
+              key={`index_${i}`}
               style={[
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
@@ -95,6 +96,7 @@ const MyTaskSection: React.FC = () => {
 
           {JOBDESK.map((x, i) => (
             <View
+              key={`index_${i}`}
               style={[
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},

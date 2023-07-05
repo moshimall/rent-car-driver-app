@@ -1,12 +1,10 @@
 import CodePush from 'react-native-code-push';
 import CodepushUpdateManager from 'screens/CodepushUpdateManager';
-import DeviceInfo from 'react-native-device-info';
 import MainTab from './MainTabNavigator';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {RootStackParamList} from '../types/navigator';
 import {theme} from 'utils';
-import {useNavigation} from '@react-navigation/native';
 import {
   LoginScreen,
   OtpVerificationScreen,
@@ -20,28 +18,6 @@ import SplashScreen from 'screens/SplashScreen';
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const Main: React.FC = () => {
-  const navigation = useNavigation();
-
-  const checkCodepushUpdate = () => {
-    CodePush.checkForUpdate()
-      .then(async update => {
-        if (update) {
-          navigation.navigate('CodepushUpdateManager', {
-            failedInstall: update.failedInstall,
-          });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    const bundleId = DeviceInfo.getBundleId();
-    console.log(bundleId);
-    checkCodepushUpdate();
-  }, []);
-
   return (
     <RootStack.Navigator
       screenOptions={{

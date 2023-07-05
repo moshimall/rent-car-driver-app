@@ -83,14 +83,12 @@ const TaskDetailAmbilMobilScreen = () => {
         <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
-            showToast({
-              title: 'Berhasil',
-              type: 'success',
-              message: 'Berhasil Upload Foto',
-            });
+            // showToast({
+            //   title: 'Berhasil',
+            //   type: 'success',
+            //   message: 'Berhasil Upload Foto',
+            // });
           }}
-          onDelete={() => {}}
-          selectedImageLabel=""
         />
 
         <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>
@@ -139,25 +137,42 @@ const TaskDetailAmbilMobilScreen = () => {
                 }, 0),
               },
             ].map((x, i) => (
-              <View>
-                {(denda.length) === i && <View style={{borderBottomWidth: 1, borderBottomColor: '#A8A8A8', marginBottom: 10}} />}
-                <View style={[rowCenter, {justifyContent: 'space-between', marginBottom: 10}]}>
+              <View key={`index_${i}`}>
+                {denda.length === i && (
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#A8A8A8',
+                      marginBottom: 10,
+                    }}
+                  />
+                )}
+                <View
+                  style={[
+                    rowCenter,
+                    {justifyContent: 'space-between', marginBottom: 10},
+                  ]}>
                   <Text>{x.keterangan}</Text>
 
                   <View style={[rowCenter]}>
-                    <Text>{currencyFormat(parseInt(x.jumlah))}</Text>
-                    {denda.length !== i  ? <TouchableOpacity onPress={()=> {
-                      let array = deepClone(denda);
-                      // let index = 2;
-                      
-                      array.splice(i, 1);
-                      setDenda(array);
-                    }}>
-                      <Image
-                        source={ic_close}
-                        style={[iconCustomSize(8), {marginLeft: 5}]}
-                      />
-                    </TouchableOpacity>: <View style={{ width: 13}} />}
+                    <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
+                    {denda.length !== i ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          let array = deepClone(denda);
+                          // let index = 2;
+
+                          array.splice(i, 1);
+                          setDenda(array);
+                        }}>
+                        <Image
+                          source={ic_close}
+                          style={[iconCustomSize(8), {marginLeft: 5}]}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={{width: 13}} />
+                    )}
                   </View>
                 </View>
               </View>
@@ -246,11 +261,11 @@ const TaskDetailAmbilMobilScreen = () => {
               let _ = deepClone(denda);
               _.push(tempDenda);
               setDenda(_);
-              bottomSheetRef.current.close();
+              bottomSheetRef?.current?.close();
               setTempDenda({
                 keterangan: '',
-                jumlah: ''
-              })
+                jumlah: '',
+              });
             }}
           />
         </View>

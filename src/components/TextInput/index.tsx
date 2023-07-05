@@ -31,7 +31,7 @@ interface ITextInput {
   secureTextEntry?: boolean;
   onChangeText: (v: string) => void;
   value: string;
-  errorMessage: string;
+  errorMessage?: string;
   leftIcon?: any;
   disabled?: boolean;
   styleTitle?: TextStyle
