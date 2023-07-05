@@ -1,9 +1,10 @@
 import CodePush from 'react-native-code-push';
 import DeviceInfo from 'react-native-device-info';
-import React, {useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {ic_main_icon2} from 'assets/icons';
 import {iconCustomSize} from 'utils/mixins';
 import {Image, StyleSheet, View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
 const SplashScreen = () => {
@@ -25,11 +26,13 @@ const SplashScreen = () => {
       });
   };
 
-  useEffect(() => {
-    const bundleId = DeviceInfo.getBundleId();
-    console.log(bundleId);
-    checkCodepushUpdate();
-  }, []);
+  useFocusEffect(() => {
+    useCallback(() => {
+      const bundleId = DeviceInfo.getBundleId();
+      console.log(bundleId);
+      checkCodepushUpdate();
+    }, []);
+  });
 
   return (
     <View
