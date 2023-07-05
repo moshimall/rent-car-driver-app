@@ -1,18 +1,14 @@
 import {h1, h4} from 'utils/styles';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {showToast} from 'utils/Toast';
+import {theme} from 'utils';
+import {useState} from 'react';
 import {
   ImagePickerResponse,
   launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
-import {showToast} from 'utils/Toast';
-import {theme} from 'utils';
-import {
-  ic_info_error,
-  ic_rounded_close,
-  ic_rounded_image_file,
-  ic_take_photo,
-} from 'assets/icons';
+import {ic_image_close, ic_info_error, ic_take_photo} from 'assets/icons';
 import {
   View,
   TouchableOpacity,
@@ -26,27 +22,25 @@ import {
 
 interface IProps {
   onCameraChange: (res: ImagePickerResponse['assets']) => void;
-  onDelete: (i: number) => void;
-  selected?: string;
   errorMessage?: string;
   label?: string;
-  selectedImageLabel: string;
   containerStyle?: ViewStyle;
+  selectedImageLabel: string;
   bulkImage: any[];
   setBulkImage: any;
 }
 
 const UploadImageInput: React.FC<IProps> = ({
-  selected,
   errorMessage,
-  onDelete,
   label,
-  selectedImageLabel,
   containerStyle = {marginTop: 10},
   onCameraChange,
   bulkImage,
+  selectedImageLabel,
   setBulkImage,
 }) => {
+  const [images, setImages] = useState<any[]>([]);
+
   const onOpenCamera = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -71,6 +65,12 @@ const UploadImageInput: React.FC<IProps> = ({
           throw new Error('Maaf, ukuran file tidak boleh lebih dari 2MB!');
         } else {
           onCameraChange(result.assets);
+
+          if (images.length >= 3) {
+            throw new Error('Maaf, jumlah gambar maksimal hanya 3');
+          }
+
+          setImages(prev => [...prev, result.assets?.[0]]);
         }
       } else {
         throw new Error('Camera permission denied');
@@ -111,6 +111,12 @@ const UploadImageInput: React.FC<IProps> = ({
           throw new Error('Maaf, ukuran file tidak boleh lebih dari 2MB!');
         } else {
           onCameraChange(result.assets);
+
+          if (images.length >= 3) {
+            throw new Error('Maaf, jumlah gambar maksimal hanya 3');
+          }
+
+          setImages(prev => [...prev, ...(result.assets || [])]);
         }
       } else {
         throw new Error('Camera permission denied');
@@ -122,6 +128,12 @@ const UploadImageInput: React.FC<IProps> = ({
         message: error?.message || 'Terjadi kesalahan',
       });
     }
+  };
+
+  const handleDeleteImage = (index: number) => {
+    const val = [...images];
+    val.splice(index, 1);
+    setImages(val);
   };
 
   return (
@@ -159,34 +171,7 @@ const UploadImageInput: React.FC<IProps> = ({
         <Image source={ic_take_photo} style={iconCustomSize(53)} />
       </TouchableOpacity>
       <View style={[rowCenter]}>
-        {bulkImage?.length > 0 &&
-          bulkImage?.map((x, i) => (
-            <View style={styles.uploadedImage} key={i}>
-              <View style={styles.imageDetail}>
-                <Image
-                  source={{uri: x}}
-                  style={{width: 58, height: 58, marginRight: 10, borderRadius: 10}}
-                  resizeMode="cover"
-                />
-                <Text style={[h1, {fontSize: 14}]}>{selectedImageLabel}</Text>
-              </View>
-
-              <TouchableOpacity
-                onPress={()=> onDelete(i)}
-                style={{
-                  position: 'absolute',
-                  top: -5,
-                  right: -5,
-                }}>
-                <Image
-                  source={ic_rounded_close}
-                  style={{width: 15, height: 15, tintColor: '#000'}}
-                />
-              </TouchableOpacity>
-            </View>
-          ))}
       </View>
-
       {errorMessage && (
         <View style={[rowCenter, {marginTop: 5}]}>
           <Image source={ic_info_error} style={iconCustomSize(15)} />
@@ -196,6 +181,20 @@ const UploadImageInput: React.FC<IProps> = ({
           </Text>
         </View>
       )}
+
+      <View style={{flexDirection: 'row'}}>
+        {images.length > 0 &&
+          images.map((image, i) => (
+            <View key={`image_${i}`} style={styles.imageContainer}>
+              <TouchableOpacity
+                onPress={() => handleDeleteImage(i)}
+                style={{zIndex: 3}}>
+                <Image source={ic_image_close} style={styles.closeButton} />
+              </TouchableOpacity>
+              <Image source={{uri: image?.uri}} style={styles.image} />
+            </View>
+          ))}
+      </View>
     </View>
   );
 };
@@ -212,16 +211,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  uploadedImage: {
-    marginTop: 10,
-    width: 58,
-    marginRight: 10
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // alignItems: 'center',
+  imageContainer: {marginTop: 10, width: 58, height: 58, marginRight: 8},
+  closeButton: {
+    width: 14,
+    height: 14,
+    position: 'absolute',
+    right: -3,
+    top: -3,
   },
-  imageDetail: {
-    // flexDirection: 'row',
-    // alignItems: 'center',
-  },
+  image: {width: 58, height: 58, borderRadius: 3},
 });

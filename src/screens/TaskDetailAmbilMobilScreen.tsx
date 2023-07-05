@@ -160,19 +160,24 @@ const TaskDetailAmbilMobilScreen = () => {
                   <Text style={{width: '60%'}}>{x.keterangan}</Text>
 
                   <View style={[rowCenter]}>
-                    <Text>{currencyFormat(parseInt(x.jumlah))}</Text>
-                    {denda.length !== i  ? <TouchableOpacity onPress={()=> {
-                      let array = deepClone(denda);
-                      // let index = 2;
-                      
-                      array.splice(i, 1);
-                      setDenda(array);
-                    }}>
-                      <Image
-                        source={ic_close}
-                        style={[iconCustomSize(8), {marginLeft: 5}]}
-                      />
-                    </TouchableOpacity>: <View style={{ width: 13}} />}
+                    <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
+                    {denda.length !== i ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          let array = deepClone(denda);
+                          // let index = 2;
+
+                          array.splice(i, 1);
+                          setDenda(array);
+                        }}>
+                        <Image
+                          source={ic_close}
+                          style={[iconCustomSize(8), {marginLeft: 5}]}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={{width: 13}} />
+                    )}
                   </View>
                 </View>
               </View>
@@ -284,11 +289,11 @@ const TaskDetailAmbilMobilScreen = () => {
               let _ = deepClone(denda);
               _.push(tempDenda);
               setDenda(_);
-              bottomSheetRef.current.close();
+              bottomSheetRef?.current?.close();
               setTempDenda({
                 keterangan: '',
-                jumlah: ''
-              })
+                jumlah: '',
+              });
             }}
           />
         </View>

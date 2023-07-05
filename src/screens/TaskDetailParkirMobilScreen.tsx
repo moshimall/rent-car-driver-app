@@ -20,6 +20,7 @@ import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/Up
 import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
+import { deepClone } from 'utils';
 
 const TaskDetailAmbilMobilScreen = () => {
   const navigation = useNavigation();

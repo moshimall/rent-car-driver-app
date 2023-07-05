@@ -177,6 +177,7 @@ const HomeScreen = () => {
 
           {SORT.map((x, i) => (
             <TouchableOpacity
+              key={`index_${i}`}
               onPress={() => setSorting(i)}
               style={[
                 rowCenter,
@@ -199,6 +200,7 @@ const HomeScreen = () => {
 
           {JOBDESK.map((x, i) => (
             <TouchableOpacity
+              key={`index_${i}`}
               onPress={() => {
                 let _ = deepClone(jobdesk);
                 let idx = jobdesk.findIndex(y => y === i);

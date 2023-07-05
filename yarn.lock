@@ -5228,7 +5228,7 @@ __metadata:
     react-native-device-info: ^10.3.0
     react-native-dotenv: ^3.4.7
     react-native-gesture-handler: ^2.9.0
-    react-native-image-picker: ^5.0.1
+    react-native-image-picker: ^5.6.0
     react-native-reanimated: ^2.14.4
     react-native-reanimated-carousel: ^3.3.2
     react-native-safe-area-context: ^4.5.0
@@ -8883,13 +8883,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-image-picker@npm:^5.0.1":
-  version: 5.3.1
-  resolution: "react-native-image-picker@npm:5.3.1"
+"react-native-image-picker@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "react-native-image-picker@npm:5.6.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 183485e9bab619938ab608fbca019c53c049e73bc798ea5ab4ab38d54ee2b7b9dc923b27f26ae070c9b4844af2b521fbd310e1c2f5aea99e851b7abbbcf7f166
+  checksum: 3797ec006c2d1f7b96c088c25d972113ef61f42e499f1bdbc553630acecab613d671a2c7d050029a7b01df144e83992ea2639b33255cfa487bf422943ded419b
   languageName: node
   linkType: hard
 
