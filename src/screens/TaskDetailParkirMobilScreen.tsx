@@ -51,17 +51,15 @@ const TaskDetailAmbilMobilScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{marginHorizontal: 20}}>
-        <UploadImageInput
+      <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
-            showToast({
-              title: 'Berhasil',
-              type: 'success',
-              message: 'Berhasil Upload Foto',
-            });
+            // showToast({
+            //   title: 'Berhasil',
+            //   type: 'success',
+            //   message: 'Berhasil Upload Foto',
+            // });
           }}
-          onDelete={() => {}}
-          selectedImageLabel=""
         />
 
         <Text style={[h4, styles.text, {marginVertical: 10}]}>
