@@ -29,6 +29,7 @@ export const ic_car = require('./ic_car.png');
 export const ic_checkblue = require('./ic_checkblue.png');
 export const ic_uncheckblue = require('./ic_uncheckblue.png');
 export const ic_camera = require('./ic_camera.png');
+export const ic_image_close = require('./ic_image_close.png');
 
 export const ic_profile = require('./ic_profile.png');
 export const ic_lock = require('./ic_lock.png');

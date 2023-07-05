@@ -83,14 +83,12 @@ const TaskDetailAmbilMobilScreen = () => {
         <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
-            showToast({
-              title: 'Berhasil',
-              type: 'success',
-              message: 'Berhasil Upload Foto',
-            });
+            // showToast({
+            //   title: 'Berhasil',
+            //   type: 'success',
+            //   message: 'Berhasil Upload Foto',
+            // });
           }}
-          onDelete={() => {}}
-          selectedImageLabel=""
         />
 
         <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>
@@ -145,7 +143,7 @@ const TaskDetailAmbilMobilScreen = () => {
                   <Text>{x.keterangan}</Text>
 
                   <View style={[rowCenter]}>
-                    <Text>{currencyFormat(parseInt(x.jumlah))}</Text>
+                    <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
                     {denda.length !== i  ? <TouchableOpacity onPress={()=> {
                       let array = deepClone(denda);
                       // let index = 2;
@@ -246,7 +244,7 @@ const TaskDetailAmbilMobilScreen = () => {
               let _ = deepClone(denda);
               _.push(tempDenda);
               setDenda(_);
-              bottomSheetRef.current.close();
+              bottomSheetRef?.current?.close();
               setTempDenda({
                 keterangan: '',
                 jumlah: ''
