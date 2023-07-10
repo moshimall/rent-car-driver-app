@@ -26,13 +26,13 @@ const SplashScreen = () => {
       });
   };
 
-  useFocusEffect(() => {
+  useFocusEffect(
     useCallback(() => {
       const bundleId = DeviceInfo.getBundleId();
       console.log(bundleId);
       checkCodepushUpdate();
-    }, []);
-  });
+    }, []),
+  );
 
   return (
     <View
