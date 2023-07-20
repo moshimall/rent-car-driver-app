@@ -2,7 +2,7 @@
 // import { toggleToast } from "redux/features/utils/utilsSlice";
 // import store from "redux/store";
 
-import { useHelperStore } from "store/helpersStore";
+import { useHelperStore } from "store/actions/helpersStore";
 
 interface IToast {
     title: string;

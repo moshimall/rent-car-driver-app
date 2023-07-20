@@ -1,7 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {SafeAreaView, View} from 'react-native';
-import {useHelperStore} from 'store/helpersStore';
+import {useHelperStore} from 'store/actions/helpersStore';
 import {IHelpers} from 'types/store.types';
 import MainStackNavigator from './MainStackNavigator';
 import Toast from 'components/Toast/Toast';

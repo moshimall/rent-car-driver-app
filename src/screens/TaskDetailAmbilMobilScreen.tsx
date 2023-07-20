@@ -97,12 +97,12 @@ const TaskDetailAmbilMobilScreen = () => {
               message: 'Berhasil Upload Foto',
             });
           }}
-          onDelete={(i) => {
-            console.log('x = ', i)
-            let _ = deepClone(bulkImage);
-            _.splice(i, 1);
-            setBulkImage(_);
-          }}
+          // onDelete={(i) => {
+          //   console.log('x = ', i)
+          //   let _ = deepClone(bulkImage);
+          //   _.splice(i, 1);
+          //   setBulkImage(_);
+          // }}
           bulkImage={bulkImage}
           setBulkImage={setBulkImage}
           selectedImageLabel=""

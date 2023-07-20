@@ -2698,6 +2698,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apisauce@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "apisauce@npm:3.0.1"
+  dependencies:
+    axios: ^1.4.0
+  checksum: fbf689442b17e1bfcbce9aa105b4ca971ff5b1a264ae30d2ca33df2d074d5ea4a498070fb2be0d14000bb5ff2858351cd67bc20621207b1061cc5fa7113cd6e2
+  languageName: node
+  linkType: hard
+
 "appcenter-file-upload-client@npm:0.1.0":
   version: 0.1.0
   resolution: "appcenter-file-upload-client@npm:0.1.0"
@@ -2917,6 +2926,17 @@ __metadata:
   version: 1.0.5
   resolution: "available-typed-arrays@npm:1.0.5"
   checksum: 20eb47b3cefd7db027b9bbb993c658abd36d4edd3fe1060e83699a03ee275b0c9b216cc076ff3f2db29073225fb70e7613987af14269ac1fe2a19803ccc97f1a
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "axios@npm:1.4.0"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 7fb6a4313bae7f45e89d62c70a800913c303df653f19eafec88e56cea2e3821066b8409bc68be1930ecca80e861c52aa787659df0ffec6ad4d451c7816b9386b
   languageName: node
   linkType: hard
 
@@ -5002,6 +5022,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.15.0":
+  version: 1.15.2
+  resolution: "follow-redirects@npm:1.15.2"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
+  languageName: node
+  linkType: hard
+
 "for-each@npm:^0.3.3":
   version: 0.3.3
   resolution: "for-each@npm:0.3.3"
@@ -5340,6 +5370,8 @@ __metadata:
     "@types/react-test-renderer": ^18.0.0
     "@typescript-eslint/eslint-plugin": ^5.37.0
     "@typescript-eslint/parser": ^5.37.0
+    apisauce: ^3.0.1
+    axios: ^1.4.0
     babel-jest: ^26.6.3
     babel-plugin-module-resolver: ^5.0.0
     eslint: ^7.32.0
@@ -8992,7 +9024,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proxy-from-env@npm:^1.0.0":
+"proxy-from-env@npm:^1.0.0, proxy-from-env@npm:^1.1.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4

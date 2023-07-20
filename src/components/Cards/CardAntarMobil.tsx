@@ -7,7 +7,7 @@ import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
 
-const CardAntarMobil = () => {
+const CardAntarMobil = ({item}: any) => {
   const navigation = useNavigation();
   return (
     <View style={[styles.cardWrapper]}>
@@ -23,7 +23,7 @@ const CardAntarMobil = () => {
       </View>
       <View style={styles.lineHorizontal} />
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{fontWeight: '500'}}>0129389283</Text>
+        Order ID: <Text style={{fontWeight: '500'}}>{item?.order?.order_key}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -31,7 +31,7 @@ const CardAntarMobil = () => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>Cafe Bali</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_delivery_location}</Text>
           </View>
         </View>
 
@@ -41,7 +41,7 @@ const CardAntarMobil = () => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengambilan</Text>
-            <Text style={styles.textLocation}>Cafe Bali</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_return_location}</Text>
           </View>
         </View>
       </View>
@@ -52,7 +52,7 @@ const CardAntarMobil = () => {
           <Image source={ic_calendar} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Mulai Sewa</Text>
-            <Text style={styles.textLocation}>01 Juli 2022 | 09:00 AM</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.start_booking_date} |  {item?.order?.order_detail?.start_booking_time}</Text>
           </View>
         </View>
 
@@ -62,7 +62,7 @@ const CardAntarMobil = () => {
           <Image source={ic_calendar} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
-            <Text style={styles.textLocation}>03 Juli 2022 | 09:00 AM</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.end_booking_date} | {item?.order?.order_detail?.end_booking_time}</Text>
           </View>
         </View>
       </View>

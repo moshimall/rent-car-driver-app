@@ -30,7 +30,7 @@ import {
 } from 'assets/icons';
 import {deepClone, theme} from 'utils';
 import Button from 'components/Button';
-import {useHelperStore} from 'store/helpersStore';
+import {useHelperStore} from 'store/actions/helpersStore';
 import {IHelpers} from 'types/store.types';
 import {showToast} from 'utils/Toast';
 import {h1, h3} from 'utils/styles';
@@ -43,18 +43,33 @@ import CardAntarMobil from 'components/Cards/CardAntarMobil';
 import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
 import CardParkirMobil from 'components/Cards/CardParkirMobil';
 import CustomBackdrop from 'components/CustomBackdrop';
+import {DataItemTask, Pagination} from 'types/tasks.types';
+import {getTasks} from 'store/effects/taskStore';
+import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
   const [selected, setSelected] = useState<number>(0);
   const navigation = useNavigation();
   const [changebg, setChangebg] = useState(true);
+  const [tasks, setTasks] = useState<DataItemTask[]>([]);
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<Pagination>({
+    limit: 10,
+    page: 1,
+    // next_page: 1,
+    // prev_page: 1,
+    // total: 2,
+    // total_page: 1,
+  });
+
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
 
-  useEffect(() => {
-    console.log('lerprs = ', helpers.isShowToast);
-  }, [helpers.isShowToast]);
+  // useEffect(() => {
+  //   console.log('lerprs = ', helpers.isShowToast);
+  // }, [helpers.isShowToast]);
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -70,6 +85,45 @@ const HomeScreen = () => {
       setChangebg(false);
     }
   }, []);
+
+  useEffect(() => {
+    _getTasks()
+    return () => {};
+  }, []);
+
+  const _getTasks = async () => {
+    setLoader(true);
+    let res = await getTasks({
+      courier_id: 1,
+      limit: pagination.limit,
+      page: pagination.page,
+      task_status: 'DELIVERY_PROCESS',
+    });
+    console.log('res = ', res);
+    setTasks(res?.data);
+    setPagination(res?.pagination);
+    setLoader(false);
+  };
+
+  const handleMore = () => {
+    if (
+      pagination.page < (pagination?.total_page || 0) &&
+      !loader
+    ) {
+      setRefresh(true);
+      _getTasks();
+      setRefresh(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    setRefresh(true);
+    setPagination({
+      limit: 10,
+      page: 1
+    });
+    setRefresh(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -106,7 +160,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={{margin: 16}}>
-        <FlatList
+        {/* <FlatList
           // data={[]}
           data={['Antar', 'Ambil', 'Parkir']}
           renderItem={({item}) => (
@@ -123,6 +177,20 @@ const HomeScreen = () => {
           )}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={() => <View style={{marginBottom: 120}} />}
+        /> */}
+        <FlatList
+          // contentContainerStyle={styles.listContainer}
+          data={[...tasks]}
+          renderItem={({item}) => <CardAntarMobil item={item} />}
+          keyExtractor={(x, i) => i.toString()}
+          ListFooterComponent={<LoadingNextPage loading={loader} />}
+          // onEndReached={() => {
+          //   return handleMore();
+          // }}
+          refreshing={refresh}
+          onRefresh={() => {
+            return handleRefresh();
+          }}
         />
       </View>
       {/* <BottomSheet
@@ -247,7 +315,6 @@ const SORT = ['Paling Baru', 'Paling Lama'];
 const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi'];
 
 export default HomeScreen;
-
 
 const styles = StyleSheet.create({
   textName: {
