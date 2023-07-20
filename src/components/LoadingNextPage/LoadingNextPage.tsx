@@ -12,7 +12,7 @@ const LoadingNextPage = ({loading}: {loading: boolean}) => {
     );
   }
 
-  return null;
+  return <View style={{marginBottom: 100}} />;
 };
 
 export default LoadingNextPage;
@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   loading: {fontSize: 16, color: theme.colors.navy, marginBottom: 10},
 });

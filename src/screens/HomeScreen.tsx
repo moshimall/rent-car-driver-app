@@ -94,10 +94,10 @@ const HomeScreen = () => {
   const _getTasks = async () => {
     setLoader(true);
     let res = await getTasks({
-      courier_id: 1,
+      // courier_id: 1,
       limit: pagination.limit,
       page: pagination.page,
-      task_status: 'DELIVERY_PROCESS',
+      // task_status: '',
     });
     console.log('res = ', res);
     setTasks(res?.data);
