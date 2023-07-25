@@ -26,7 +26,7 @@ import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 import {deepClone, theme} from 'utils';
-import BottomSheet, { BottomSheetModal } from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import CustomTextInput from 'components/TextInput';
 import {currencyFormat} from 'utils/currencyFormat';
 import CustomBackdrop from 'components/CustomBackdrop';
@@ -82,14 +82,14 @@ const TaskDetailAmbilMobilScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{marginHorizontal: 20}}>
-          <UploadImageInput
+        <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
             console.log('ress = ', res);
             let _: any = [];
-            res?.map((x)=> {
-              _.push(x.uri)
-            })
+            res?.map(x => {
+              _.push(x.uri);
+            });
             setBulkImage(_);
             showToast({
               title: 'Berhasil',
@@ -154,9 +154,21 @@ const TaskDetailAmbilMobilScreen = () => {
                 }, 0),
               },
             ].map((x, i) => (
-              <View>
-                {(denda.length) === i && <View style={{borderBottomWidth: 1, borderBottomColor: '#A8A8A8', marginBottom: 10}} />}
-                <View style={[rowCenter, {justifyContent: 'space-between', marginBottom: 10}]}>
+              <View key={`index_${i}`}>
+                {denda.length === i && (
+                  <View
+                    style={{
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#A8A8A8',
+                      marginBottom: 10,
+                    }}
+                  />
+                )}
+                <View
+                  style={[
+                    rowCenter,
+                    {justifyContent: 'space-between', marginBottom: 10},
+                  ]}>
                   <Text style={{width: '60%'}}>{x.keterangan}</Text>
 
                   <View style={[rowCenter]}>
