@@ -2,14 +2,12 @@ import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
 import MyTaskSection from 'components/TaskScreenComponent/MyTaskSection/MyTaskSection';
 import React, {useEffect, useState} from 'react';
-import TopTabs from 'components/TaskScreenComponent/TopTabs/TopTabs';
-import {h1, h2, h4} from 'utils/styles';
+import {h1} from 'utils/styles';
 import {ic_arrow_left_white} from 'assets/icons';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {WINDOW_WIDTH, rowCenter} from 'utils/mixins';
-import {useNavigation} from '@react-navigation/native';
-import FinishedTaskSection from 'components/TaskScreenComponent/FinishedTaskSection/FinishedTaskSection';
+import {rowCenter} from 'utils/mixins';
 import {theme} from 'utils';
+import {useNavigation} from '@react-navigation/native';
 
 type TabState = 'Tugas Saya' | 'Tugas Selesai';
 
@@ -43,18 +41,15 @@ const TaskScreen = () => {
     <View style={styles.container}>
       {/* <TopTabs onChangeTab={setTabState} /> */}
 
-      
-
       {<MyTaskSection />}
     </View>
   );
 };
 
-export default hoc(TaskScreen);
+export default hoc(TaskScreen, theme.colors.navy, false, 'light-content');
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
-  
 });

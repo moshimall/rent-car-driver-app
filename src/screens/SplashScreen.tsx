@@ -4,21 +4,23 @@ import React, {useCallback} from 'react';
 import {ic_main_icon2} from 'assets/icons';
 import {iconCustomSize} from 'utils/mixins';
 import {Image, StyleSheet, View} from 'react-native';
+import {RootStackParamList} from 'types/navigator';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
 
 const SplashScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const checkCodepushUpdate = () => {
     CodePush.checkForUpdate()
       .then(async update => {
         if (update) {
-          navigation.navigate('CodepushUpdateManager', {
+          navigation.replace('CodepushUpdateManager', {
             failedInstall: update.failedInstall,
           });
         } else {
-          navigation.navigate('Login');
+          navigation.replace('Login');
         }
       })
       .catch(err => {

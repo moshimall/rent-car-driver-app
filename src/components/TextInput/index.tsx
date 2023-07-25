@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
   input: {
     width: '95%',
     margin: 0,
-    padding: 0
+    padding: 0,
+    color: theme.colors.black,
   },
   eye: {
     height: 20,
