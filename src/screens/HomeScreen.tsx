@@ -180,7 +180,7 @@ const HomeScreen = () => {
         /> */}
         <FlatList
           // contentContainerStyle={styles.listContainer}
-          data={[...tasks]}
+          data={[...(tasks || [])]}
           renderItem={({item}) => <CardAntarMobil item={item} />}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
