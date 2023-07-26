@@ -94,10 +94,10 @@ const HomeScreen = () => {
   const _getTasks = async () => {
     setLoader(true);
     let res = await getTasks({
-      // courier_id: 1,
+      courier_id: 1,
       limit: pagination.limit,
       page: pagination.page,
-      // task_status: '',
+      task_status: 'PICKED',
     });
     console.log('res = ', res);
     setTasks(res?.data);
@@ -180,7 +180,7 @@ const HomeScreen = () => {
         /> */}
         <FlatList
           // contentContainerStyle={styles.listContainer}
-          data={[...tasks]}
+          data={tasks?.length > 0 ? tasks : []}
           renderItem={({item}) => <CardAntarMobil item={item} />}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
