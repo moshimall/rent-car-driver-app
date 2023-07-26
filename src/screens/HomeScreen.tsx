@@ -134,8 +134,22 @@ const HomeScreen = () => {
       </View>
       <View style={{margin: 16}}>
         <FlatList
-          data={[...(tasks || [])]}
-          renderItem={({item}) => <CardAntarMobil item={item} />}
+          // data={[...(tasks || [])]}
+          data={[...Array(5)]}
+          // renderItem={({item}) => <CardAntarMobil item={item} />}
+          renderItem={({item}) => <CardAntarMobil item={{
+            order: {
+              order_key: '192ASD9802',
+              order_detail: {
+                rental_delivery_location: 'BALI',
+                rental_return_location: 'BALI',
+                start_booking_date: '20 Juli 2023',
+                start_booking_time: '02:03',
+                end_booking_date: '22 Juli 2023',
+                end_booking_time: '02:03'
+              }
+            }
+          }} />}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
           refreshing={refresh}
