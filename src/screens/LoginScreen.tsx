@@ -1,27 +1,22 @@
+import appBar from 'components/AppBar/AppBar';
+import Button from 'components/Button';
+import CustomTextInput from 'components/TextInput';
+import hoc from 'components/hoc';
+import React, {FC, useEffect, useState} from 'react';
+import {FONT_SIZE_12, FONT_SIZE_20} from 'utils/typography';
+import {h1, h2, h3} from 'utils/styles';
+import {ic_main_icon2} from 'assets/icons';
+import {iconCustomSize} from 'utils/mixins';
+import {theme} from 'utils';
+import {useNavigation} from '@react-navigation/native';
 import {
-  Alert,
   Image,
-  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC, useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import appBar from 'components/AppBar/AppBar';
-import hoc from 'components/hoc';
-import {container, iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {h1, h2, h3} from 'utils/styles';
-import {FONT_SIZE_12, FONT_SIZE_20} from 'utils/typography';
-import {theme} from 'utils';
-import CustomTextInput from 'components/TextInput';
-import Button from 'components/Button';
-
-import {showToast} from 'utils/Toast';
-import { ic_main_icon2 } from 'assets/icons';
-// import {toggleLoader} from 'redux/features/loader/loaderSlice';
 
 interface IErrorMessage {
   error_email: string;
@@ -46,12 +41,14 @@ const LoginScreen: FC = () => {
         // title: 'Home'
         trailing: (
           <View style={{marginRight: 20, marginTop: 20}}>
-            <Image source={ic_main_icon2} style={iconCustomSize(100)} resizeMode='contain' />
+            <Image
+              source={ic_main_icon2}
+              style={iconCustomSize(100)}
+              resizeMode="contain"
+            />
           </View>
         ),
-        leading:(
-          <View/>
-        )
+        leading: <View />,
       }),
     );
   }, [navigation]);
@@ -78,7 +75,6 @@ const LoginScreen: FC = () => {
         //   }, 1500);
         // }
       } catch (error) {
-        
         // showToast({
         //   message: t('global.alert.error_occurred'),
         //   title: t('global.alert.warning'),
@@ -92,7 +88,6 @@ const LoginScreen: FC = () => {
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardDismissMode="interactive">
-        
       <Text style={[h1, styles.textHeader]}>Masuk</Text>
       <Text style={[h3, styles.textDesc]}>
         Masukan Email untuk login ke Get & Ride
@@ -123,10 +118,11 @@ const LoginScreen: FC = () => {
           value={form.password}
           errorMessage={formError.error_password}
         />
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-          <Text style={[h2, styles.textFPass]}>
-            {'Lupa Password?'}?
-          </Text>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.navigate('ForgotPassword')
+          }}>
+          <Text style={[h2, styles.textFPass]}>{'Lupa Password?'}?</Text>
         </TouchableOpacity>
       </View>
       <Button
@@ -135,7 +131,6 @@ const LoginScreen: FC = () => {
         styleWrapper={{marginTop: 40}}
         onPress={methods.handleLogin}
       />
-      
     </ScrollView>
   );
 };
@@ -151,7 +146,7 @@ const styles = StyleSheet.create({
   textHeader: {
     fontSize: FONT_SIZE_20,
     color: theme.colors.navy,
-    marginTop: 100
+    marginTop: 100,
   },
   textDesc: {
     fontSize: FONT_SIZE_12,

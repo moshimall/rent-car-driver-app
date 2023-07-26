@@ -55,6 +55,7 @@ const MainTab: React.FC = () => {
         name="Home"
         component={HomeScreen}
         options={{
+          unmountOnBlur: true,
           tabBarLabel: 'Beranda',
           headerStyle: {
             backgroundColor: theme.colors.navy,

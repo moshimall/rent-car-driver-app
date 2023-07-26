@@ -1,13 +1,14 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
+import {boxShadow, iconSize, rowCenter, WINDOW_HEIGHT} from 'utils/mixins';
+import {ic_check, ic_close, ic_error, ic_warning} from 'assets/icons';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {theme} from 'utils';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import {boxShadow, iconSize, rowCenter, WINDOW_HEIGHT} from 'utils/mixins';
-import {ic_check, ic_close, ic_error, ic_warning} from 'assets/icons';
 
 type IType = 'success' | 'warning' | 'error';
 interface IDataTiast {
@@ -58,18 +59,18 @@ const Toast = ({
   });
 
   useEffect(() => {
-    if(!message) return;
+    if (!message) return;
     const option = {
       duration: 700,
     };
     topValue.value = withSpring(50);
 
     setTimeout(() => {
-        topValue.value = withTiming(-WINDOW_HEIGHT, option);
+      topValue.value = withTiming(-WINDOW_HEIGHT, option);
     }, 5000);
   }, [show]);
 
-  const selectedType = DATA_TOAST.find(x=> x.id === type);
+  const selectedType = DATA_TOAST.find(x => x.id === type);
 
   return (
     <Animated.View
@@ -78,12 +79,14 @@ const Toast = ({
         boxShadow('#000', {height: 1, width: 2}, 3.27, 0.24),
         rView,
         {
-            borderColor: selectedType?.primary_color,
-            backgroundColor: selectedType?.secondary_color
-        }
+          borderColor: selectedType?.primary_color,
+          backgroundColor: selectedType?.secondary_color,
+        },
       ]}>
       <TouchableOpacity
-        onPress={() => (topValue.value = withTiming(-WINDOW_HEIGHT, {duration: 500}))}
+        onPress={() =>
+          (topValue.value = withTiming(-WINDOW_HEIGHT, {duration: 500}))
+        }
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -91,7 +94,7 @@ const Toast = ({
         }}>
         <View style={rowCenter}>
           <Image source={selectedType?.icon} style={iconSize} />
-          <View style={{marginLeft: 10,width: '85%'}}>
+          <View style={{marginLeft: 10, width: '85%'}}>
             <Text style={styles.textTitle}>{title}</Text>
             <Text style={styles.textMessage}>{message}</Text>
           </View>
@@ -128,10 +131,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
-  textMessage : {
+  textMessage: {
     fontSize: 12,
     fontWeight: '500',
     marginTop: 2,
-    
-  }
+    color: theme.colors.black,
+  },
 });

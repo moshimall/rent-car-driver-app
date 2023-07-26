@@ -1,5 +1,19 @@
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
+import Button from 'components/Button';
+import CardAntarMobil from 'components/Cards/CardAntarMobil';
+import CustomBackdrop from 'components/CustomBackdrop';
+import hoc from 'components/hoc';
+import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {DataItemTask, Pagination} from 'types/tasks.types';
+import {deepClone, theme} from 'utils';
+import {getTasks} from 'store/effects/taskStore';
+import {h1} from 'utils/styles';
+import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
+import {IHelpers} from 'types/store.types';
+import {useHelperStore} from 'store/actions/helpersStore';
+import {useNavigation} from '@react-navigation/native';
 import {
-  Alert,
   FlatList,
   Image,
   StyleSheet,
@@ -7,45 +21,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
-  WINDOW_HEIGHT,
-  boxShadow,
-  container,
-  iconCustomSize,
-  iconSize,
-  rowCenter,
-} from 'utils/mixins';
-import {
-  ic_calendar,
-  ic_car,
-  ic_check,
   ic_checkblue,
   ic_filter,
   ic_main_icon,
-  ic_pinpoin,
   ic_radio_button,
   ic_selected_radio_button,
   ic_uncheckblue,
 } from 'assets/icons';
-import {deepClone, theme} from 'utils';
-import Button from 'components/Button';
-import {useHelperStore} from 'store/actions/helpersStore';
-import {IHelpers} from 'types/store.types';
-import {showToast} from 'utils/Toast';
-import {h1, h3} from 'utils/styles';
-import {useNavigation} from '@react-navigation/native';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetModal,
-} from '@gorhom/bottom-sheet';
-import CardAntarMobil from 'components/Cards/CardAntarMobil';
-import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
-import CardParkirMobil from 'components/Cards/CardParkirMobil';
-import CustomBackdrop from 'components/CustomBackdrop';
-import {DataItemTask, Pagination} from 'types/tasks.types';
-import {getTasks} from 'store/effects/taskStore';
-import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -58,18 +41,11 @@ const HomeScreen = () => {
   const [pagination, setPagination] = useState<Pagination>({
     limit: 10,
     page: 1,
-    // next_page: 1,
-    // prev_page: 1,
-    // total: 2,
-    // total_page: 1,
   });
 
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
 
-  // useEffect(() => {
-  //   console.log('lerprs = ', helpers.isShowToast);
-  // }, [helpers.isShowToast]);
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -87,7 +63,7 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
-    _getTasks()
+    _getTasks();
     return () => {};
   }, []);
 
@@ -106,10 +82,7 @@ const HomeScreen = () => {
   };
 
   const handleMore = () => {
-    if (
-      pagination.page < (pagination?.total_page || 0) &&
-      !loader
-    ) {
+    if (pagination.page < (pagination?.total_page || 0) && !loader) {
       setRefresh(true);
       _getTasks();
       setRefresh(false);
@@ -120,7 +93,7 @@ const HomeScreen = () => {
     setRefresh(true);
     setPagination({
       limit: 10,
-      page: 1
+      page: 1,
     });
     setRefresh(false);
   };
@@ -160,60 +133,22 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
       <View style={{margin: 16}}>
-        {/* <FlatList
-          // data={[]}
-          data={['Antar', 'Ambil', 'Parkir']}
-          renderItem={({item}) => (
-            <>
-              {item === 'Antar' && <CardAntarMobil />}
-              {item === 'Ambil' && <CardAmbilMobil />}
-              {item === 'Parkir' && <CardParkirMobil />}
-            </>
-          )}
-          ListEmptyComponent={() => (
-            <Text style={{alignSelf: 'center', marginTop: '50%'}}>
-              Belum ada tugas
-            </Text>
-          )}
-          keyExtractor={(x, i) => i.toString()}
-          ListFooterComponent={() => <View style={{marginBottom: 120}} />}
-        /> */}
         <FlatList
-          // contentContainerStyle={styles.listContainer}
-          data={tasks?.length > 0 ? tasks : []}
+          data={[...(tasks || [])]}
           renderItem={({item}) => <CardAntarMobil item={item} />}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
-          // onEndReached={() => {
-          //   return handleMore();
-          // }}
           refreshing={refresh}
           onRefresh={() => {
             return handleRefresh();
           }}
         />
       </View>
-      {/* <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        enablePanDownToClose={true}
-        containerStyle={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        }}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}> */}
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
-        containerStyle={
-          {
-            // backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          }
-        }
-        // in
         index={-1}
-        // backgroundStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', }}
         enablePanDownToClose={true}
         backdropComponent={backdropProps => (
           <CustomBackdrop
@@ -314,7 +249,7 @@ const HomeScreen = () => {
 const SORT = ['Paling Baru', 'Paling Lama'];
 const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi'];
 
-export default HomeScreen;
+export default hoc(HomeScreen, theme.colors.white, false, 'dark-content');
 
 const styles = StyleSheet.create({
   textName: {
@@ -337,7 +272,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: theme.colors.navy,
     borderBottomWidth: 2,
-    // borderRadius: 20,
   },
   activeText: {
     fontSize: 12,
@@ -352,7 +286,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: theme.colors.white,
     borderBottomWidth: 2,
-    // borderRadius: 20,
   },
   inactiveText: {
     fontSize: 12,
@@ -381,7 +314,6 @@ const styles = StyleSheet.create({
     borderStyle: 'dotted',
   },
   lineHorizontal: {
-    // height: 1,
     width: '95%',
     alignSelf: 'center',
     marginVertical: 30,
@@ -419,7 +351,5 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     margin: 20,
-
-    // alignItems: 'center',
   },
 });

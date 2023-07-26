@@ -1,10 +1,10 @@
-import {useNavigation} from '@react-navigation/native';
-import {ic_car, ic_check, ic_pinpoin} from 'assets/icons';
 import Button from 'components/Button';
-import {View, Text, Image, StyleSheet} from 'react-native';
-import {theme} from 'utils';
-import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {h2} from 'utils/styles';
+import {ic_car, ic_check, ic_pinpoin} from 'assets/icons';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {theme} from 'utils';
+import {useNavigation} from '@react-navigation/native';
 
 const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
   const navigation = useNavigation();
@@ -17,12 +17,16 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
           {justifyContent: 'space-between', alignItems: 'flex-start'},
         ]}>
         <View>
-          <Image
-            source={ic_car}
-            style={iconCustomSize(20)}
-            resizeMode="stretch"
-          />
-          <Text>03 Juli 2022 09:08 AM</Text>
+          <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+            <Image
+              source={ic_car}
+              style={iconCustomSize(20)}
+              resizeMode="stretch"
+            />
+            <Text style={styles.title}>Antar Mobil</Text>
+          </View>
+
+          <Text style={styles.time}>03 Juli 2022 09:08 AM</Text>
         </View>
 
         <View style={[rowCenter, styles.taskDoneWrapper]}>
@@ -91,7 +95,7 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
         _theme="navy"
         title="Detail Tugas"
         onPress={() => {
-          navigation.navigate('TaskDetail');
+          navigation.navigate('TaskDetailAntarMobil');
         }}
         styleWrapper={{
           width: '95%',
@@ -121,6 +125,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 5,
   },
+  title: {
+    color: theme.colors.navy,
+    fontSize: 12,
+    fontFamily: 'Inter',
+    fontWeight: '700',
+    marginLeft: 15,
+  },
+  time: {
+    color: '#A8A8A8',
+    fontSize: 12,
+    fontFamily: 'Inter',
+    fontWeight: '400',
+  },
   textOrderId: {fontSize: 12, fontWeight: 'bold'},
   textTitle: {
     fontSize: 12,
@@ -134,21 +151,21 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   lineVertical: {
-    height: 25,
+    height: 21,
     width: 1,
     marginLeft: 20,
-    marginVertical: 5,
+    marginVertical: 7,
     borderColor: '#D9D9D9',
     borderWidth: 1,
-    borderStyle: 'dotted',
+    borderStyle: 'dashed',
   },
   lineHorizontal: {
     width: '95%',
     alignSelf: 'center',
-    marginVertical: 30,
+    marginVertical: 20,
     borderColor: '#D9D9D9',
     borderWidth: 1,
-    borderStyle: 'dotted',
+    borderStyle: 'dashed',
   },
   textComment: {
     color: '#A8A8A8',
