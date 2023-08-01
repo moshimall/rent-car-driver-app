@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: '400',
   },
-  textOrderId: {fontSize: 12, fontWeight: 'bold'},
+  textOrderId: {fontSize: 12, fontWeight: 'bold', color: theme.colors.black},
   textTitle: {
     fontSize: 12,
     fontWeight: '400',

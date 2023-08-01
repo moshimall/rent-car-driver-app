@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     color: '#B5B5B5',
     fontWeight: '500',
   },
-  textOrderId: {fontSize: 12, fontWeight: 'bold'},
+  textOrderId: {fontSize: 12, fontWeight: 'bold', color: theme.colors.black},
   textTitle: {
     fontSize: 12,
     fontWeight: '400',

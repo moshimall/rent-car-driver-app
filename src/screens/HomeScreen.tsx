@@ -137,19 +137,23 @@ const HomeScreen = () => {
           // data={[...(tasks || [])]}
           data={[...Array(5)]}
           // renderItem={({item}) => <CardAntarMobil item={item} />}
-          renderItem={({item}) => <CardAntarMobil item={{
-            order: {
-              order_key: '192ASD9802',
-              order_detail: {
-                rental_delivery_location: 'BALI',
-                rental_return_location: 'BALI',
-                start_booking_date: '20 Juli 2023',
-                start_booking_time: '02:03',
-                end_booking_date: '22 Juli 2023',
-                end_booking_time: '02:03'
-              }
-            }
-          }} />}
+          renderItem={({item}) => (
+            <CardAntarMobil
+              item={{
+                order: {
+                  order_key: '192ASD9802',
+                  order_detail: {
+                    rental_delivery_location: 'BALI',
+                    rental_return_location: 'BALI',
+                    start_booking_date: '20 Juli 2023',
+                    start_booking_time: '02:03',
+                    end_booking_date: '22 Juli 2023',
+                    end_booking_time: '02:03',
+                  },
+                },
+              }}
+            />
+          )}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
           refreshing={refresh}
@@ -200,7 +204,7 @@ const HomeScreen = () => {
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
-              <Text>{x}</Text>
+              <Text style={styles.text}>{x}</Text>
 
               <Image
                 source={
@@ -233,7 +237,7 @@ const HomeScreen = () => {
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
-              <Text>{x}</Text>
+              <Text style={styles.text}>{x}</Text>
 
               <Image
                 source={
@@ -365,5 +369,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     margin: 20,
+  },
+  text: {
+    fontFamily: 'Inter',
+    fontSize: 12,
+    color: theme.colors.black,
   },
 });
