@@ -1,6 +1,7 @@
 import {ic_pinpoin} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {theme} from 'utils';
 
 const FinishedTaskCard: React.FC = () => {
   return (
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 5,
   },
-  textOrderId: {fontSize: 12, fontWeight: 'bold'},
+  textOrderId: {fontSize: 12, fontWeight: 'bold', color: theme.colors.black},
   textTitle: {
     fontSize: 12,
     fontWeight: '400',
@@ -71,4 +72,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'dotted',
   },
-})
+});

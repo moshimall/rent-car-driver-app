@@ -24,7 +24,8 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
       </View>
       <View style={styles.lineHorizontal} />
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{fontWeight: '500'}}>{item?.order?.order_key}</Text>
+        Order ID:{' '}
+        <Text style={{fontWeight: '500'}}>{item?.order?.order_key}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -32,7 +33,9 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_delivery_location}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.rental_delivery_location}
+            </Text>
           </View>
         </View>
 
@@ -42,7 +45,9 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengambilan</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_return_location}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.rental_return_location}
+            </Text>
           </View>
         </View>
       </View>
@@ -53,7 +58,10 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_calendar} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Mulai Sewa</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.start_booking_date} |  {item?.order?.order_detail?.start_booking_time}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.start_booking_date} |{' '}
+              {item?.order?.order_detail?.start_booking_time}
+            </Text>
           </View>
         </View>
 
@@ -63,7 +71,10 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_calendar} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.end_booking_date} | {item?.order?.order_detail?.end_booking_time}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.end_booking_date} |{' '}
+              {item?.order?.order_detail?.end_booking_time}
+            </Text>
           </View>
         </View>
       </View>
@@ -131,7 +142,7 @@ const styles = StyleSheet.create({
     color: '#B5B5B5',
     fontWeight: '500',
   },
-  textOrderId: {fontSize: 12, fontWeight: 'bold'},
+  textOrderId: {fontSize: 12, fontWeight: 'bold', color: theme.colors.black},
   textTitle: {
     fontSize: 12,
     fontWeight: '400',

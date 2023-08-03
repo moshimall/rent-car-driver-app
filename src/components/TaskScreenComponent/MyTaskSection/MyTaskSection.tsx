@@ -35,7 +35,7 @@ const MyTaskSection: React.FC = () => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['50%', '80%'], []);
+  const snapPoints = useMemo(() => ['60%', '80%'], []);
 
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
@@ -117,7 +117,7 @@ const MyTaskSection: React.FC = () => {
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
-              <Text>{x}</Text>
+              <Text style={styles.text}>{x}</Text>
 
               <Image
                 source={
@@ -150,7 +150,7 @@ const MyTaskSection: React.FC = () => {
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
-              <Text>{x}</Text>
+              <Text style={styles.text}>{x}</Text>
 
               <Image
                 source={
@@ -200,9 +200,13 @@ const styles = StyleSheet.create({
   },
   activeText: {color: '#fff', fontSize: 13, fontWeight: '700'},
   inactiveText: {color: theme.colors.navy, fontSize: 13, fontWeight: '500'},
+  text: {
+    fontFamily: 'Inter',
+    fontSize: 12,
+    color: theme.colors.black,
+  },
   contentContainer: {
     flex: 1,
     margin: 20,
-    // alignItems: 'center',
   },
 });

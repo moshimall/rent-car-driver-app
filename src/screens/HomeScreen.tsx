@@ -247,7 +247,7 @@ const HomeScreen = () => {
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
-              <Text>{x}</Text>
+              <Text style={styles.text}>{x}</Text>
 
               <Image
                 source={
@@ -280,7 +280,7 @@ const HomeScreen = () => {
                 rowCenter,
                 {justifyContent: 'space-between', marginBottom: 10},
               ]}>
-              <Text>{x}</Text>
+              <Text style={styles.text}>{x}</Text>
 
               <Image
                 source={
@@ -413,5 +413,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     margin: 20,
+  },
+  text: {
+    fontFamily: 'Inter',
+    fontSize: 12,
+    color: theme.colors.black,
   },
 });
