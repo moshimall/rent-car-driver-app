@@ -14,15 +14,27 @@ import {
   View,
 } from 'react-native';
 import {WINDOW_WIDTH, iconSize, rowCenter} from 'utils/mixins';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
 import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
 import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 import { deepClone } from 'utils';
+import { RootStackParamList } from 'types/navigator';
+import moment from 'moment';
+import { currencyFormat } from 'utils/currencyFormat';
+
+
+type ScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'TaskDetailAntarMobil'
+>;
+
 
 const TaskDetailAntarMobil = () => {
+  const {item} = useRoute<ScreenRouteProp>().params;
+
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
 
@@ -55,12 +67,12 @@ const TaskDetailAntarMobil = () => {
       <View style={styles.descriptionContainer}>
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Nama</Text>
-          <Text style={styles.boldText}>Kevin Sanjaya</Text>
+          <Text style={styles.boldText}>{item?.order?.user_name}</Text>
         </View>
 
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>No Handphone</Text>
-          <Text style={styles.boldText}>081234567890</Text>
+          <Text style={styles.boldText}>{item?.order?.wa_number}</Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -68,12 +80,12 @@ const TaskDetailAntarMobil = () => {
       <View style={styles.descriptionContainer}>
         <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>No. Order</Text>
-          <Text style={styles.boldText}>12N34567</Text>
+          <Text style={styles.boldText}>{item?.order?.order_key}</Text>
         </View>
 
         <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>Plat Nomor</Text>
-          <Text style={styles.boldText}>DK 12345 LA</Text>
+          <Text style={styles.boldText}>{item?.order?.order_detail?.vehicle_id}</Text>
         </View>
 
         <View style={{flexBasis: '33%'}}>
@@ -87,7 +99,7 @@ const TaskDetailAntarMobil = () => {
         <View style={{}}>
           <View>
             <Text style={[h4, styles.text]}>Mobil</Text>
-            <Text style={styles.boldText}>Suzuki Ertiga</Text>
+            <Text style={styles.boldText}>{item?.order?.order_detail?.vehicle?.name}</Text>
           </View>
           <View style={{marginBottom: 10}} />
           <CustomCarousel
@@ -124,12 +136,12 @@ const TaskDetailAntarMobil = () => {
       <View style={styles.descriptionContainer}>
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Total Pembayaran</Text>
-          <Text style={styles.boldText}>IDR 607.000</Text>
+          <Text style={styles.boldText}>{currencyFormat(item?.order?.total_payment)}</Text>
         </View>
 
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Status Pembayaran</Text>
-          <Text style={styles.boldText}>Success</Text>
+          <Text style={styles.boldText}>{item?.order?.order_status}</Text>
         </View>
       </View>
       <View style={styles.solidLine} />
@@ -139,7 +151,16 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>Cafe Bali</Text>
+          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_delivery_location}</Text>
+        </View>
+      </View>
+
+      <View style={{padding: '5%', paddingTop: 10}}>
+        <Text style={[h4, styles.text]}>Detail Lokasi</Text>
+        <View
+          style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+          <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
+          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_delivery_location_detail}</Text>
         </View>
       </View>
       <View style={[styles.solidLine, {marginHorizontal: '5%'}]} />
@@ -149,7 +170,15 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>Cafe Bali</Text>
+          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_return_location}</Text>
+        </View>
+      </View>
+      <View style={{padding: '5%', paddingTop: 10}}>
+        <Text style={[h4, styles.text]}>Detail Lokasi</Text>
+        <View
+          style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
+          <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
+          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_return_location_detail}</Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -157,14 +186,14 @@ const TaskDetailAntarMobil = () => {
       <View style={{padding: '5%'}}>
         <View style={{marginBottom: 20}}>
           <Text style={[[h4, styles.text], {marginBottom: 5}]}>Mulai Sewa</Text>
-          <Text style={styles.boldText}>01 Juli 2022 | 09:00 AM</Text>
+          <Text style={styles.boldText}>{moment(item?.order?.order_detail?.start_booking_date)?.format('DD MMMM YYYY')} | {item?.order?.order_detail?.start_booking_time}</Text>
         </View>
 
         <View>
           <Text style={[[h4, styles.text], {marginBottom: 5}]}>
             Tanggal Pengembalian
           </Text>
-          <Text style={styles.boldText}>03 Juli 2022 | 09:00 AM</Text>
+          <Text style={styles.boldText}>{moment(item?.order?.order_detail?.end_booking_date)?.format('DD MMMM YYYY')} | {item?.order?.order_detail?.end_booking_time}</Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -177,7 +206,7 @@ const TaskDetailAntarMobil = () => {
             </Text>
             <View style={styles.imageContainer}>
               <Image
-                source={img_license}
+                source={{uri: item?.order?.order_detail?.identity?.sim}}
                 style={styles.image}
                 resizeMode="cover"
               />
@@ -189,7 +218,7 @@ const TaskDetailAntarMobil = () => {
               Lihat Foto KTP
             </Text>
             <View style={styles.imageContainer}>
-              <Image source={img_ktp} style={styles.image} resizeMode="cover" />
+              <Image source={{uri: item?.order?.order_detail?.identity?.ktp}} style={styles.image} resizeMode="cover" />
             </View>
           </View>
         </View>

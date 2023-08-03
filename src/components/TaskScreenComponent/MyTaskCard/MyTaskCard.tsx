@@ -5,8 +5,10 @@ import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
+import { DataItemTask } from 'types/tasks.types';
+import moment from 'moment';
 
-const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
+const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item}) => {
   const navigation = useNavigation();
 
   return (
@@ -23,10 +25,10 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
               style={iconCustomSize(20)}
               resizeMode="stretch"
             />
-            <Text style={styles.title}>Antar Mobil</Text>
+            <Text style={styles.title}>Parkir ke Garasi</Text>
           </View>
 
-          <Text style={styles.time}>03 Juli 2022 09:08 AM</Text>
+          <Text style={styles.time}>{moment(item?.created_at).add(7, 'hour').format('HH MMMM YYYY HH:mm')}</Text>
         </View>
 
         <View style={[rowCenter, styles.taskDoneWrapper]}>
@@ -43,7 +45,7 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
 
       <View style={styles.lineHorizontal} />
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{fontWeight: '500'}}>0129389283</Text>
+        Order ID: <Text style={{fontWeight: '500'}}>{item?.order_key}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -51,7 +53,7 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>Cafe Bali</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_delivery_location}</Text>
           </View>
         </View>
 
@@ -60,8 +62,8 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
         <View style={rowCenter}>
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
-            <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>Cafe Bali</Text>
+            <Text style={styles.textTitle}>Lokasi Pengambilan</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_return_location}</Text>
           </View>
         </View>
       </View>
@@ -84,18 +86,18 @@ const MyTaskCard: React.FC<{status: 0 | 1}> = ({status}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
-            <Text style={styles.textLocation}>03 Juli 2022 | 09:00 AM</Text>
+            <Text style={styles.textLocation}>{item?.order?.order_detail?.end_booking_date} | {item?.order?.order_detail?.end_booking_time}</Text>
           </View>
         </View>
       </View>
 
-      <Text style={styles.textComment}>Comment : </Text>
+      {/* <Text style={styles.textComment}>Comment : </Text> */}
 
       <Button
         _theme="navy"
         title="Detail Tugas"
         onPress={() => {
-          navigation.navigate('TaskDetailAntarMobil');
+          navigation.navigate('TaskCompleteDetail', {item: item});
         }}
         styleWrapper={{
           width: '95%',

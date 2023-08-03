@@ -14,6 +14,7 @@ import {
   TaskDetailParkirMobilScreen,
 } from '../screens';
 import SplashScreen from 'screens/SplashScreen';
+import TaskCompleteDetailScreen from 'screens/TaskCompleteDetailScreen';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -67,6 +68,15 @@ const Main: React.FC = () => {
         <RootStack.Screen
           name="OtpVerification"
           component={OtpVerificationScreen}
+        />
+        <RootStack.Screen
+          name="TaskCompleteDetail"
+          component={TaskCompleteDetailScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: theme.colors.navy,
+            },
+          }}
         />
       </>
     </RootStack.Navigator>

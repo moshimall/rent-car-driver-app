@@ -85,7 +85,9 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         _theme="navy"
         title="Antar Mobil"
         onPress={() => {
-          navigation.navigate('TaskDetailAntarMobil');
+          navigation.navigate('TaskDetailAntarMobil', {
+            item: item
+          });
         }}
         styleWrapper={{
           width: '95%',

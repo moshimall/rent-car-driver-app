@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import { DataItemTask } from './tasks.types';
 
 type RootStackParamList = {
   ProductDetail: {productId: string};
@@ -9,7 +10,12 @@ type RootStackParamList = {
   Auth: undefined;
   OtpVerification: undefined;
   Register: undefined;
-  TaskDetailAntarMobil: undefined;
+  TaskDetailAntarMobil: {
+    item: DataItemTask
+  };
+  TaskCompleteDetail: {
+    item: DataItemTask
+  };
   TaskDetailAmbilMobil: undefined;
   TaskDetailParkirMobil: undefined;
   Splash: undefined;
