@@ -29,6 +29,8 @@ import {
   ic_selected_radio_button,
   ic_uncheckblue,
 } from 'assets/icons';
+import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
+import CardParkirMobil from 'components/Cards/CardParkirMobil';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -67,18 +69,49 @@ const HomeScreen = () => {
     return () => {};
   }, []);
 
+  useEffect(() => {
+    let _ = deepClone(tasks);
+    _.sort((a, b) => {
+      const dateA = new Date(a.order.order_detail.start_booking_date);
+      const dateB = new Date(b.order.order_detail.start_booking_date);
+      if (sorting === 0) {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+
+    setTasks(_);
+
+    console.log('sorinrt = ', sorting);
+
+    return () => {};
+  }, [sorting]);
+
   const _getTasks = async () => {
     setLoader(true);
-    let res = await getTasks({
+    let param = {
       courier_id: 1,
       limit: pagination.limit,
       page: pagination.page,
-      task_status: 'PICKED',
+    };
+    const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
+    let _: any = [];
+    jobdesk?.map((x, i) => {
+      _.push(VALUE[x]);
     });
+    param['task_status'] = _;
+
+    console.log('jobdesk = ', param);
+    let res = await getTasks(param);
     console.log('res = ', res);
     setTasks(res?.data);
     setPagination(res?.pagination);
     setLoader(false);
+  };
+
+  const handleFilter = async () => {
+    _getTasks();
   };
 
   const handleMore = () => {
@@ -134,22 +167,36 @@ const HomeScreen = () => {
       </View>
       <View style={{margin: 16}}>
         <FlatList
-          // data={[...(tasks || [])]}
-          data={[...Array(5)]}
-          // renderItem={({item}) => <CardAntarMobil item={item} />}
-          renderItem={({item}) => <CardAntarMobil item={{
-            order: {
-              order_key: '192ASD9802',
-              order_detail: {
-                rental_delivery_location: 'BALI',
-                rental_return_location: 'BALI',
-                start_booking_date: '20 Juli 2023',
-                start_booking_time: '02:03',
-                end_booking_date: '22 Juli 2023',
-                end_booking_time: '02:03'
-              }
-            }
-          }} />}
+          data={[...(tasks || [])]}
+          // data={[...Array(5)]}
+          renderItem={({item}) => (
+            <>
+              {item?.status === 'DELIVERY_PROCESS' && (
+                <CardAntarMobil item={item} />
+              )}
+              {item?.status === 'PICKUP_PROCESS' && (
+                <CardAmbilMobil item={item} />
+              )}
+              {item?.status === 'RETURNED' && <CardParkirMobil item={item} />}
+            </>
+          )}
+          // renderItem={({item}) => (
+          //   <CardAntarMobil
+          //     item={{
+          //       order: {
+          //         order_key: '192ASD9802',
+          //         order_detail: {
+          //           rental_delivery_location: 'BALI',
+          //           rental_return_location: 'BALI',
+          //           start_booking_date: '20 Juli 2023',
+          //           start_booking_time: '02:03',
+          //           end_booking_date: '22 Juli 2023',
+          //           end_booking_time: '02:03',
+          //         },
+          //       },
+          //     }}
+          //   />
+          // )}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
           refreshing={refresh}
@@ -251,6 +298,7 @@ const HomeScreen = () => {
             title={'Konfirmasi'}
             onPress={() => {
               if (bottomSheetRef?.current) bottomSheetRef?.current.close();
+              handleFilter();
             }}
             styleWrapper={{marginTop: 10}}
           />
@@ -261,7 +309,7 @@ const HomeScreen = () => {
 };
 
 const SORT = ['Paling Baru', 'Paling Lama'];
-const JOBDESK = ['Antar Mobil', 'Antar Mobil', 'Parkir ke Garasi'];
+const JOBDESK = ['Antar Mobil', 'Ambil Mobil', 'Parkir ke Garasi'];
 
 export default hoc(HomeScreen, theme.colors.white, false, 'dark-content');
 

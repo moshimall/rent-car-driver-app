@@ -6,8 +6,9 @@ import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
+import { DataItemTask } from 'types/tasks.types';
 
-const CardAntarMobil = ({item}: any) => {
+const CardAntarMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
   return (
     <View style={[styles.cardWrapper]}>
