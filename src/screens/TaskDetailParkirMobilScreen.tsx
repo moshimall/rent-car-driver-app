@@ -14,17 +14,23 @@ import {
   View,
 } from 'react-native';
 import {WINDOW_WIDTH, iconSize, rowCenter} from 'utils/mixins';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
 import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
 import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
-import { deepClone } from 'utils';
+import {deepClone} from 'utils';
+import {updateCourirTasks} from 'store/effects/taskStore';
+import {RootStackParamList} from 'types/navigator';
+
+type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailParkirMobil'>;
 
 const TaskDetailAmbilMobilScreen = () => {
+  const {item} = useRoute<ScreenRouteProp>().params;
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     navigation.setOptions(
@@ -50,26 +56,50 @@ const TaskDetailAmbilMobilScreen = () => {
     );
   }, [navigation]);
 
+  const handleSubmit = async () => {
+    if (bulkImage?.length <= 0) {
+      Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
+      return;
+    }
+    let res = await updateCourirTasks({
+      id: item?.id,
+      image_captures: [...bulkImage],
+      status: 'RETURNED',
+      note: note,
+    });
+    if (!res) {
+      showToast({
+        title: 'Terjadi Kesalahan',
+        type: 'error',
+        message: 'Terjadi Kesalahan, silahkan hubungi Admin.',
+      });
+      return;
+    }
+    
+    console.log('ress sukses anter = ', res);
+    showToast({
+      title: 'Berhasil',
+      type: 'success',
+      message: 'Berhasil Menyelesaikan Tugas',
+    });
+    navigation.goBack();
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{marginHorizontal: 20}}>
-      <UploadImageInput
+        <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
             console.log('ress = ', res);
             let _: any = [];
-            res?.map((x)=> {
-              _.push(x.uri)
-            })
-            setBulkImage(_);
-            showToast({
-              title: 'Berhasil',
-              type: 'success',
-              message: 'Berhasil Upload Foto',
+            res?.map(x => {
+              _.push(`data:${x?.type};base64,${x?.base64}`);
             });
+            setBulkImage(_);
           }}
-          onDelete={(i) => {
-            console.log('x = ', i)
+          onDelete={i => {
+            console.log('x = ', i);
             let _ = deepClone(bulkImage);
             _.splice(i, 1);
             setBulkImage(_);
@@ -79,22 +109,20 @@ const TaskDetailAmbilMobilScreen = () => {
           selectedImageLabel=""
         />
 
-        <Text style={[h4, styles.text, {marginVertical: 10}]}>
-          Keterangan
-        </Text>
+        <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>
 
-          <TextInput
-            style={{
-              borderWidth: 1,
-              borderColor: '#6666',
-              borderRadius: 6,
-              height: 100,
-              textAlignVertical: 'top'
-
-            }}
-            
-            placeholder='Tulis Keterangan..'
-          />
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: '#6666',
+            borderRadius: 6,
+            height: 100,
+            textAlignVertical: 'top',
+          }}
+          placeholder="Tulis Keterangan.."
+          value={note}
+          onChangeText={v => setNote(v)}
+        />
         <Button
           title="Selesaikan Tugas"
           onPress={() => {
@@ -109,12 +137,7 @@ const TaskDetailAmbilMobilScreen = () => {
                 {
                   text: 'Ya',
                   onPress(value) {
-                    showToast({
-                      title: 'Berhasil',
-                      type: 'success',
-                      message: 'Berhasil Menyelesaikan Tugas',
-                    });
-                    navigation.goBack();
+                    handleSubmit();
                   },
                 },
               ],

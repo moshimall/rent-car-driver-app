@@ -6,8 +6,9 @@ import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
+import {DataItemTask} from 'types/tasks.types';
 
-const CardParkirMobil = () => {
+const CardParkirMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
   return (
     <View style={[styles.cardWrapper]}>
@@ -22,8 +23,15 @@ const CardParkirMobil = () => {
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
+      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>
+        {item?.order?.user_name}
+      </Text>
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{fontWeight: '500'}}>0129389283</Text>
+        Order ID:{' '}
+        <Text style={{fontWeight: '500'}}>
+          {item?.order?.order_key} |{' '}
+          {item?.order?.order_detail?.vehicle?.name || '-'}
+        </Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -63,7 +71,7 @@ const CardParkirMobil = () => {
         _theme="navy"
         title="Kembalikan ke Garasi"
         onPress={() => {
-          navigation.navigate('TaskDetailParkirMobil');
+          navigation.navigate('TaskDetailParkirMobil', {item: item});
         }}
         styleWrapper={{
           width: '95%',

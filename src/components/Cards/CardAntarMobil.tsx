@@ -23,9 +23,10 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
+      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>{ item?.order?.user_name}</Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
-        <Text style={{fontWeight: '500'}}>{item?.order?.order_key}</Text>
+        <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { item?.order?.order_detail?.vehicle?.name || '-'}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>

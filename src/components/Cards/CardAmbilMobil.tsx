@@ -23,8 +23,10 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
+      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>{ item?.order?.user_name}</Text>
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{fontWeight: '500'}}>{item?.order?.order_key}</Text>
+        Order ID:{' '}
+        <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { item?.order?.order_detail?.vehicle?.name || '-'}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -64,7 +66,7 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
         _theme="navy"
         title="Ambil Mobil"
         onPress={() => {
-          navigation.navigate('TaskDetailAmbilMobil');
+          navigation.navigate('TaskDetailAmbilMobil', {item: item});
         }}
         styleWrapper={{
           width: '95%',

@@ -77,7 +77,7 @@ const MyTaskSection: React.FC = () => {
     console.log('jobdesk = ', param);
     let res = await getTasks(param);
     console.log('res = ', res);
-    setTasks(res?.data);
+    setTasks(res?.data || []);
     setPagination(res?.pagination);
     setLoader(false);
   };

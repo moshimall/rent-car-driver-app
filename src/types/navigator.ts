@@ -16,8 +16,12 @@ type RootStackParamList = {
   TaskCompleteDetail: {
     item: DataItemTask
   };
-  TaskDetailAmbilMobil: undefined;
-  TaskDetailParkirMobil: undefined;
+  TaskDetailAmbilMobil: {
+    item: DataItemTask
+  };
+  TaskDetailParkirMobil: {
+    item: DataItemTask
+  };
   Splash: undefined;
 };
 

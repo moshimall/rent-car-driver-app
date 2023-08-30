@@ -7,7 +7,28 @@ interface IParamsTasks {
     task_status: string[];
     courier_id: number;
 }
+
+interface IParamUpdateOrder {
+    order_status: TASKSTATUS;
+    courier_id: number;
+}
+
+interface IParamUPdateCourirTasks {
+    id: number;
+    status: TASKSTATUS;
+    note?: string;
+    violations?: {
+        violation: string;
+        cost: number;
+    }[];
+    /**
+   * diisi base64 exp: ["data:image/png;base64,iVBO"]
+   */
+    image_captures: string[];
+}
+
 type TASKSTATUS = "DELIVERY_PROCESS" | "PICKUP_PROCESS" | "DELIVERED" | "PICKED" | "RETURNED";
+
 export const getTasks = async (paramsFilter: IParamsTasks) => {
     let _param = {
         limit: paramsFilter?.limit,
@@ -38,3 +59,64 @@ export const getTasks = async (paramsFilter: IParamsTasks) => {
         Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
     }
 }
+
+export const updateOrder = async (params: IParamUpdateOrder) => {
+    try {
+        const response: any = await apiWithInterceptor({
+            method: 'put',
+            url: '/api/order',
+            data: params,
+        });
+
+        return response.data;
+    } catch (error) {
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
+
+export const updateCourirTasks = async (params: IParamUPdateCourirTasks) => {
+    try {
+        console.log('params = ', params?.id)
+        console.log('params = ', params?.note)
+        console.log('params = ', params?.status)
+        console.log('params = ', params?.violations)
+        // console.log('params = ', params?.image_captures)
+        const response: any = await apiWithInterceptor({
+            method: 'put',
+            url: '/api/tasks',
+            data: params,
+        });
+
+        return response.data;
+    } catch (err) {
+        console.log('err = ', err);
+        console.log('err = ', err?.response);
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
+
+interface IParamOrderViolations {
+    violations:
+    {
+        violation: string;
+        cost: number;
+    }[]
+    ;
+    total_payment: number;
+    transaction_key: string;
+}
+
+export const updateOrderViolations = async (params: IParamOrderViolations) => {
+    try {
+        const response: any = await apiWithInterceptor({
+            method: 'put',
+            url: '/api/orders/' + params?.transaction_key,
+            data: params,
+        });
+
+        return response.data;
+    } catch (error) {
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
+

@@ -20,17 +20,13 @@ import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/Up
 import Button from 'components/Button';
 import {showToast} from 'utils/Toast';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
-import { deepClone } from 'utils';
-import { RootStackParamList } from 'types/navigator';
+import {deepClone} from 'utils';
+import {RootStackParamList} from 'types/navigator';
 import moment from 'moment';
-import { currencyFormat } from 'utils/currencyFormat';
+import {currencyFormat} from 'utils/currencyFormat';
+import {updateCourirTasks} from 'store/effects/taskStore';
 
-
-type ScreenRouteProp = RouteProp<
-  RootStackParamList,
-  'TaskDetailAntarMobil'
->;
-
+type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAntarMobil'>;
 
 const TaskDetailAntarMobil = () => {
   const {item} = useRoute<ScreenRouteProp>().params;
@@ -62,6 +58,34 @@ const TaskDetailAntarMobil = () => {
     );
   }, [navigation]);
 
+  const handleSubmit = async () => {
+    if (bulkImage?.length <= 0) {
+      Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
+      return;
+    }
+    let res = await updateCourirTasks({
+      id: item?.id,
+      image_captures: [...bulkImage],
+      status: 'DELIVERED',
+    });
+    if (!res) {
+      showToast({
+        title: 'Terjadi Kesalahan',
+        type: 'error',
+        message: 'Terjadi Kesalahan, silahkan hubungi Admin.',
+      });
+      return;
+    }
+    
+    console.log('ress sukses anter = ', res);
+    showToast({
+      title: 'Berhasil',
+      type: 'success',
+      message: 'Berhasil Menyelesaikan Tugas',
+    });
+    navigation.goBack();
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.descriptionContainer}>
@@ -85,7 +109,9 @@ const TaskDetailAntarMobil = () => {
 
         <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>Plat Nomor</Text>
-          <Text style={styles.boldText}>{item?.order?.order_detail?.vehicle_id}</Text>
+          <Text style={styles.boldText}>
+            {item?.order?.order_detail?.vehicle_id}
+          </Text>
         </View>
 
         <View style={{flexBasis: '33%'}}>
@@ -99,7 +125,9 @@ const TaskDetailAntarMobil = () => {
         <View style={{}}>
           <View>
             <Text style={[h4, styles.text]}>Mobil</Text>
-            <Text style={styles.boldText}>{item?.order?.order_detail?.vehicle?.name}</Text>
+            <Text style={styles.boldText}>
+              {item?.order?.order_detail?.vehicle?.name}
+            </Text>
           </View>
           <View style={{marginBottom: 10}} />
           <CustomCarousel
@@ -136,7 +164,9 @@ const TaskDetailAntarMobil = () => {
       <View style={styles.descriptionContainer}>
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Total Pembayaran</Text>
-          <Text style={styles.boldText}>{currencyFormat(item?.order?.total_payment)}</Text>
+          <Text style={styles.boldText}>
+            {currencyFormat(item?.order?.total_payment)}
+          </Text>
         </View>
 
         <View style={{flexBasis: '50%'}}>
@@ -151,7 +181,9 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_delivery_location}</Text>
+          <Text style={[h4, styles.text]}>
+            {item?.order?.order_detail?.rental_delivery_location}
+          </Text>
         </View>
       </View>
 
@@ -160,7 +192,9 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_delivery_location_detail}</Text>
+          <Text style={[h4, styles.text]}>
+            {item?.order?.order_detail?.rental_delivery_location_detail}
+          </Text>
         </View>
       </View>
       <View style={[styles.solidLine, {marginHorizontal: '5%'}]} />
@@ -170,7 +204,9 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_return_location}</Text>
+          <Text style={[h4, styles.text]}>
+            {item?.order?.order_detail?.rental_return_location}
+          </Text>
         </View>
       </View>
       <View style={{padding: '5%', paddingTop: 10}}>
@@ -178,7 +214,9 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>{item?.order?.order_detail?.rental_return_location_detail}</Text>
+          <Text style={[h4, styles.text]}>
+            {item?.order?.order_detail?.rental_return_location_detail}
+          </Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -186,14 +224,24 @@ const TaskDetailAntarMobil = () => {
       <View style={{padding: '5%'}}>
         <View style={{marginBottom: 20}}>
           <Text style={[[h4, styles.text], {marginBottom: 5}]}>Mulai Sewa</Text>
-          <Text style={styles.boldText}>{moment(item?.order?.order_detail?.start_booking_date)?.format('DD MMMM YYYY')} | {item?.order?.order_detail?.start_booking_time}</Text>
+          <Text style={styles.boldText}>
+            {moment(item?.order?.order_detail?.start_booking_date)?.format(
+              'DD MMMM YYYY',
+            )}{' '}
+            | {item?.order?.order_detail?.start_booking_time}
+          </Text>
         </View>
 
         <View>
           <Text style={[[h4, styles.text], {marginBottom: 5}]}>
             Tanggal Pengembalian
           </Text>
-          <Text style={styles.boldText}>{moment(item?.order?.order_detail?.end_booking_date)?.format('DD MMMM YYYY')} | {item?.order?.order_detail?.end_booking_time}</Text>
+          <Text style={styles.boldText}>
+            {moment(item?.order?.order_detail?.end_booking_date)?.format(
+              'DD MMMM YYYY',
+            )}{' '}
+            | {item?.order?.order_detail?.end_booking_time}
+          </Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -218,7 +266,11 @@ const TaskDetailAntarMobil = () => {
               Lihat Foto KTP
             </Text>
             <View style={styles.imageContainer}>
-              <Image source={{uri: item?.order?.order_detail?.identity?.ktp}} style={styles.image} resizeMode="cover" />
+              <Image
+                source={{uri: item?.order?.order_detail?.identity?.ktp}}
+                style={styles.image}
+                resizeMode="cover"
+              />
             </View>
           </View>
         </View>
@@ -226,20 +278,15 @@ const TaskDetailAntarMobil = () => {
         <UploadImageInput
           label="Upload Foto Pengantaran"
           onCameraChange={res => {
-            console.log('ress = ', res);
+            // console.log('ress = ', res);
             let _: any = [];
-            res?.map((x)=> {
-              _.push(x.uri)
-            })
-            setBulkImage(_);
-            showToast({
-              title: 'Berhasil',
-              type: 'success',
-              message: 'Berhasil Upload Foto',
+            res?.map(x => {
+              _.push(`data:${x?.type};base64,${x?.base64}`);
             });
+            setBulkImage(_);
           }}
-          onDelete={(i) => {
-            console.log('x = ', i)
+          onDelete={i => {
+            console.log('x = ', i);
             let _ = deepClone(bulkImage);
             _.splice(i, 1);
             setBulkImage(_);
@@ -249,22 +296,18 @@ const TaskDetailAntarMobil = () => {
           selectedImageLabel=""
         />
 
-        <Text style={[h4, styles.text, {marginVertical: 10}]}>
-          Keterangan
-        </Text>
+        <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>
 
-          <TextInput
-            style={{
-              borderWidth: 1,
-              borderColor: '#6666',
-              borderRadius: 6,
-              height: 100,
-              textAlignVertical: 'top'
-
-            }}
-            
-            placeholder='Tulis Keterangan..'
-          />
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: '#6666',
+            borderRadius: 6,
+            height: 100,
+            textAlignVertical: 'top',
+          }}
+          placeholder="Tulis Keterangan.."
+        />
         <Button
           title="Selesaikan Tugas"
           onPress={() => {
@@ -279,12 +322,7 @@ const TaskDetailAntarMobil = () => {
                 {
                   text: 'Ya',
                   onPress(value) {
-                    showToast({
-                      title: 'Berhasil',
-                      type: 'success',
-                      message: 'Berhasil Menyelesaikan Tugas',
-                    });
-                    navigation.goBack();
+                    handleSubmit();
                   },
                 },
               ],

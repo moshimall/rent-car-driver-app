@@ -12,7 +12,7 @@ import {h1} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {IHelpers} from 'types/store.types';
 import {useHelperStore} from 'store/actions/helpersStore';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   FlatList,
   Image,
@@ -64,16 +64,21 @@ const HomeScreen = () => {
     }
   }, []);
 
-  useEffect(() => {
-    _getTasks();
-    return () => {};
-  }, []);
+  // useEffect(() => {
+  //   _getTasks();
+  //   return () => {};
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      _getTasks();
+    }, []),
+  );
 
   useEffect(() => {
     let _ = deepClone(tasks);
-    _.sort((a, b) => {
-      const dateA = new Date(a.order.order_detail.start_booking_date);
-      const dateB = new Date(b.order.order_detail.start_booking_date);
+    _.sort((a: any, b: any) => {
+      const dateA: any = new Date(a.order.order_detail.start_booking_date);
+      const dateB: any = new Date(b.order.order_detail.start_booking_date);
       if (sorting === 0) {
         return dateA - dateB;
       } else {
@@ -94,7 +99,7 @@ const HomeScreen = () => {
       courier_id: 1,
       limit: pagination.limit,
       page: pagination.page,
-    };
+    } as any;
     const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
     let _: any = [];
     jobdesk?.map((x, i) => {
@@ -103,7 +108,7 @@ const HomeScreen = () => {
     param['task_status'] = _;
 
     console.log('jobdesk = ', param);
-    let res = await getTasks(param);
+    let res = await getTasks(param as any);
     console.log('res = ', res);
     setTasks(res?.data);
     setPagination(res?.pagination);
@@ -128,6 +133,7 @@ const HomeScreen = () => {
       limit: 10,
       page: 1,
     });
+    _getTasks();
     setRefresh(false);
   };
 
@@ -187,6 +193,16 @@ const HomeScreen = () => {
             return handleRefresh();
           }}
           onEndReached={handleMore}
+          ListEmptyComponent={() => (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '20%',
+              }}>
+              <Text>tidak ada tugas</Text>
+            </View>
+          )}
         />
       </View>
       <BottomSheet

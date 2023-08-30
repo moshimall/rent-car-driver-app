@@ -19,7 +19,7 @@ import {
   View,
 } from 'react-native';
 import {WINDOW_WIDTH, iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
 import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
 import Button from 'components/Button';
@@ -30,16 +30,22 @@ import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import CustomTextInput from 'components/TextInput';
 import {currencyFormat} from 'utils/currencyFormat';
 import CustomBackdrop from 'components/CustomBackdrop';
+import {updateCourirTasks} from 'store/effects/taskStore';
+import {RootStackParamList} from 'types/navigator';
 
 interface Denda {
   keterangan: string;
   jumlah: string;
 }
+type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAmbilMobil'>;
+
 const TaskDetailAmbilMobilScreen = () => {
   const navigation = useNavigation();
+  const {item} = useRoute<ScreenRouteProp>().params;
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [bulkImage, setBulkImage] = useState([]);
+  const [note, setNote] = useState('');
 
   const [denda, setDenda] = useState<Denda[]>([]);
   const [tempDenda, setTempDenda] = useState<Denda>({
@@ -79,161 +85,194 @@ const TaskDetailAmbilMobilScreen = () => {
     );
   }, [navigation]);
 
+  const handleSubmit = async () => {
+    if (bulkImage?.length <= 0) {
+      Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
+      return;
+    }
+    let res = await updateCourirTasks({
+      id: item?.id,
+      image_captures: [...bulkImage],
+      status: 'PICKED',
+      note: note,
+      violations: denda?.map(x => ({
+        violation: x?.keterangan,
+        cost: JSON.parse(x?.jumlah || 0) as any,
+      })),
+    });
+
+    if (!res) {
+      showToast({
+        title: 'Terjadi Kesalahan',
+        type: 'error',
+        message: 'Terjadi Kesalahan, silahkan hubungi Admin.',
+      });
+      return;
+    }
+    console.log('ress sukses anter = ', res);
+    showToast({
+      title: 'Berhasil',
+      type: 'success',
+      message: 'Berhasil Menyelesaikan Tugas',
+    });
+    navigation.goBack();
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={{marginHorizontal: 20}}>
-        <UploadImageInput
-          label="Upload Foto Pengantaran"
-          onCameraChange={res => {
-            console.log('ress = ', res);
-            let _: any = [];
-            res?.map(x => {
-              _.push(x.uri);
-            });
-            setBulkImage(_);
-            showToast({
-              title: 'Berhasil',
-              type: 'success',
-              message: 'Berhasil Upload Foto',
-            });
-          }}
-          // onDelete={(i) => {
-          //   console.log('x = ', i)
-          //   let _ = deepClone(bulkImage);
-          //   _.splice(i, 1);
-          //   setBulkImage(_);
-          // }}
-          bulkImage={bulkImage}
-          setBulkImage={setBulkImage}
-          selectedImageLabel=""
-        />
+    <View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={{marginHorizontal: 20}}>
+          <UploadImageInput
+            label="Upload Foto Pengantaran"
+            onCameraChange={res => {
+              // console.log('ress = ', res);
+              let _: any = [];
+              res?.map(x => {
+                _.push(`data:${x?.type};base64,${x?.base64}`);
+              });
+              setBulkImage(_);
+              // showToast({
+              //   title: 'Berhasil',
+              //   type: 'success',
+              //   message: 'Berhasil Upload Foto',
+              // });
+            }}
+            onDelete={i => {
+              console.log('x = ', i);
+              let _ = deepClone(bulkImage);
+              _.splice(i, 1);
+              setBulkImage(_);
+            }}
+            bulkImage={bulkImage}
+            setBulkImage={setBulkImage}
+            selectedImageLabel=""
+          />
 
-        <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>
+          <Text style={[h4, styles.text, {marginVertical: 10}]}>
+            Keterangan
+          </Text>
 
-        <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: '#6666',
-            borderRadius: 6,
-            height: 100,
-            textAlignVertical: 'top',
-          }}
-          placeholder="Tulis Keterangan.."
-        />
-
-        <Text style={[h4, styles.text, {marginVertical: 10}]}>
-          Detail Denda
-        </Text>
-
-        {denda.length <= 0 ? (
-          <View
-            style={{
-              backgroundColor: '#F4F4F4',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 20,
-            }}>
-            <Text style={{fontSize: 11, color: '#A8A8A8'}}>
-              Tidak ada denda
-            </Text>
-          </View>
-        ) : (
-          <View
+          <TextInput
             style={{
               borderWidth: 1,
-              borderColor: '#A8A8A8',
-              padding: 10,
-              borderRadius: 10,
-            }}>
-            {[
-              ...denda,
-              {
-                keterangan: 'Total',
-                jumlah: denda.reduce((accumulator, v) => {
-                  return accumulator + parseInt(v.jumlah);
-                }, 0),
-              },
-            ].map((x, i) => (
-              <View key={`index_${i}`}>
-                {denda.length === i && (
+              borderColor: '#6666',
+              borderRadius: 6,
+              height: 100,
+              textAlignVertical: 'top',
+            }}
+            placeholder="Tulis Keterangan.."
+            value={note}
+            onChangeText={v => setNote(v)}
+          />
+
+          <Text style={[h4, styles.text, {marginVertical: 10}]}>
+            Detail Denda
+          </Text>
+
+          {denda.length <= 0 ? (
+            <View
+              style={{
+                backgroundColor: '#F4F4F4',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 20,
+              }}>
+              <Text style={{fontSize: 11, color: '#A8A8A8'}}>
+                Tidak ada denda
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: '#A8A8A8',
+                padding: 10,
+                borderRadius: 10,
+              }}>
+              {[
+                ...denda,
+                {
+                  keterangan: 'Total',
+                  jumlah: denda.reduce((accumulator, v) => {
+                    return accumulator + parseInt(v.jumlah);
+                  }, 0),
+                },
+              ].map((x, i) => (
+                <View key={`index_${i}`}>
+                  {denda.length === i && (
+                    <View
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#A8A8A8',
+                        marginBottom: 10,
+                      }}
+                    />
+                  )}
                   <View
-                    style={{
-                      borderBottomWidth: 1,
-                      borderBottomColor: '#A8A8A8',
-                      marginBottom: 10,
-                    }}
-                  />
-                )}
-                <View
-                  style={[
-                    rowCenter,
-                    {justifyContent: 'space-between', marginBottom: 10},
-                  ]}>
-                  <Text style={{width: '60%'}}>{x.keterangan}</Text>
+                    style={[
+                      rowCenter,
+                      {justifyContent: 'space-between', marginBottom: 10},
+                    ]}>
+                    <Text style={{width: '60%'}}>{x.keterangan}</Text>
 
-                  <View style={[rowCenter]}>
-                    <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
-                    {denda.length !== i ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          let array = deepClone(denda);
-                          // let index = 2;
+                    <View style={[rowCenter]}>
+                      <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
+                      {denda.length !== i ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            let array = deepClone(denda);
+                            // let index = 2;
 
-                          array.splice(i, 1);
-                          setDenda(array);
-                        }}>
-                        <Image
-                          source={ic_close}
-                          style={[iconCustomSize(8), {marginLeft: 5}]}
-                        />
-                      </TouchableOpacity>
-                    ) : (
-                      <View style={{width: 13}} />
-                    )}
+                            array.splice(i, 1);
+                            setDenda(array);
+                          }}>
+                          <Image
+                            source={ic_close}
+                            style={[iconCustomSize(8), {marginLeft: 5}]}
+                          />
+                        </TouchableOpacity>
+                      ) : (
+                        <View style={{width: 13}} />
+                      )}
+                    </View>
                   </View>
                 </View>
-              </View>
-            ))}
-          </View>
-        )}
+              ))}
+            </View>
+          )}
 
-        <TouchableOpacity
-          style={styles.btnDenda}
-          onPress={() => bottomSheetRef.current?.snapToIndex(0)}>
-          <Text style={{fontWeight: 'bold', color: theme.colors.navy}}>
-            Tambah Denda
-          </Text>
-        </TouchableOpacity>
-        <Button
-          title="Selesaikan Tugas"
-          onPress={() => {
-            Alert.alert(
-              'Konfirmasi Ambil Mobil',
-              'Apakah anda yakin menyelesaikan Tugas?',
-              [
-                {
-                  text: 'Tidak',
-                  onPress(value) {},
-                },
-                {
-                  text: 'Ya',
-                  onPress(value) {
-                    showToast({
-                      title: 'Berhasil',
-                      type: 'success',
-                      message: 'Berhasil Menyelesaikan Tugas',
-                    });
-                    navigation.goBack();
+          <TouchableOpacity
+            style={styles.btnDenda}
+            onPress={() => bottomSheetRef.current?.snapToIndex(0)}>
+            <Text style={{fontWeight: 'bold', color: theme.colors.navy}}>
+              Tambah Denda
+            </Text>
+          </TouchableOpacity>
+          <Button
+            title="Selesaikan Tugas"
+            onPress={() => {
+              Alert.alert(
+                'Konfirmasi Ambil Mobil',
+                'Apakah anda yakin menyelesaikan Tugas?',
+                [
+                  {
+                    text: 'Tidak',
+                    onPress(value) {},
                   },
-                },
-              ],
-            );
-          }}
-          _theme="green"
-          styleWrapper={{marginVertical: 20}}
-        />
-      </View>
-
+                  {
+                    text: 'Ya',
+                    onPress(value) {
+                      handleSubmit();
+                    },
+                  },
+                ],
+              );
+            }}
+            _theme="green"
+            styleWrapper={{marginVertical: 20}}
+          />
+        </View>
+      </ScrollView>
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
@@ -310,7 +349,7 @@ const TaskDetailAmbilMobilScreen = () => {
           />
         </View>
       </BottomSheet>
-    </ScrollView>
+    </View>
   );
 };
 

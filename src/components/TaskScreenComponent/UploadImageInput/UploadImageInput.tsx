@@ -22,6 +22,7 @@ import {
 
 interface IProps {
   onCameraChange: (res: ImagePickerResponse['assets']) => void;
+  onDelete: (i: number) => void;
   errorMessage?: string;
   label?: string;
   containerStyle?: ViewStyle;
@@ -216,6 +217,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     position: 'absolute',
+    zIndex: -9,
     right: -3,
     top: -3,
   },
