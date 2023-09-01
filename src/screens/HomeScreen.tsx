@@ -31,6 +31,8 @@ import {
 } from 'assets/icons';
 import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
 import CardParkirMobil from 'components/Cards/CardParkirMobil';
+import { useDataStore } from 'store/actions/dataStore';
+import { IDataStore } from 'types/data.types';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -44,6 +46,7 @@ const HomeScreen = () => {
     limit: 10,
     page: 1,
   });
+  const getData = useDataStore() as IDataStore;
 
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
@@ -71,6 +74,8 @@ const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       _getTasks();
+      getData?.getVehicles();
+      
     }, []),
   );
 
@@ -136,6 +141,8 @@ const HomeScreen = () => {
     _getTasks();
     setRefresh(false);
   };
+
+  if (getData?.loaderVehicle) return;
 
   return (
     <View style={styles.container}>

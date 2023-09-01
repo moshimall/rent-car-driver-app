@@ -93,7 +93,7 @@ const TaskDetailAmbilMobilScreen = () => {
     let res = await updateCourirTasks({
       id: item?.id,
       image_captures: [...bulkImage],
-      status: 'PICKED',
+      status: 'PICKUP_PROCESS',
       note: note,
       violations: denda?.map(x => ({
         violation: x?.keterangan,

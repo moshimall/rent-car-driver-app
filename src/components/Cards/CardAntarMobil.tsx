@@ -7,9 +7,19 @@ import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
 import { DataItemTask } from 'types/tasks.types';
+import { useDataStore } from 'store/actions/dataStore';
+import { IDataStore, Vehicle } from 'types/data.types';
 
 const CardAntarMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
+  const getData = useDataStore() as IDataStore;
+  const vehicleId = (
+    getData?.vehicles?.length > 0
+      ? getData?.vehicles?.find(
+          x => x?.id === item?.order?.order_detail?.vehicle_id,
+        )
+      : {}
+  ) as Vehicle;
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -26,7 +36,7 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
       <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>{ item?.order?.user_name}</Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
-        <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { item?.order?.order_detail?.vehicle?.name || '-'}</Text>
+        <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { vehicleId?.name || '-'}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -87,7 +97,8 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         title="Antar Mobil"
         onPress={() => {
           navigation.navigate('TaskDetailAntarMobil', {
-            item: item
+            item: item,
+            vehicleId: vehicleId
           });
         }}
         styleWrapper={{

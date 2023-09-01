@@ -6,10 +6,20 @@ import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
-import { DataItemTask } from 'types/tasks.types';
+import {DataItemTask} from 'types/tasks.types';
+import {useDataStore} from 'store/actions/dataStore';
+import {IDataStore, Vehicle} from 'types/data.types';
 
 const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
+  const getData = useDataStore() as IDataStore;
+  const vehicleId = (
+    getData?.vehicles?.length > 0
+      ? getData?.vehicles?.find(
+          x => x?.id === item?.order?.order_detail?.vehicle_id,
+        )
+      : {}
+  ) as Vehicle;
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -23,10 +33,14 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
-      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>{ item?.order?.user_name}</Text>
+      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>
+        {item?.order?.user_name}
+      </Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
-        <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { item?.order?.order_detail?.vehicle?.name || '-'}</Text>
+        <Text style={{fontWeight: '500'}}>
+          {item?.order?.order_key} | {vehicleId?.name || '-'}
+        </Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -34,7 +48,9 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_delivery_location}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.rental_delivery_location}
+            </Text>
           </View>
         </View>
 
@@ -44,7 +60,9 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengembalian</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_return_location}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.rental_return_location}
+            </Text>
           </View>
         </View>
       </View>
@@ -55,7 +73,10 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_calendar} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.end_booking_date} | {item?.order?.order_detail?.end_booking_time}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.end_booking_date} |{' '}
+              {item?.order?.order_detail?.end_booking_time}
+            </Text>
           </View>
         </View>
       </View>

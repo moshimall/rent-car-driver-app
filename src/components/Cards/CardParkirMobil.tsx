@@ -6,10 +6,20 @@ import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {DataItemTask} from 'types/tasks.types';
+import {DataItemTask, Vehicle} from 'types/tasks.types';
+import { useDataStore } from 'store/actions/dataStore';
+import { IDataStore } from 'types/data.types';
 
 const CardParkirMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
+  const getData = useDataStore() as IDataStore;
+  const vehicleId = (
+    getData?.vehicles?.length > 0
+      ? getData?.vehicles?.find(
+          x => x?.id === item?.order?.order_detail?.vehicle_id,
+        )
+      : {}
+  ) as Vehicle;
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -30,7 +40,7 @@ const CardParkirMobil = ({item}: {item: DataItemTask}) => {
         Order ID:{' '}
         <Text style={{fontWeight: '500'}}>
           {item?.order?.order_key} |{' '}
-          {item?.order?.order_detail?.vehicle?.name || '-'}
+          {vehicleId?.name || '-'}
         </Text>
       </Text>
 

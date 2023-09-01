@@ -64,7 +64,7 @@ const TaskDetailAmbilMobilScreen = () => {
     let res = await updateCourirTasks({
       id: item?.id,
       image_captures: [...bulkImage],
-      status: 'RETURNED',
+      status: 'IN_GARAGE',
       note: note,
     });
     if (!res) {

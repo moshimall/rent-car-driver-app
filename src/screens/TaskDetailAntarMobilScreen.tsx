@@ -25,11 +25,12 @@ import {RootStackParamList} from 'types/navigator';
 import moment from 'moment';
 import {currencyFormat} from 'utils/currencyFormat';
 import {updateCourirTasks} from 'store/effects/taskStore';
+import { URL_IMAGE } from '@env';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAntarMobil'>;
 
 const TaskDetailAntarMobil = () => {
-  const {item} = useRoute<ScreenRouteProp>().params;
+  const {item, vehicleId} = useRoute<ScreenRouteProp>().params;
 
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
@@ -66,7 +67,7 @@ const TaskDetailAntarMobil = () => {
     let res = await updateCourirTasks({
       id: item?.id,
       image_captures: [...bulkImage],
-      status: 'DELIVERED',
+      status: 'DELIVERY_PROCESS',
     });
     if (!res) {
       showToast({
@@ -76,7 +77,7 @@ const TaskDetailAntarMobil = () => {
       });
       return;
     }
-    
+
     console.log('ress sukses anter = ', res);
     showToast({
       title: 'Berhasil',
@@ -125,13 +126,11 @@ const TaskDetailAntarMobil = () => {
         <View style={{}}>
           <View>
             <Text style={[h4, styles.text]}>Mobil</Text>
-            <Text style={styles.boldText}>
-              {item?.order?.order_detail?.vehicle?.name}
-            </Text>
+            <Text style={styles.boldText}>{vehicleId?.name}</Text>
           </View>
           <View style={{marginBottom: 10}} />
           <CustomCarousel
-            data={[...Array(4)]}
+            data={[...vehicleId?.photo as any[]]}
             paginationSize={7}
             paginationPosition={-10}
             // renderCarouselTitle={
@@ -149,7 +148,7 @@ const TaskDetailAntarMobil = () => {
                     // alignSelf: 'center',
                   }
                 }>
-                <Image source={img_car_1} style={{height: 250, width: '90%'}} />
+                <Image source={{uri: URL_IMAGE + item?.name}} style={{height: 250, width: '90%'}} />
               </View>
             )}
             containerStyle={{
@@ -181,7 +180,7 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>
+          <Text style={[h1, styles.text]}>
             {item?.order?.order_detail?.rental_delivery_location}
           </Text>
         </View>
@@ -191,8 +190,8 @@ const TaskDetailAntarMobil = () => {
         <Text style={[h4, styles.text]}>Detail Lokasi</Text>
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-          <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>
+          {/* <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} /> */}
+          <Text style={[h1, styles.text]}>
             {item?.order?.order_detail?.rental_delivery_location_detail}
           </Text>
         </View>
@@ -204,7 +203,7 @@ const TaskDetailAntarMobil = () => {
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
           <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>
+          <Text style={[h1, styles.text]}>
             {item?.order?.order_detail?.rental_return_location}
           </Text>
         </View>
@@ -213,8 +212,8 @@ const TaskDetailAntarMobil = () => {
         <Text style={[h4, styles.text]}>Detail Lokasi</Text>
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-          <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} />
-          <Text style={[h4, styles.text]}>
+          {/* <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} /> */}
+          <Text style={[h1, styles.text]}>
             {item?.order?.order_detail?.rental_return_location_detail}
           </Text>
         </View>
