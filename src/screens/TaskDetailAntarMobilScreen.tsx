@@ -25,13 +25,15 @@ import {RootStackParamList} from 'types/navigator';
 import moment from 'moment';
 import {currencyFormat} from 'utils/currencyFormat';
 import {updateCourirTasks} from 'store/effects/taskStore';
-import { URL_IMAGE } from '@env';
+import {URL_IMAGE} from '@env';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAntarMobil'>;
 
 const TaskDetailAntarMobil = () => {
   const {item, vehicleId} = useRoute<ScreenRouteProp>().params;
-
+  {
+    console.log('vehicleId = ', vehicleId);
+  }
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
 
@@ -67,7 +69,7 @@ const TaskDetailAntarMobil = () => {
     let res = await updateCourirTasks({
       id: item?.id,
       image_captures: [...bulkImage],
-      status: 'DELIVERY_PROCESS',
+      status: 'PICKUP_PROCESS',
     });
     if (!res) {
       showToast({
@@ -90,12 +92,12 @@ const TaskDetailAntarMobil = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.descriptionContainer}>
-        <View style={{flexBasis: '50%'}}>
+        <View style={{}}>
           <Text style={[h4, styles.text]}>Nama</Text>
           <Text style={styles.boldText}>{item?.order?.user_name}</Text>
         </View>
 
-        <View style={{flexBasis: '50%'}}>
+        <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>No Handphone</Text>
           <Text style={styles.boldText}>{item?.order?.wa_number}</Text>
         </View>
@@ -103,34 +105,38 @@ const TaskDetailAntarMobil = () => {
       <View style={styles.dashedLine} />
 
       <View style={styles.descriptionContainer}>
-        <View style={{flexBasis: '33%'}}>
+        <View style={{}}>
           <Text style={[h4, styles.text]}>No. Order</Text>
           <Text style={styles.boldText}>{item?.order?.order_key}</Text>
         </View>
 
         <View style={{flexBasis: '33%'}}>
-          <Text style={[h4, styles.text]}>Plat Nomor</Text>
+          <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
           <Text style={styles.boldText}>
-            {item?.order?.order_detail?.vehicle_id}
+            {vehicleId?.max_suitcase && (vehicleId?.min_suitcase + ' - ' + vehicleId?.max_suitcase)} Kursi
           </Text>
+        </View>
+      </View>
+      <View style={styles.descriptionContainer}>
+        <View>
+          <Text style={[h4, styles.text]}>Mobil</Text>
+          <Text style={styles.boldText}>{vehicleId?.name} { vehicleId?.brand_name}</Text>
         </View>
 
         <View style={{flexBasis: '33%'}}>
-          <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
-          <Text style={styles.boldText}>0 - 4 Kursi</Text>
+          <Text style={[h4, styles.text]}>Plat Nomor</Text>
+          <Text style={styles.boldText}>
+            {vehicleId?.license_number}
+          </Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
 
       <View style={styles.descriptionContainer}>
         <View style={{}}>
-          <View>
-            <Text style={[h4, styles.text]}>Mobil</Text>
-            <Text style={styles.boldText}>{vehicleId?.name}</Text>
-          </View>
           <View style={{marginBottom: 10}} />
           <CustomCarousel
-            data={[...vehicleId?.photo as any[]]}
+            data={[...((vehicleId?.photo as any[]) || [])]}
             paginationSize={7}
             paginationPosition={-10}
             // renderCarouselTitle={
@@ -148,7 +154,10 @@ const TaskDetailAntarMobil = () => {
                     // alignSelf: 'center',
                   }
                 }>
-                <Image source={{uri: URL_IMAGE + item?.name}} style={{height: 250, width: '90%'}} />
+                <Image
+                  source={{uri: URL_IMAGE + item?.name}}
+                  style={{height: 250, width: '90%'}}
+                />
               </View>
             )}
             containerStyle={{

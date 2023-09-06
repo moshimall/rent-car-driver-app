@@ -13,6 +13,7 @@ import {IDataStore, Vehicle} from 'types/data.types';
 const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
   const getData = useDataStore() as IDataStore;
+  // console.log('getData?.vehicles = ', getData?.vehicles)
   const vehicleId = (
     getData?.vehicles?.length > 0
       ? getData?.vehicles?.find(

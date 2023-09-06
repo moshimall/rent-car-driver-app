@@ -93,7 +93,7 @@ const HomeScreen = () => {
 
     setTasks(_);
 
-    console.log('sorinrt = ', sorting);
+    // console.log('_ = ', JSON.stringify(_));
 
     return () => {};
   }, [sorting]);
@@ -114,7 +114,7 @@ const HomeScreen = () => {
 
     console.log('jobdesk = ', param);
     let res = await getTasks(param as any);
-    console.log('res = ', res);
+    console.log('res = ', JSON.stringify(res));
     setTasks(res?.data);
     setPagination(res?.pagination);
     setLoader(false);

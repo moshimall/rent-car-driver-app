@@ -20,6 +20,8 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         )
       : {}
   ) as Vehicle;
+
+  console.log('item?.order?.order_detail?.vehicle_id = ', item?.order?.order_detail?.vehicle_id)
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -96,6 +98,7 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         _theme="navy"
         title="Antar Mobil"
         onPress={() => {
+          console.log('vehicleId1 = ', item)
           navigation.navigate('TaskDetailAntarMobil', {
             item: item,
             vehicleId: vehicleId
