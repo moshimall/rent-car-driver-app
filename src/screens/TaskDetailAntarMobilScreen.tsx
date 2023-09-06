@@ -26,16 +26,26 @@ import moment from 'moment';
 import {currencyFormat} from 'utils/currencyFormat';
 import {updateCourirTasks} from 'store/effects/taskStore';
 import {URL_IMAGE} from '@env';
+import {getUserById} from 'store/effects/authStore';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAntarMobil'>;
 
 const TaskDetailAntarMobil = () => {
   const {item, vehicleId} = useRoute<ScreenRouteProp>().params;
-  {
-    console.log('vehicleId = ', vehicleId);
-  }
+
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
+  const [user, setUser] = useState<{
+    PersonalInfos: {
+      ktp: string;
+      sim: string;
+    };
+  }>({
+    PersonalInfos: {
+      ktp: '',
+      sim: '',
+    },
+  });
 
   useEffect(() => {
     navigation.setOptions(
@@ -59,7 +69,18 @@ const TaskDetailAntarMobil = () => {
         ),
       }),
     );
+    // _getUser();
   }, [navigation]);
+
+  const _getUser = async () => {
+    try {
+      let res = await getUserById(item?.order?.customer_id);
+      console.log('ress user = ', res);
+      setUser(res?.data);
+    } catch (error) {
+      console.log('err = ', error);
+    }
+  };
 
   const handleSubmit = async () => {
     if (bulkImage?.length <= 0) {
@@ -113,21 +134,21 @@ const TaskDetailAntarMobil = () => {
         <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
           <Text style={styles.boldText}>
-            {vehicleId?.max_suitcase && (vehicleId?.min_suitcase + ' - ' + vehicleId?.max_suitcase)} Kursi
+            {vehicleId?.max_suitcase && vehicleId?.max_suitcase} Kursi
           </Text>
         </View>
       </View>
       <View style={styles.descriptionContainer}>
         <View>
           <Text style={[h4, styles.text]}>Mobil</Text>
-          <Text style={styles.boldText}>{vehicleId?.name} { vehicleId?.brand_name}</Text>
+          <Text style={styles.boldText}>
+            {vehicleId?.name} {vehicleId?.brand_name}
+          </Text>
         </View>
 
         <View style={{flexBasis: '33%'}}>
           <Text style={[h4, styles.text]}>Plat Nomor</Text>
-          <Text style={styles.boldText}>
-            {vehicleId?.license_number}
-          </Text>
+          <Text style={styles.boldText}>{vehicleId?.license_number}</Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -284,7 +305,7 @@ const TaskDetailAntarMobil = () => {
         </View>
 
         <UploadImageInput
-          label="Upload Foto Pengantaran"
+          label="Upload Foto"
           onCameraChange={res => {
             // console.log('ress = ', res);
             let _: any = [];

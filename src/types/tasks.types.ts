@@ -62,6 +62,7 @@ export interface Vehicle {
   }
   
   export interface DataItemTask {
+    customer_id: string;
     id: number;
     order: Order;
     courier_id: number;

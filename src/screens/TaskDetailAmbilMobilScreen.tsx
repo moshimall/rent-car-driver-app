@@ -123,7 +123,7 @@ const TaskDetailAmbilMobilScreen = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={{marginHorizontal: 20}}>
           <UploadImageInput
-            label="Upload Foto Pengantaran"
+            label="Upload Foto"
             onCameraChange={res => {
               // console.log('ress = ', res);
               let _: any = [];
