@@ -102,8 +102,8 @@ const HomeScreen = () => {
     setLoader(true);
     let param = {
       courier_id: 1,
-      limit: pagination.limit,
-      page: pagination.page,
+      limit: pagination?.limit || 0,
+      page: pagination?.page || 1,
     } as any;
     const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
     let _: any = [];
@@ -125,7 +125,7 @@ const HomeScreen = () => {
   };
 
   const handleMore = () => {
-    if (pagination.page < (pagination?.total_page || 0) && !loader) {
+    if (pagination?.page < (pagination?.total_page || 0) && !loader) {
       setRefresh(true);
       _getTasks();
       setRefresh(false);

@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAuthStore } from 'store/actions/authStore';
 
 interface IErrorMessage {
   error_email: string;
@@ -25,10 +26,10 @@ interface IErrorMessage {
 
 const LoginScreen: FC = () => {
   const navigation = useNavigation();
-
+  const login = useAuthStore((state: any) => state.login);
   const [form, setForm] = useState<any>({
-    email: 'sumaalbaroh1892@gmail.com',
-    password: '12345678abc',
+    email: 'admin2@mail.com',
+    password: 'admindev2',
   });
   const [formError, setFormError] = useState<IErrorMessage>({
     error_email: '',
@@ -56,7 +57,8 @@ const LoginScreen: FC = () => {
   const methods = {
     handleLogin: async () => {
       try {
-        navigation.navigate('MainTab');
+        await login(form?.email, form?.password);
+        // navigation.navigate('MainTab');
         // Keyboard.dismiss();
         // const _errorMessage: any = {};
         // let status = true;

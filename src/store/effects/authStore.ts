@@ -5,7 +5,7 @@ export const getUserById = async (id: string) => {
   try {
     const response: any = await apiWithInterceptor({
       method: 'get',
-      url: '/api/users/' + id,
+      url: '/users/' + id,
     });
 
     return response.data;

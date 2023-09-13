@@ -52,7 +52,7 @@ export const getTasks = async (paramsFilter: IParamsTasks) => {
     try {
         const response: any = await apiWithInterceptor({
             method: 'get',
-            url: '/api/tasks' + params,
+            url: '/tasks' + params,
         });
         return response.data;
     } catch (error) {
@@ -64,7 +64,7 @@ export const updateOrder = async (params: IParamUpdateOrder) => {
     try {
         const response: any = await apiWithInterceptor({
             method: 'put',
-            url: '/api/order',
+            url: '/order',
             data: params,
         });
 
@@ -83,7 +83,7 @@ export const updateCourirTasks = async (params: IParamUPdateCourirTasks) => {
         // console.log('params = ', params?.image_captures)
         const response: any = await apiWithInterceptor({
             method: 'put',
-            url: '/api/tasks',
+            url: '/tasks',
             data: params,
         });
 
@@ -110,10 +110,45 @@ export const updateOrderViolations = async (params: IParamOrderViolations) => {
     try {
         const response: any = await apiWithInterceptor({
             method: 'put',
-            url: '/api/orders/' + params?.transaction_key,
+            url: '/orders/' + params?.transaction_key,
             data: params,
         });
 
+        return response.data;
+    } catch (error) {
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
+
+
+export const getTaskById = async (taskId: number) => {
+    try {
+        const response: any = await apiWithInterceptor({
+            method: 'get',
+            url: '/tasks/' + taskId,
+        });
+
+        const responseOrder: any = await apiWithInterceptor({
+            method: 'get',
+            url: '/admin/orders/' + response?.data?.order?.transaction_key,
+        });
+
+        return responseOrder.data;
+    } catch (error) {
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
+
+
+
+
+export const getVehicleById = async (id: number) => {
+    try {
+        const response: any = await apiWithInterceptor({
+            method: 'get',
+            url: '/admin/vehicles/' + id,
+        });
+        console.log('id res = ', response?.data);
         return response.data;
     } catch (error) {
         Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');

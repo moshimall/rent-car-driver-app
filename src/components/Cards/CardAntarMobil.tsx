@@ -1,27 +1,47 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ic_car, ic_pinpoin, ic_calendar} from 'assets/icons';
 import {theme} from 'utils';
 import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
-import { DataItemTask } from 'types/tasks.types';
-import { useDataStore } from 'store/actions/dataStore';
-import { IDataStore, Vehicle } from 'types/data.types';
+import {DataItemTask} from 'types/tasks.types';
+import {useDataStore} from 'store/actions/dataStore';
+import {IDataStore, Vehicle} from 'types/data.types';
+import {getVehicleById} from 'store/effects/taskStore';
 
 const CardAntarMobil = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
   const getData = useDataStore() as IDataStore;
-  const vehicleId = (
-    getData?.vehicles?.length > 0
-      ? getData?.vehicles?.find(
-          x => x?.id === item?.order?.order_detail?.vehicle_id,
-        )
-      : {}
-  ) as Vehicle;
+  const [vehicleId, setVehicleId] = useState<Vehicle>({});
 
-  console.log('item?.order?.order_detail?.vehicle_id = ', item?.order?.order_detail?.vehicle_id)
+  // const vehicleId = (
+  //   getData?.vehicles?.length > 0
+  //     ? getData?.vehicles?.find(
+  //         x => x?.id === item?.order?.order_detail?.vehicle_id,
+  //       )
+  //     : {}
+  // ) as Vehicle;
+
+  // console.log(
+  //   'item?.order?.order_detail?.vehicle_id = ',
+  //   item?.order?.order_detail?.vehicle_id,
+  // );
+
+  useEffect(() => {
+    _getDetailVehicle();
+    return () => {};
+  }, [item]);
+
+  const _getDetailVehicle = async () => {
+    try {
+      let res = await getVehicleById(item?.order?.order_detail?.vehicle_id);
+      console.log('res detail = ', res);
+      setVehicleId(res);
+    } catch (error) {}
+  };
+
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -35,10 +55,14 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
-      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>{ item?.order?.user_name}</Text>
+      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>
+        {item?.order?.user_name}
+      </Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
-        <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { vehicleId?.name || '-'}</Text>
+        <Text style={{fontWeight: '500'}}>
+          {item?.order?.order_key} | {vehicleId?.name || '-'}
+        </Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -98,10 +122,10 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
         _theme="navy"
         title="Antar Mobil"
         onPress={() => {
-          console.log('vehicleId1 = ', item)
+          console.log('vehicleId1 = ', item);
           navigation.navigate('TaskDetailAntarMobil', {
             item: item,
-            vehicleId: vehicleId
+            vehicleId: vehicleId,
           });
         }}
         styleWrapper={{

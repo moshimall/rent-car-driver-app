@@ -15,10 +15,12 @@ import {
 } from '../screens';
 import SplashScreen from 'screens/SplashScreen';
 import TaskCompleteDetailScreen from 'screens/TaskCompleteDetailScreen';
+import {useAuthStore} from 'store/actions/authStore';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const Main: React.FC = () => {
+  const isAuthenticated = useAuthStore((state: any) => state.isAuthenticated);
   return (
     <RootStack.Navigator
       screenOptions={{
@@ -27,57 +29,73 @@ const Main: React.FC = () => {
       }}
       initialRouteName="Splash">
       <>
-        <RootStack.Screen name="MainTab" component={MainTab} />
-        <RootStack.Screen
-          name="CodepushUpdateManager"
-          component={CodepushUpdateManager}
-          options={{
-            ...TransitionPresets.ModalSlideFromBottomIOS,
-          }}
-        />
-        <RootStack.Screen
-          name="TaskDetailAntarMobil"
-          component={TaskDetailAntarMobilScreen}
-          options={{
-            headerStyle: {
-              backgroundColor: theme.colors.navy,
-            },
-          }}
-        />
-        <RootStack.Screen
-          name="TaskDetailAmbilMobil"
-          component={TaskDetailAmbilMobilScreen}
-          options={{
-            headerStyle: {
-              backgroundColor: theme.colors.navy,
-            },
-          }}
-        />
-        <RootStack.Screen
-          name="TaskDetailParkirMobil"
-          component={TaskDetailParkirMobilScreen}
-          options={{
-            headerStyle: {
-              backgroundColor: theme.colors.navy,
-            },
-          }}
-        />
-        <RootStack.Screen name="Splash" component={SplashScreen} />
-        <RootStack.Screen name="Login" component={LoginScreen} />
-        <RootStack.Screen name="Register" component={RegisterScreen} />
-        <RootStack.Screen
-          name="OtpVerification"
-          component={OtpVerificationScreen}
-        />
-        <RootStack.Screen
-          name="TaskCompleteDetail"
-          component={TaskCompleteDetailScreen}
-          options={{
-            headerStyle: {
-              backgroundColor: theme.colors.navy,
-            },
-          }}
-        />
+        {!isAuthenticated && (
+          <>
+            <RootStack.Screen name="Splash" component={SplashScreen} />
+            <RootStack.Screen name="Login" component={LoginScreen} />
+            <RootStack.Screen name="Register" component={RegisterScreen} />
+            <RootStack.Screen
+              name="OtpVerification"
+              component={OtpVerificationScreen}
+            />
+            <RootStack.Screen
+              name="CodepushUpdateManager"
+              component={CodepushUpdateManager}
+              options={{
+                ...TransitionPresets.ModalSlideFromBottomIOS,
+              }}
+            />
+          </>
+        )}
+        {isAuthenticated && (
+          <>
+            <RootStack.Screen name="MainTab" component={MainTab} />
+            <RootStack.Screen
+              name="CodepushUpdateManager"
+              component={CodepushUpdateManager}
+              options={{
+                ...TransitionPresets.ModalSlideFromBottomIOS,
+              }}
+            />
+            <RootStack.Screen
+              name="TaskDetailAntarMobil"
+              component={TaskDetailAntarMobilScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: theme.colors.navy,
+                },
+              }}
+            />
+            <RootStack.Screen
+              name="TaskDetailAmbilMobil"
+              component={TaskDetailAmbilMobilScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: theme.colors.navy,
+                },
+              }}
+            />
+            <RootStack.Screen
+              name="TaskDetailParkirMobil"
+              component={TaskDetailParkirMobilScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: theme.colors.navy,
+                },
+              }}
+            />
+
+            <RootStack.Screen
+              name="TaskCompleteDetail"
+              component={TaskCompleteDetailScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: theme.colors.navy,
+                },
+              }}
+            />
+          </>
+        )}
       </>
     </RootStack.Navigator>
   );

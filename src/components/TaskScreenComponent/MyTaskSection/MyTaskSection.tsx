@@ -64,10 +64,10 @@ const MyTaskSection: React.FC = () => {
     setLoader(true);
     let param = {
       courier_id: 1,
-      limit: pagination.limit,
+      limit: pagination?.limit || 0,
       page: pagination.page,
     };
-    const VALUE = ['RETURNED'];
+    const VALUE = ['IN_GARAGE'];
     let _: any = [];
     jobdesk?.map((x, i) => {
       _.push(VALUE[x]);

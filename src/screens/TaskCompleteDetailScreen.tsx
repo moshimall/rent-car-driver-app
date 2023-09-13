@@ -25,7 +25,7 @@ import CollapseItem from 'components/CollapseItem/CollapseItem';
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskCompleteDetail'>;
 
 const TaskCompleteDetailScreen = () => {
-  const {item} = useRoute<ScreenRouteProp>().params;
+  const {item, vehicleId} = useRoute<ScreenRouteProp>().params;
 
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
@@ -87,7 +87,7 @@ const TaskCompleteDetailScreen = () => {
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Mobil</Text>
           <Text style={styles.boldText}>
-            {item?.order?.order_detail?.vehicle?.name}
+            {vehicleId?.brand_name} {vehicleId?.name}
           </Text>
         </View>
 
@@ -101,14 +101,14 @@ const TaskCompleteDetailScreen = () => {
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
           <Text style={styles.boldText}>
-            {item?.order?.order_detail?.vehicle?.max_suitcase} kursi
+            {vehicleId?.max_suitcase} kursi
           </Text>
         </View>
 
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Plat Nomor</Text>
           <Text style={styles.boldText}>
-            {item?.order?.order_detail?.vehicle_id}
+            {vehicleId?.license_number}
           </Text>
         </View>
       </View>

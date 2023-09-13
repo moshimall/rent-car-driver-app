@@ -24,7 +24,7 @@ import {deepClone} from 'utils';
 import {RootStackParamList} from 'types/navigator';
 import moment from 'moment';
 import {currencyFormat} from 'utils/currencyFormat';
-import {updateCourirTasks} from 'store/effects/taskStore';
+import {getTaskById, updateCourirTasks} from 'store/effects/taskStore';
 import {URL_IMAGE} from '@env';
 import {getUserById} from 'store/effects/authStore';
 
@@ -35,6 +35,7 @@ const TaskDetailAntarMobil = () => {
 
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
+  const [taskById, setTaskById] = useState({});
   const [user, setUser] = useState<{
     PersonalInfos: {
       ktp: string;
@@ -70,6 +71,7 @@ const TaskDetailAntarMobil = () => {
       }),
     );
     // _getUser();
+    _getTaskById();
   }, [navigation]);
 
   const _getUser = async () => {
@@ -77,6 +79,17 @@ const TaskDetailAntarMobil = () => {
       let res = await getUserById(item?.order?.customer_id);
       console.log('ress user = ', res);
       setUser(res?.data);
+    } catch (error) {
+      console.log('err = ', error);
+    }
+  };
+
+
+  const _getTaskById = async () => {
+    try {
+      let res = await getTaskById(item?.id);
+      console.log('ress task id = ', res);
+      setTaskById(res);
     } catch (error) {
       console.log('err = ', error);
     }
@@ -142,7 +155,7 @@ const TaskDetailAntarMobil = () => {
         <View>
           <Text style={[h4, styles.text]}>Mobil</Text>
           <Text style={styles.boldText}>
-            {vehicleId?.name} {vehicleId?.brand_name}
+            {vehicleId?.brand_name} {vehicleId?.name}
           </Text>
         </View>
 
@@ -194,7 +207,7 @@ const TaskDetailAntarMobil = () => {
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Total Pembayaran</Text>
           <Text style={styles.boldText}>
-            {currencyFormat(item?.order?.total_payment)}
+            {currencyFormat(taskById?.total_payment)}
           </Text>
         </View>
 

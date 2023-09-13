@@ -14,13 +14,13 @@ const useDataStore = create((set) => ({
                 loaderVehicle: true
             })
             let response = await apiWithInterceptor({
-                url: 'api/vehicles',
+                url: 'admin/vehicles',
                 method: 'get'
             })
             set({
                 loaderVehicle: false
             })
-            // console.log('res veh =', response?.data);
+            console.log('res veh =', response?.data);
             set({
                 vehicles: response?.data?.vehicles
             })

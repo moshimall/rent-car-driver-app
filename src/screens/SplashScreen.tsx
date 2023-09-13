@@ -8,9 +8,11 @@ import {RootStackParamList} from 'types/navigator';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useFocusEffect} from '@react-navigation/native';
 import {useNavigation} from '@react-navigation/native';
+import { useAuthStore } from 'store/actions/authStore';
 
 const SplashScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const logout = useAuthStore(state => state.logout);
 
   const checkCodepushUpdate = () => {
     CodePush.checkForUpdate()
@@ -21,6 +23,7 @@ const SplashScreen = () => {
           });
         } else {
           navigation.replace('Login');
+
         }
       })
       .catch(err => {

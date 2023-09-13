@@ -16,7 +16,8 @@ type RootStackParamList = {
     vehicleId?: Vehicle
   };
   TaskCompleteDetail: {
-    item: DataItemTask
+    item: DataItemTask;
+    vehicleId?: Vehicle
   };
   TaskDetailAmbilMobil: {
     item: DataItemTask

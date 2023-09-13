@@ -5,12 +5,21 @@ import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import { DataItemTask } from 'types/tasks.types';
+import { DataItemTask, Vehicle } from 'types/tasks.types';
 import moment from 'moment';
+import { useDataStore } from 'store/actions/dataStore';
+import { IDataStore } from 'types/data.types';
 
 const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item}) => {
   const navigation = useNavigation();
-
+  const getData = useDataStore() as IDataStore;
+  const vehicleId = (
+    getData?.vehicles?.length > 0
+      ? getData?.vehicles?.find(
+          x => x?.id === item?.order?.order_detail?.vehicle_id,
+        )
+      : {}
+  ) as Vehicle;
   return (
     <View style={[styles.cardWrapper]}>
       <View
@@ -45,7 +54,7 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
 
       <View style={styles.lineHorizontal} />
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{fontWeight: '500'}}>{item?.order_key}</Text>
+        Order ID: <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { vehicleId?.name || '-'}</Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -97,7 +106,7 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
         _theme="navy"
         title="Detail Tugas"
         onPress={() => {
-          navigation.navigate('TaskCompleteDetail', {item: item});
+          navigation.navigate('TaskCompleteDetail', {item: item, vehicleId: vehicleId});
         }}
         styleWrapper={{
           width: '95%',
