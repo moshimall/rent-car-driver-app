@@ -65,3 +65,7 @@ buck-out/
 
 /.yarn
 /.yarn/
+
+.env
+.env.production
+.env.development
