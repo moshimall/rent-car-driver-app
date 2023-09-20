@@ -20,7 +20,7 @@ const useDataStore = create((set) => ({
             set({
                 loaderVehicle: false
             })
-            console.log('res veh =', response?.data);
+            // console.log('res veh =', response?.data);
             set({
                 vehicles: response?.data?.vehicles
             })

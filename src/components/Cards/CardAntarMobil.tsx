@@ -37,7 +37,7 @@ const CardAntarMobil = ({item}: {item: DataItemTask}) => {
   const _getDetailVehicle = async () => {
     try {
       let res = await getVehicleById(item?.order?.order_detail?.vehicle_id);
-      console.log('res detail = ', res);
+      // console.log('res detail = ', res);
       setVehicleId(res);
     } catch (error) {}
   };

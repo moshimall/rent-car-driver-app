@@ -1,6 +1,6 @@
 // import store from 'redux/store';
 import { URL_API } from '@env';
-import {ApisauceConfig, create} from 'apisauce';
+import { ApisauceConfig, create } from 'apisauce';
 import { useAuthStore } from 'store/actions/authStore';
 import { showToast } from './Toast';
 // import {logout} from 'redux/features/auth/authSlice';
@@ -24,14 +24,15 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
         const state: any = useAuthStore.getState();
 
         console.log('URL_API = ', URL_API + request.url);
+        // console.log('refresh_token = ', state?.authToken?.access_token);
         request.baseURL = URL_API;
         request.timeout = 10000;
         request.headers.Authorization = 'Bearer ' + state?.authToken?.access_token;
-        console.log('request.headers.Authorization = ', request.headers.Authorization);
+        // console.log('request.headers.Authorization = ', request.headers.Authorization);
         return request;
-      } catch (error) {}
+      } catch (error) { }
     },
-    (error:any) => {
+    (error: any) => {
       return Promise.reject(error);
     },
   );
@@ -40,31 +41,50 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
     function (successRes) {
       return successRes;
     },
-    function (error) {
+    async function (error) {
       try {
         console.log('error', error.config.url);
-        console.log(error.response.status);
+        console.log(error.response);
+        console.log('error.response.data=  ', error.response.data);
         const state: any = useAuthStore.getState();
+        // if (error.response.status === 401) {
+        //   const refresh_token = state?.authToken?.access_token;
+        //   state.logout()
+        //   showToast({
+        //     message: 'token expired',
+        //     title: 'error',
+        //     type: 'error'
+        //   })
+        //   // if (
+        //   //   refresh_token &&
+        //   //   error.response.data?.slug !== 'refresh-token-invalid'
+        //   // ) {
+        //   //   // store.dispatch(refreshToken(refresh_token as any));
+        //   //   return api.axiosInstance.request(error.config);
+        //   // } else {
+        //   //   // store.dispatch(logout());
+        //   // }
+        // }
         if (error.response.status === 401) {
-          // const refresh_token = store?.getState()?.auth?.auth.refresh_token;
-          state.logout()
-          showToast({
-            message: 'token expired',
-            title: 'error',
-            type: 'error'
-          })
-          // if (
-          //   refresh_token &&
-          //   error.response.data?.slug !== 'refresh-token-invalid'
-          // ) {
-          //   // store.dispatch(refreshToken(refresh_token as any));
-          //   return api.axiosInstance.request(error.config);
-          // } else {
-          //   // store.dispatch(logout());
-          // }
+          const refresh_token = state?.authToken?.refresh_token;
+          const isLogin = state?.isAuthenticated;
+
+          if (
+            refresh_token
+            &&
+            error.response.data?.slug === 'unable-to-verify-jwt'
+          ) {
+            // store.dispatch(refreshToken(refresh_token as any));
+            await state?.refreshToken(refresh_token);
+            return api.axiosInstance.request(error.config);
+          } else if (!refresh_token && isLogin) {
+            state.logout()
+          } else {
+            state.logout()
+          }
         }
         return Promise.reject(error);
-      } catch (e) {}
+      } catch (e) { }
     },
   );
 

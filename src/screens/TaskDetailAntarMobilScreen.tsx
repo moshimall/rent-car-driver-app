@@ -70,7 +70,7 @@ const TaskDetailAntarMobil = () => {
         ),
       }),
     );
-    // _getUser();
+    _getUser();
     _getTaskById();
   }, [navigation]);
 
@@ -78,7 +78,7 @@ const TaskDetailAntarMobil = () => {
     try {
       let res = await getUserById(item?.order?.customer_id);
       console.log('ress user = ', res);
-      setUser(res?.data);
+      setUser(res);
     } catch (error) {
       console.log('err = ', error);
     }
@@ -296,7 +296,7 @@ const TaskDetailAntarMobil = () => {
             </Text>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri: item?.order?.order_detail?.identity?.sim}}
+                source={{uri: URL_IMAGE + user?.PersonalInfos?.sim}}
                 style={styles.image}
                 resizeMode="cover"
               />
@@ -309,7 +309,7 @@ const TaskDetailAntarMobil = () => {
             </Text>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri: item?.order?.order_detail?.identity?.ktp}}
+                source={{uri: URL_IMAGE + user?.PersonalInfos?.ktp}}
                 style={styles.image}
                 resizeMode="cover"
               />

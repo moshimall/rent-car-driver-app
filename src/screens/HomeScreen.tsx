@@ -114,7 +114,7 @@ const HomeScreen = () => {
 
     console.log('jobdesk = ', param);
     let res = await getTasks(param as any);
-    console.log('res = ', JSON.stringify(res));
+    // console.log('res = ', JSON.stringify(res));
     setTasks(res?.data);
     setPagination(res?.pagination);
     setLoader(false);

@@ -30,6 +30,22 @@ const useAuthStore = create<any>(
           Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
         }
       },
+      refreshToken: async (token: string) => {
+        try {
+          const response: any = await apiWithInterceptor({
+            method: 'post',
+            url: '/authorization/refresh',
+            data: { refresh_token: token },
+          });
+          console.log('res login = ', response.data)
+          set(() => ({
+            isAuthenticated: true,
+            authToken: { ...response?.data },
+          }));
+        } catch (error) {
+          Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+        }
+      },
       logout: () => {
         set(() => ({
           isAuthenticated: false,

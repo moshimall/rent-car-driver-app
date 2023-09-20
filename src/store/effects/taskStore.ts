@@ -148,7 +148,7 @@ export const getVehicleById = async (id: number) => {
             method: 'get',
             url: '/admin/vehicles/' + id,
         });
-        console.log('id res = ', response?.data);
+        // console.log('id res = ', response?.data);
         return response.data;
     } catch (error) {
         Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
