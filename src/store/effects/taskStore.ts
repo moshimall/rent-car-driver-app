@@ -76,10 +76,6 @@ export const updateOrder = async (params: IParamUpdateOrder) => {
 
 export const updateCourirTasks = async (params: IParamUPdateCourirTasks) => {
     try {
-        console.log('params = ', params?.id)
-        console.log('params = ', params?.note)
-        console.log('params = ', params?.status)
-        console.log('params = ', params?.violations)
         // console.log('params = ', params?.image_captures)
         const response: any = await apiWithInterceptor({
             method: 'put',
@@ -89,8 +85,6 @@ export const updateCourirTasks = async (params: IParamUPdateCourirTasks) => {
 
         return response.data;
     } catch (err) {
-        console.log('err = ', err);
-        console.log('err = ', err?.response);
         Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
     }
 }
@@ -139,7 +133,33 @@ export const getTaskById = async (taskId: number) => {
     }
 }
 
+export const getTaskById2 = async (taskId: number) => {
+    try {
+        const response: any = await apiWithInterceptor({
+            method: 'get',
+            url: '/tasks/' + taskId,
+        });
 
+        
+        return response.data;
+    } catch (error) {
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
+
+
+export const getNotes = async (taskId: number) => {
+    try {
+        const response: any = await apiWithInterceptor({
+            method: 'get',
+            url: `/tasks/${taskId}/notes`,
+        });
+        console.log('get nhotes = ', response?.data);
+        return response.data;
+    } catch (error) {
+        Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+    }
+}
 
 
 export const getVehicleById = async (id: number) => {

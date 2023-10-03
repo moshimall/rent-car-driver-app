@@ -18,7 +18,15 @@
     "appcenter:android-prod": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-Android -d Production -m --disable-duplicate-release-error",
     "appcenter:android-dev": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-Android -d Development -m --disable-duplicate-release-error",
     "appcenter:ios-prod": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-iOS -d Production -m --disable-duplicate-release-error",
-    "appcenter:ios-dev": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-iOS -d Development -m --disable-duplicate-release-error"
+    "appcenter:ios-dev": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-iOS -d Development -m --disable-duplicate-release-error",
+
+    "androidProductionReleaseBundle": "cd android && ./gradlew bundleProductionRelease && killall -9 java",
+    "androidDevelopmentDebugAPK": "cd android && ./gradlew assembleDevelopmentDebug && killall -9 java",
+    "androidDevelopmentReleaseAPK": "cd android && ./gradlew assembleDevelopmentRelease && killall -9 java",
+    "androidProductionDebugAPK": "cd android && ./gradlew assembleProductionDebug && killall -9 java",
+    "androidProductionReleaseAPK": "cd android && ./gradlew assembleProductionRelease && killall -9 java",
+    "androidStagingDebugAPK": "cd android && ./gradlew assembleStagingDebug && killall -9 java",
+    "androidStagingReleaseAPK": "cd android && ./gradlew assembleStagingRelease && killall -9 java"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",

@@ -15,20 +15,34 @@ import {
 } from 'react-native';
 import {WINDOW_WIDTH, iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
-
 import {deepClone, theme} from 'utils';
 import {RootStackParamList} from 'types/navigator';
 import moment from 'moment';
 import CollapseItem from 'components/CollapseItem/CollapseItem';
+import {getNotes, getTaskById, getTaskById2} from 'store/effects/taskStore';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskCompleteDetail'>;
 
+type IStatus = 'PICKUP_PROCESS' | 'RETURNED' | 'IN_GARAGE';
+interface TaskId {
+  image_captures: {
+    file_name: string;
+    for_task_status: IStatus;
+  }[];
+  id: number;
+  note: string;
+  status: IStatus;
+}
+interface Notes {
+  status: IStatus;
+  note: string;
+}
 const TaskCompleteDetailScreen = () => {
   const {item, vehicleId} = useRoute<ScreenRouteProp>().params;
 
   const navigation = useNavigation();
-  const [bulkImage, setBulkImage] = useState([]);
+  const [taskId, setTaskId] = useState<TaskId>();
+  const [notes, setNotes] = useState<Notes[]>([]);
 
   useEffect(() => {
     navigation.setOptions(
@@ -53,6 +67,20 @@ const TaskCompleteDetailScreen = () => {
       }),
     );
   }, [navigation]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const taskDetails = await getTaskById2(item?.id);
+      setTaskId(taskDetails);
+
+      const taskNotes = await getNotes(item?.id);
+      setNotes(taskNotes);
+    };
+
+    fetchData();
+
+    return () => {};
+  }, [item, navigation]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -100,16 +128,12 @@ const TaskCompleteDetailScreen = () => {
       <View style={styles.descriptionContainer}>
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Jumlah Kursi</Text>
-          <Text style={styles.boldText}>
-            {vehicleId?.max_suitcase} kursi
-          </Text>
+          <Text style={styles.boldText}>{vehicleId?.max_suitcase} kursi</Text>
         </View>
 
         <View style={{flexBasis: '50%'}}>
           <Text style={[h4, styles.text]}>Plat Nomor</Text>
-          <Text style={styles.boldText}>
-            {vehicleId?.license_number}
-          </Text>
+          <Text style={styles.boldText}>{vehicleId?.license_number}</Text>
         </View>
       </View>
       <View style={styles.dashedLine} />
@@ -180,16 +204,18 @@ const TaskCompleteDetailScreen = () => {
               Foto Pengantaran
             </Text>
             <View style={[rowCenter]}>
-              {[...Array(3)].map((x, i) => (
-                <Image
-                  key={i}
-                  source={img_car_1}
-                  style={[
-                    iconCustomSize(58),
-                    {borderRadius: 10, marginRight: 10},
-                  ]}
-                />
-              ))}
+              {taskId?.image_captures
+                ?.filter(x => x?.for_task_status === 'PICKUP_PROCESS')
+                .map((x, i) => (
+                  <Image
+                    key={i}
+                    source={{uri: x?.file_name}}
+                    style={[
+                      iconCustomSize(58),
+                      {borderRadius: 10, marginRight: 10},
+                    ]}
+                  />
+                ))}
             </View>
 
             <Text style={[[h4, styles.text], {marginTop: 10}]}>Keterangan</Text>
@@ -197,7 +223,7 @@ const TaskCompleteDetailScreen = () => {
             <TextInput
               style={styles.textArea}
               editable={false}
-              value={item?.note || '-'}
+              value={notes.find(x => x?.status === 'PICKUP_PROCESS')?.note}
             />
           </>
         }
@@ -224,16 +250,18 @@ const TaskCompleteDetailScreen = () => {
               Foto Pengantaran
             </Text>
             <View style={[rowCenter]}>
-              {[...Array(3)].map((x, i) => (
-                <Image
-                  key={i}
-                  source={img_car_1}
-                  style={[
-                    iconCustomSize(58),
-                    {borderRadius: 10, marginRight: 10},
-                  ]}
-                />
-              ))}
+              {taskId?.image_captures
+                ?.filter(x => x?.for_task_status === 'RETURNED')
+                .map((x, i) => (
+                  <Image
+                    key={i}
+                    source={{uri: x?.file_name}}
+                    style={[
+                      iconCustomSize(58),
+                      {borderRadius: 10, marginRight: 10},
+                    ]}
+                  />
+                ))}
             </View>
 
             <Text style={[[h4, styles.text], {marginTop: 10}]}>Keterangan</Text>
@@ -241,7 +269,7 @@ const TaskCompleteDetailScreen = () => {
             <TextInput
               style={styles.textArea}
               editable={false}
-              value={item?.note || '-'}
+              value={notes.find(x => x?.status === 'RETURNED')?.note}
             />
             <Text style={[[h4, styles.text], {marginBottom: 5, marginTop: 20}]}>
               Detail Denda
@@ -276,16 +304,18 @@ const TaskCompleteDetailScreen = () => {
               Foto Pengantaran
             </Text>
             <View style={[rowCenter]}>
-              {[...Array(3)].map((x, i) => (
-                <Image
-                  key={i}
-                  source={img_car_1}
-                  style={[
-                    iconCustomSize(58),
-                    {borderRadius: 10, marginRight: 10},
-                  ]}
-                />
-              ))}
+              {taskId?.image_captures
+                ?.filter(x => x?.for_task_status === 'IN_GARAGE')
+                .map((x, i) => (
+                  <Image
+                    key={i}
+                    source={{uri: x?.file_name}}
+                    style={[
+                      iconCustomSize(58),
+                      {borderRadius: 10, marginRight: 10},
+                    ]}
+                  />
+                ))}
             </View>
 
             <Text style={[[h4, styles.text], {marginTop: 10}]}>Keterangan</Text>
@@ -293,7 +323,7 @@ const TaskCompleteDetailScreen = () => {
             <TextInput
               style={styles.textArea}
               editable={false}
-              value={item?.note || '-'}
+              value={notes.find(x => x?.status === 'IN_GARAGE')?.note}
             />
           </>
         }

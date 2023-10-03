@@ -74,9 +74,6 @@ const CollapseItem = ({children, title}: IProps) => {
         onLayout={event => {
           let {x, y, width, height} = event.nativeEvent.layout;
           setHeightView(height);
-          // viewValue.value = withTiming(height, {
-          //   duration: 500,
-          // });
         }}>
         {children}
       </View>
