@@ -69,3 +69,4 @@ buck-out/
 .env
 .env.production
 .env.development
+.env.staging
