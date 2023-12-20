@@ -1,13 +1,7 @@
-// import store from 'redux/store';
-import { URL_API } from '@env';
-import { ApisauceConfig, create } from 'apisauce';
-import { useAuthStore } from 'store/actions/authStore';
-import { showToast } from './Toast';
-// import {logout} from 'redux/features/auth/authSlice';
-// import {refreshToken} from 'redux/features/auth/authAPI';
-// import base64 from 'base-64';
-
-// import {BASE_URL, BASIC_PASSWORD, BASIC_USERNAME} from '@env';
+import Config from 'react-native-config';
+import {ApisauceConfig, create} from 'apisauce';
+import {showToast} from './Toast';
+import {useAuthStore} from 'store/actions/authStore';
 
 type ApiConfig = {
   method: ApisauceConfig['method'];
@@ -22,13 +16,16 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
     (request: any) => {
       try {
         const state: any = useAuthStore.getState();
-
-        console.log('URL_API = ', URL_API + request.url);
-        console.log('refresh_token = ', state?.authToken?.access_token);
-        request.baseURL = URL_API;
+        // request.baseURL = URL_API;
+        console.log(`URL API: ${Config.URL_API}${request.url}`);
+        request.baseURL = Config.URL_API;
         request.timeout = 10000;
-        request.headers.Authorization = 'Bearer ' + state?.authToken?.access_token;
-        // console.log('request.headers.Authorization = ', request.headers.Authorization);
+        request.headers.Authorization =
+          'Bearer ' + state?.authToken?.access_token;
+        console.log(
+          'request.headers.Authorization = ',
+          request.headers.Authorization,
+        );
         return request;
       } catch (error) { }
     },
@@ -66,22 +63,22 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
         //   // }
         // }
         if (error.response.status === 401) {
-          const refresh_token = state?.authToken?.refresh_token;
-          const isLogin = state?.isAuthenticated;
-
-          if (
-            refresh_token
-            &&
-            error.response.data?.slug === 'unable-to-verify-jwt'
-          ) {
-            // store.dispatch(refreshToken(refresh_token as any));
-            await state?.refreshToken(refresh_token);
-            return api.axiosInstance.request(error.config);
-          } else if (!refresh_token && isLogin) {
-            state.logout()
-          } else {
-            state.logout()
-          }
+          // const refresh_token = store?.getState()?.auth?.auth.refresh_token;
+          state.logout();
+          showToast({
+            message: 'token expired',
+            title: 'error',
+            type: 'error',
+          });
+          // if (
+          //   refresh_token &&
+          //   error.response.data?.slug !== 'refresh-token-invalid'
+          // ) {
+          //   // store.dispatch(refreshToken(refresh_token as any));
+          //   return api.axiosInstance.request(error.config);
+          // } else {
+          //   // store.dispatch(logout());
+          // }
         }
         return Promise.reject(error);
       } catch (e) { }

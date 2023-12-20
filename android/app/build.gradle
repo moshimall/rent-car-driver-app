@@ -85,6 +85,8 @@ project.ext.react = [
 project.ext.envConfigFiles = [
    productiondebug: ".env.production",
    productionrelease: ".env.production",
+   stagingrelease: ".env.staging",
+   stagingdebug: ".env.staging",
    developmentrelease: ".env.development",
    developmentdebug: ".env.development",
 ]
@@ -151,6 +153,14 @@ android {
             resValue "string", "build_config_package", "com.getridedriver"
             resValue "string", "CodePushDeploymentKey", "GvoSuq0Jr09d36m5IQ1NfvKn0nBEuCtBcPnew"
             resValue "string", "app_name", "Get Ride Driver"
+        }
+        staging {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationIdSuffix ".staging"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.getridedriver"
+            resValue "string", "CodePushDeploymentKey", "yHWdN-WskjsTHNdDdaZSrLuLTQk3tfvRBBrli"
+            resValue "string", "app_name", "Get Ride Driver Staging"
         }
         development {
             minSdkVersion rootProject.ext.minSdkVersion
@@ -257,8 +267,6 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            resValue "string", "CodePushDeploymentKey", "1iACsEauG0_Oi0WmB72dB8b9zu0KwgJcm0bVw"
-            resValue "string", "app_name", "Get Ride Driver Dev"
             applicationIdSuffix ".development"
             matchingFallbacks = ['release']
         }
@@ -268,8 +276,6 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            resValue "string", "CodePushDeploymentKey", "GvoSuq0Jr09d36m5IQ1NfvKn0nBEuCtBcPnew"
-            resValue "string", "app_name", "Get Ride Driver"
         }
     }
 
