@@ -27,6 +27,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+
 const Section: React.FC<
   PropsWithChildren<{
     title: string;
@@ -63,6 +64,7 @@ const App = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
 
   return (
     <SafeAreaView style={backgroundStyle}>

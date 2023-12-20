@@ -24,7 +24,7 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
         const state: any = useAuthStore.getState();
 
         console.log('URL_API = ', URL_API + request.url);
-        // console.log('refresh_token = ', state?.authToken?.access_token);
+        console.log('refresh_token = ', state?.authToken?.access_token);
         request.baseURL = URL_API;
         request.timeout = 10000;
         request.headers.Authorization = 'Bearer ' + state?.authToken?.access_token;

@@ -5386,6 +5386,7 @@ __metadata:
     react-native-dotenv: ^3.4.7
     react-native-gesture-handler: ^2.12.0
     react-native-image-picker: ^5.6.0
+    react-native-onesignal: ^5.0.4
     react-native-reanimated: ^2.14.4
     react-native-reanimated-carousel: ^3.3.2
     react-native-safe-area-context: ^4.5.0
@@ -5908,7 +5909,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.4":
+"invariant@npm:^2.2.2, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -9238,6 +9239,15 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 3797ec006c2d1f7b96c088c25d972113ef61f42e499f1bdbc553630acecab613d671a2c7d050029a7b01df144e83992ea2639b33255cfa487bf422943ded419b
+  languageName: node
+  linkType: hard
+
+"react-native-onesignal@npm:^5.0.4":
+  version: 5.0.4
+  resolution: "react-native-onesignal@npm:5.0.4"
+  dependencies:
+    invariant: ^2.2.2
+  checksum: b0391d1659d8517f27fb1ff5c34a39604973f42ded4f72618c969263db2ad24c44c9c440d2280270a9cf1f8a948ef452fb196f15272de208e45251e15187c3ad
   languageName: node
   linkType: hard
 

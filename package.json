@@ -19,7 +19,6 @@
     "appcenter:android-dev": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-Android -d Development -m --disable-duplicate-release-error",
     "appcenter:ios-prod": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-iOS -d Production -m --disable-duplicate-release-error",
     "appcenter:ios-dev": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-iOS -d Development -m --disable-duplicate-release-error",
-
     "androidProductionReleaseBundle": "cd android && ./gradlew bundleProductionRelease && killall -9 java",
     "androidDevelopmentDebugAPK": "cd android && ./gradlew assembleDevelopmentDebug && killall -9 java",
     "androidDevelopmentReleaseAPK": "cd android && ./gradlew assembleDevelopmentRelease && killall -9 java",
@@ -49,6 +48,7 @@
     "react-native-dotenv": "^3.4.7",
     "react-native-gesture-handler": "^2.12.0",
     "react-native-image-picker": "^5.6.0",
+    "react-native-onesignal": "^5.0.4",
     "react-native-reanimated": "^2.14.4",
     "react-native-reanimated-carousel": "^3.3.2",
     "react-native-safe-area-context": "^4.5.0",

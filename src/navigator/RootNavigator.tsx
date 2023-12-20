@@ -7,8 +7,37 @@ import MainStackNavigator from './MainStackNavigator';
 import Toast from 'components/Toast/Toast';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
+import {LogLevel, OneSignal} from 'react-native-onesignal';
+
+
+
 const Router: React.FC = () => {
   const helpers = useHelperStore() as IHelpers;
+  useEffect(() => {
+    OneSignal.Notifications.requestPermission(true);
+    OneSignal.initialize('14935259-a535-428e-b10d-2b8f0d68a752');
+
+    OneSignal.Notifications.addEventListener('click', event => {
+      console.log('OneSignal: notification clicked:', event);
+    });
+    getPlayerId();
+    return () => {
+      // OneSignal.Notifications.removeEventListener('click');
+    };
+  }, []);
+
+  const getPlayerId = async () => {
+    try {
+      const subId = OneSignal.User.pushSubscription.getPushSubscriptionId();
+      const subToken =
+        OneSignal.User.pushSubscription.getPushSubscriptionToken();
+
+      console.log('subId = ', subId);
+      console.log('subToken = ', subToken);
+    } catch (error) {
+      console.log('err = ', error);
+    }
+  };
 
   return (
     <SafeAreaView style={{flex: 1}}>
