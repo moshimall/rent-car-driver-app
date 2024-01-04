@@ -34,6 +34,7 @@ import CardParkirMobil from 'components/Cards/CardParkirMobil';
 import { useDataStore } from 'store/actions/dataStore';
 import { IDataStore } from 'types/data.types';
 import { OneSignal } from 'react-native-onesignal';
+import { getPlayerId } from 'store/effects/authStore';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -76,23 +77,10 @@ const HomeScreen = () => {
     useCallback(() => {
       _getTasks();
       getData?.getVehicles();
-      getPlayerId()
+      getPlayerId();
     }, []),
   );
 
-
-  const getPlayerId = async () => {
-    try {
-      const subId = OneSignal.User.pushSubscription.getPushSubscriptionId();
-      const subToken =
-        OneSignal.User.pushSubscription.getPushSubscriptionToken();
-
-      console.log('subId = ', subId);
-      console.log('subToken = ', subToken);
-    } catch (error) {
-      console.log('err = ', error);
-    }
-  };
 
   useEffect(() => {
     let _ = deepClone(tasks);
