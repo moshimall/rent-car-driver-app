@@ -8,7 +8,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {DataItemTask, Pagination} from 'types/tasks.types';
 import {deepClone, theme} from 'utils';
 import {getTasks} from 'store/effects/taskStore';
-import {h1} from 'utils/styles';
+import {h1, h4} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {IHelpers} from 'types/store.types';
 import {useHelperStore} from 'store/actions/helpersStore';
@@ -22,19 +22,23 @@ import {
   View,
 } from 'react-native';
 import {
+  ic_car1,
   ic_checkblue,
   ic_filter,
   ic_main_icon,
+  ic_plane,
   ic_radio_button,
   ic_selected_radio_button,
   ic_uncheckblue,
+  ic_with_driver,
+  ic_without_driver,
 } from 'assets/icons';
 import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
 import CardParkirMobil from 'components/Cards/CardParkirMobil';
-import { useDataStore } from 'store/actions/dataStore';
-import { IDataStore } from 'types/data.types';
-import { OneSignal } from 'react-native-onesignal';
-import { getPlayerId } from 'store/effects/authStore';
+import {useDataStore} from 'store/actions/dataStore';
+import {IDataStore} from 'types/data.types';
+import {OneSignal} from 'react-native-onesignal';
+import {getPlayerId} from 'store/effects/authStore';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -80,7 +84,6 @@ const HomeScreen = () => {
       getPlayerId();
     }, []),
   );
-
 
   useEffect(() => {
     let _ = deepClone(tasks);
@@ -145,6 +148,25 @@ const HomeScreen = () => {
     setRefresh(false);
   };
 
+  const MENU = [
+    {
+      ic: ic_without_driver,
+      name: 'Tanpa Supir',
+    },
+    {
+      ic: ic_with_driver,
+      name: 'Dengan Supir',
+    },
+    {
+      ic: ic_plane,
+      name: 'Airport Transfer',
+    },
+    {
+      ic: ic_car1,
+      name: 'Tour',
+    },
+  ];
+
   if (getData?.loaderVehicle) return;
 
   return (
@@ -159,6 +181,20 @@ const HomeScreen = () => {
         </View>
       </View>
 
+      <View style={[rowCenter, styles.menuWrapper]}>
+        {MENU?.map((x, i) => (
+          <TouchableOpacity key={i} style={{alignItems: 'center'}}>
+            <View style={{
+              padding: 10,
+              backgroundColor: '#E3F1FF',
+              borderRadius: 10
+            }}>
+              <Image source={x?.ic} style={[iconSize]} />
+            </View>
+            <Text style={[h4, {fontSize: 12}]}>{x?.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <View
         style={[
           rowCenter,
@@ -428,5 +464,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontSize: 12,
     color: theme.colors.black,
+  },
+  menuWrapper: {
+    justifyContent: 'space-between',
+    margin: 20,
+    backgroundColor: '#fff',
+    elevation: 4,
+    borderRadius: 10,
+    padding: 20,
   },
 });

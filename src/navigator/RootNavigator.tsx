@@ -9,9 +9,9 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import Config from 'react-native-config';
 
 import {OneSignal} from 'react-native-onesignal';
-console.log('Config.APP_ID = ', Config.APP_ID);
-// OneSignal.initialize('14935259-a535-428e-b10d-2b8f0d68a752');
-OneSignal.initialize(Config.APP_ID || '');
+// console.log('Config.APP_ID = ', Config.APP_ID);
+// // OneSignal.initialize('14935259-a535-428e-b10d-2b8f0d68a752');
+// OneSignal.initialize(Config.APP_ID || '');
 
 const Router: React.FC = () => {
   const helpers = useHelperStore() as IHelpers;

@@ -43,3 +43,8 @@ export const ic_radio_button = require('./ic_radio_button.png');
 export const ic_arrow_down = require('./ic_arrow_down.png');
 export const ic_arrow_up = require('./ic_arrow_up.png');
 
+export const ic_with_driver = require('./ic_with_driver.png');
+export const ic_plane = require('./ic_plane.png');
+export const ic_without_driver = require('./ic_without_driver.png');
+export const ic_car1 = require('./ic_car1.png');
+

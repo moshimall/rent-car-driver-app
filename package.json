@@ -11,7 +11,7 @@
     "android:build-dev": "cd android && ENVFILE=.env.development ./gradlew assembleRelease && cd ..",
     "android:build-stg": "cd android && ENVFILE=.env.staging ./gradlew assembleRelease && cd ..",
     "android:build-prod": "cd android && ENVFILE=.env.production ./gradlew assembleRelease && cd ..",
-    "android:dev": "ENVFILE=.env.development & react-native run-android --variant=developmentdebug",
+    "android:dev": "ENVFILE=.env.development && react-native run-android --variant=developmentdebug",
     "android:dev-release": "react-native run-android --variant=developmentrelease",
     "android:stg": "ENVFILE=.env.staging && react-native run-android --variant=stagingdebug",
     "android:stg-release": "cd android && ENVFILE=.env.staging ./gradlew assembleRelease && cd ..",
@@ -24,11 +24,11 @@
     "appcenter:ios-dev": "appcenter codepush release-react -a antoni_luthfi3/Get-Ride-Driver-iOS -d Development -m --disable-duplicate-release-error",
     "androidProductionReleaseBundle": "cd android && ./gradlew bundleProductionRelease && killall -9 java",
     "androidDevelopmentDebugAPK": "cd android && ./gradlew assembleDevelopmentDebug && killall -9 java",
-    "androidDevelopmentReleaseAPK": "cd android && ./gradlew assembleDevelopmentRelease && killall -9 java",
+    "androidDevelopmentReleaseAPK": "ENVFILE=.env.development && cd android && ./gradlew assembleDevelopmentRelease && killall -9 java",
     "androidProductionDebugAPK": "cd android && ./gradlew assembleProductionDebug && killall -9 java",
     "androidProductionReleaseAPK": "cd android && ./gradlew assembleProductionRelease && killall -9 java",
     "androidStagingDebugAPK": "cd android && ./gradlew assembleStagingDebug && killall -9 java",
-    "androidStagingReleaseAPK": "cd android && ./gradlew assembleStagingRelease && killall -9 java"
+    "androidStagingReleaseAPK": "ENVFILE=.env.staging && cd android && ./gradlew assembleStagingRelease && killall -9 java"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",

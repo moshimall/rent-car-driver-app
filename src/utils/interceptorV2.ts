@@ -62,24 +62,24 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
         //   //   // store.dispatch(logout());
         //   // }
         // }
-        if (error.response.status === 401) {
-          // const refresh_token = store?.getState()?.auth?.auth.refresh_token;
-          state.logout();
-          showToast({
-            message: 'token expired',
-            title: 'error',
-            type: 'error',
-          });
-          // if (
-          //   refresh_token &&
-          //   error.response.data?.slug !== 'refresh-token-invalid'
-          // ) {
-          //   // store.dispatch(refreshToken(refresh_token as any));
-          //   return api.axiosInstance.request(error.config);
-          // } else {
-          //   // store.dispatch(logout());
-          // }
-        }
+        // if (error.response.status === 401) {
+        //   // const refresh_token = store?.getState()?.auth?.auth.refresh_token;
+        //   state.logout();
+        //   showToast({
+        //     message: 'token expired',
+        //     title: 'error',
+        //     type: 'error',
+        //   });
+        //   // if (
+        //   //   refresh_token &&
+        //   //   error.response.data?.slug !== 'refresh-token-invalid'
+        //   // ) {
+        //   //   // store.dispatch(refreshToken(refresh_token as any));
+        //   //   return api.axiosInstance.request(error.config);
+        //   // } else {
+        //   //   // store.dispatch(logout());
+        //   // }
+        // }
         return Promise.reject(error);
       } catch (e) { }
     },
