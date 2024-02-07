@@ -26,6 +26,7 @@ type RootStackParamList = {
     item: DataItemTask
   };
   Splash: undefined;
+  WithDriver: undefined;
 };
 
 type RootTabParamList = {

@@ -12,7 +12,7 @@ import {h1, h4} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {IHelpers} from 'types/store.types';
 import {useHelperStore} from 'store/actions/helpersStore';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {NavigationHelpers, ParamListBase, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   FlatList,
   Image,
@@ -37,13 +37,10 @@ import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
 import CardParkirMobil from 'components/Cards/CardParkirMobil';
 import {useDataStore} from 'store/actions/dataStore';
 import {IDataStore} from 'types/data.types';
-import {OneSignal} from 'react-native-onesignal';
 import {getPlayerId} from 'store/effects/authStore';
 
 const HomeScreen = () => {
-  const helpers = useHelperStore() as IHelpers;
-  const [selected, setSelected] = useState<number>(0);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationHelpers<ParamListBase>>();
   const [changebg, setChangebg] = useState(true);
   const [tasks, setTasks] = useState<DataItemTask[]>([]);
   const [loader, setLoader] = useState(false);
@@ -152,18 +149,22 @@ const HomeScreen = () => {
     {
       ic: ic_without_driver,
       name: 'Tanpa Supir',
+      screen: '',
     },
     {
       ic: ic_with_driver,
       name: 'Dengan Supir',
+      screen: 'WithDriver',
     },
     {
       ic: ic_plane,
       name: 'Airport Transfer',
+      screen: '',
     },
     {
       ic: ic_car1,
       name: 'Tour',
+      screen: '',
     },
   ];
 
@@ -183,12 +184,16 @@ const HomeScreen = () => {
 
       <View style={[rowCenter, styles.menuWrapper]}>
         {MENU?.map((x, i) => (
-          <TouchableOpacity key={i} style={{alignItems: 'center'}}>
-            <View style={{
-              padding: 10,
-              backgroundColor: '#E3F1FF',
-              borderRadius: 10
-            }}>
+          <TouchableOpacity
+            key={i}
+            style={{alignItems: 'center'}}
+            onPress={() => navigation.navigate(x.screen)}>
+            <View
+              style={{
+                padding: 10,
+                backgroundColor: '#E3F1FF',
+                borderRadius: 10,
+              }}>
               <Image source={x?.ic} style={[iconSize]} />
             </View>
             <Text style={[h4, {fontSize: 12}]}>{x?.name}</Text>
