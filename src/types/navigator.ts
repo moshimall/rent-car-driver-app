@@ -26,7 +26,12 @@ type RootStackParamList = {
     item: DataItemTask
   };
   Splash: undefined;
+  TaskListByStatus: {
+    status: IStatusTask;
+  };
 };
+
+export type IStatusTask = 'Tanpa Supir' | 'Dengan Supir' | 'Airport Transfer' | 'Tour';
 
 type RootTabParamList = {
   Home: undefined;

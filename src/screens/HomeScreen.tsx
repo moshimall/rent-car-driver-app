@@ -26,6 +26,7 @@ import {
   ic_checkblue,
   ic_filter,
   ic_main_icon,
+  ic_no_task,
   ic_plane,
   ic_radio_button,
   ic_selected_radio_button,
@@ -39,6 +40,7 @@ import {useDataStore} from 'store/actions/dataStore';
 import {IDataStore} from 'types/data.types';
 import {OneSignal} from 'react-native-onesignal';
 import {getPlayerId} from 'store/effects/authStore';
+import {IStatusTask} from 'types/navigator';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -148,7 +150,7 @@ const HomeScreen = () => {
     setRefresh(false);
   };
 
-  const MENU = [
+  const MENU: {ic: any; name: IStatusTask}[] = [
     {
       ic: ic_without_driver,
       name: 'Tanpa Supir',
@@ -183,12 +185,18 @@ const HomeScreen = () => {
 
       <View style={[rowCenter, styles.menuWrapper]}>
         {MENU?.map((x, i) => (
-          <TouchableOpacity key={i} style={{alignItems: 'center'}}>
-            <View style={{
-              padding: 10,
-              backgroundColor: '#E3F1FF',
-              borderRadius: 10
+          <TouchableOpacity
+            key={i}
+            style={{alignItems: 'center'}}
+            onPress={() => {
+              navigation.navigate('TaskListByStatus', {status: x?.name});
             }}>
+            <View
+              style={{
+                padding: 10,
+                backgroundColor: '#E3F1FF',
+                borderRadius: 10,
+              }}>
               <Image source={x?.ic} style={[iconSize]} />
             </View>
             <Text style={[h4, {fontSize: 12}]}>{x?.name}</Text>
@@ -205,17 +213,17 @@ const HomeScreen = () => {
           },
         ]}>
         <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
-          Tugas Driver
+          Sedang Berjalan
         </Text>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => bottomSheetRef.current?.snapToIndex(0)}
           style={[rowCenter, {justifyContent: 'space-between'}]}>
           <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
             Filter
           </Text>
           <Image source={ic_filter} style={iconCustomSize(14)} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={{margin: 16}}>
         <FlatList
@@ -246,7 +254,11 @@ const HomeScreen = () => {
                 justifyContent: 'center',
                 marginTop: '20%',
               }}>
-              <Text>tidak ada tugas</Text>
+              <Image
+                source={ic_no_task}
+                style={{width: 150, height: 150, marginBottom: 20}}
+              />
+              <Text>Belum Mengambil Tugas</Text>
             </View>
           )}
         />
