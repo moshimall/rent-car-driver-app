@@ -1,7 +1,7 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { DataItemTask } from './tasks.types';
-import { Vehicle } from './data.types';
+import {DataItemTask} from './tasks.types';
+import {Vehicle} from './data.types';
 
 type RootStackParamList = {
   ProductDetail: {productId: string};
@@ -13,25 +13,35 @@ type RootStackParamList = {
   Register: undefined;
   TaskDetailAntarMobil: {
     item: DataItemTask;
-    vehicleId?: Vehicle
+    vehicleId?: Vehicle;
   };
   TaskCompleteDetail: {
     item: DataItemTask;
-    vehicleId?: Vehicle
+    vehicleId?: Vehicle;
   };
   TaskDetailAmbilMobil: {
-    item: DataItemTask
+    item: DataItemTask;
   };
   TaskDetailParkirMobil: {
-    item: DataItemTask
+    item: DataItemTask;
   };
   Splash: undefined;
-  TaskListByStatus: {
-    status: IStatusTask;
+  TaskListByType: {
+    type: ITypeTask;
+  };
+  TaskListDetailByStatus: {
+    type: ITypeTask;
+  };
+  TaskDetailAmbilMobilDariGarasi: {
+    item: DataItemTask;
   };
 };
 
-export type IStatusTask = 'Tanpa Supir' | 'Dengan Supir' | 'Airport Transfer' | 'Tour';
+export type ITypeTask =
+  | 'Tanpa Supir'
+  | 'Dengan Supir'
+  | 'Airport Transfer'
+  | 'Tour';
 
 type RootTabParamList = {
   Home: undefined;

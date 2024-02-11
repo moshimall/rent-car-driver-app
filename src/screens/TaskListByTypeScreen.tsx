@@ -14,11 +14,11 @@ import {h1} from 'utils/styles';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from 'types/navigator';
 
-type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListByStatus'>;
+type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListByType'>;
 
-const TaskListByStatusScreen = () => {
+const TaskListByTypeScreen = () => {
   const navigation = useNavigation();
-  const {status} = useRoute<ScreenRouteProp>().params;
+  const {type} = useRoute<ScreenRouteProp>().params;
 
   useEffect(() => {
     navigation.setOptions(
@@ -35,7 +35,7 @@ const TaskListByStatusScreen = () => {
                 marginLeft: 16,
               }}
             />
-            <Text style={[h1, {color: 'white', marginLeft: 10}]}>{status}</Text>
+            <Text style={[h1, {color: 'white', marginLeft: 10}]}>{type}</Text>
           </TouchableOpacity>
         ),
       }),
@@ -47,7 +47,13 @@ const TaskListByStatusScreen = () => {
       <FlatList
         data={[...Array(3)]}
         renderItem={() => (
-          <TouchableOpacity style={[rowCenter, styles.cardItem]}>
+          <TouchableOpacity
+            style={[rowCenter, styles.cardItem]}
+            onPress={() =>
+              navigation.navigate('TaskListDetailByStatus', {
+                type: type,
+              })
+            }>
             <View>
               <Text
                 style={{
@@ -65,8 +71,8 @@ const TaskListByStatusScreen = () => {
             </View>
 
             <View style={[rowCenter]}>
-                <Image source={ic_progress_clock} style={iconCustomSize(15)} />
-                <Text style={{fontSize: 12, marginLeft: 5}}>3 of 4</Text>
+              <Image source={ic_progress_clock} style={iconCustomSize(15)} />
+              <Text style={{fontSize: 12, marginLeft: 5}}>3 of 4</Text>
             </View>
           </TouchableOpacity>
         )}
@@ -75,7 +81,7 @@ const TaskListByStatusScreen = () => {
   );
 };
 
-export default TaskListByStatusScreen;
+export default TaskListByTypeScreen;
 
 const styles = StyleSheet.create({
   cardItem: {
@@ -86,6 +92,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     padding: 10,
     borderRadius: 6,
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
 });

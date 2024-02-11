@@ -1,13 +1,12 @@
 import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {h1, h4, h5} from 'utils/styles';
+import {h1, h4} from 'utils/styles';
 import {
   ic_arrow_left_white,
   ic_checkblue,
   ic_close,
   ic_pinpoin,
-  ic_plus,
 } from 'assets/icons';
 import {
   Alert,
@@ -38,9 +37,9 @@ interface Denda {
   keterangan: string;
   jumlah: string;
 }
-type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAmbilMobil'>;
+type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAmbilMobilDariGarasi'>;
 
-const TaskDetailAmbilMobilScreen = () => {
+const TaskDetailAmbilMobilDariGarasiScreen = () => {
   const navigation = useNavigation();
   const {item} = useRoute<ScreenRouteProp>().params;
 
@@ -78,7 +77,7 @@ const TaskDetailAmbilMobilScreen = () => {
               }}
             />
             <Text style={[h1, {color: 'white', marginLeft: 10}]}>
-              Ambil Mobil
+              Ambil Dari Garasi
             </Text>
           </TouchableOpacity>
         ),
@@ -166,165 +165,12 @@ const TaskDetailAmbilMobilScreen = () => {
             onChangeText={v => setNote(v)}
           />
 
-          <View style={styles.infoWrapper}>
-            <Text style={[h1]}>Informasi Penting</Text>
-            <Text style={[h4, {lineHeight: 24, fontSize: 12}]}>
-              Jika customer memiliki denda lebih besar dari pada jumlah deposit
-              yang tercantum, maka customer wajib melunasi biaya tersebut ke
-              rekening{' '}
-              <Text style={[h1, {fontSize: 12}]}>
-                221134566788 a/n Get&Ride
-              </Text>{' '}
-              di sertakan bukti transfer
-            </Text>
-          </View>
-
-          <View
-            style={[
-              rowCenter,
-              {justifyContent: 'space-between', marginTop: 10},
-            ]}>
-            <Text style={[h4, styles.text, {marginVertical: 10}]}>
-              Detail Denda
-            </Text>
-
-            <TouchableOpacity
-              style={[rowCenter]}
-              onPress={() => bottomSheetRef.current?.snapToIndex(0)}>
-              <Image source={ic_plus} style={[iconCustomSize(15)]} />
-              <Text style={[h4, {fontSize: 12, marginLeft: 5}]}>
-                Tambah Denda
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {denda.length <= 0 ? (
-            <View
-              style={{
-                backgroundColor: '#F4F4F4',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 20,
-              }}>
-              <Text style={{fontSize: 11, color: '#A8A8A8'}}>
-                Tidak ada denda
-              </Text>
-            </View>
-          ) : (
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: '#A8A8A8',
-                padding: 10,
-                borderRadius: 10,
-              }}>
-              {[
-                ...denda,
-                {
-                  keterangan: 'Total',
-                  jumlah: denda.reduce((accumulator, v) => {
-                    return accumulator + parseInt(v.jumlah);
-                  }, 0),
-                },
-              ].map((x, i) => (
-                <View key={`index_${i}`}>
-                  {denda.length === i && (
-                    <View
-                      style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: '#A8A8A8',
-                        marginBottom: 10,
-                      }}
-                    />
-                  )}
-                  <View
-                    style={[
-                      rowCenter,
-                      {justifyContent: 'space-between', marginBottom: 10},
-                    ]}>
-                    <Text style={{width: '60%'}}>{x.keterangan}</Text>
-
-                    <View style={[rowCenter]}>
-                      <Text>{currencyFormat(parseInt(x.jumlah as any))}</Text>
-                      {denda.length !== i ? (
-                        <TouchableOpacity
-                          onPress={() => {
-                            let array = deepClone(denda);
-                            // let index = 2;
-
-                            array.splice(i, 1);
-                            setDenda(array);
-                          }}>
-                          <Image
-                            source={ic_close}
-                            style={[iconCustomSize(8), {marginLeft: 5}]}
-                          />
-                        </TouchableOpacity>
-                      ) : (
-                        <View style={{width: 13}} />
-                      )}
-                    </View>
-                  </View>
-                </View>
-              ))}
-            </View>
-          )}
-
-          <View style={[styles.solidLine, {marginTop: 20}]} />
-
-          <Text style={[h4, {fontSize: 12, marginVertical: 10}]}>
-            Keterangan Deposit
-          </Text>
-
-          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
-            <Text style={[h4, {fontSize: 12}]}>Deposit</Text>
-            <Text style={[h4, {fontSize: 12}]}>IDR 500.000</Text>
-          </View>
-
-          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
-            <Text style={[h4, {fontSize: 12}]}>Deposit e-toll</Text>
-            <Text style={[h4, {fontSize: 12}]}>IDR 175.000</Text>
-          </View>
-
-          <View style={[styles.solidLine, {marginVertical: 10}]} />
-          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
-            <Text style={[h4, {fontSize: 12}]}>Kurang Bayar</Text>
-            <Text style={[h4, {fontSize: 12}]}>IDR 0</Text>
-          </View>
-          <View style={[styles.solidLine, {marginVertical: 10}]} />
-
-          <UploadImageInput
-            label="Upload Bukti Transfer"
-            onCameraChange={res => {
-              // console.log('ress = ', res);
-              let _: any = [];
-              res?.map(x => {
-                _.push(`data:${x?.type};base64,${x?.base64}`);
-              });
-              // setBulkImage(_);
-              // showToast({
-              //   title: 'Berhasil',
-              //   type: 'success',
-              //   message: 'Berhasil Upload Foto',
-              // });
-            }}
-            onDelete={i => {
-              console.log('x = ', i);
-              let _ = deepClone(bulkImage);
-              _.splice(i, 1);
-              // setBulkImage(_);
-            }}
-            // bulkImage={bulkImage}
-            // setBulkImage={setBulkImage}
-            selectedImageLabel=""
-          />
-
           <Button
-            title="Selesaikan Tugas"
+            title="Konfirmasi Ambil Dari Garasi"
             onPress={() => {
               Alert.alert(
                 'Konfirmasi Ambil Mobil',
-                'Apakah anda yakin menyelesaikan Tugas?',
+                'Apakah anda yakin menyelesaikan Tugas Ambil Dari Garasi?',
                 [
                   {
                     text: 'Tidak',
@@ -424,7 +270,7 @@ const TaskDetailAmbilMobilScreen = () => {
   );
 };
 
-export default hoc(TaskDetailAmbilMobilScreen);
+export default hoc(TaskDetailAmbilMobilDariGarasiScreen);
 
 const styles = StyleSheet.create({
   container: {
@@ -491,13 +337,5 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 20,
     // alignItems: 'center',
-  },
-  infoWrapper: {
-    padding: 10,
-    borderRadius: 4,
-    backgroundColor: '#E7F3FF',
-    borderWidth: 1,
-    borderColor: theme.colors.navy,
-    marginTop: 20,
   },
 });

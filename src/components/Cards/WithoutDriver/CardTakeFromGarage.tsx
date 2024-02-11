@@ -1,6 +1,12 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {ic_car, ic_pinpoin, ic_calendar, ic_car_key} from 'assets/icons';
+import {
+  ic_car,
+  ic_pinpoin,
+  ic_calendar,
+  ic_car_key,
+  ic_park,
+} from 'assets/icons';
 import {theme} from 'utils';
 import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
@@ -10,7 +16,7 @@ import {DataItemTask} from 'types/tasks.types';
 import {useDataStore} from 'store/actions/dataStore';
 import {IDataStore, Vehicle} from 'types/data.types';
 
-const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
+const CardTakeFromGarage = ({item}: {item: DataItemTask}) => {
   const navigation = useNavigation();
   const getData = useDataStore() as IDataStore;
   // console.log('getData?.vehicles = ', getData?.vehicles)
@@ -25,12 +31,12 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
         <Image
-          source={ic_car_key}
+          source={ic_park}
           style={iconCustomSize(25)}
           resizeMode="stretch"
         />
         <Text style={[h1, {marginLeft: 5, color: theme.colors.navy}]}>
-          Ambil Mobil
+          Ambil Dari Garasi
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
@@ -86,9 +92,24 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
 
       <Button
         _theme="navy"
-        title="Ambil Mobil"
+        title="Ambil Dari Garasi"
         onPress={() => {
-          navigation.navigate('TaskDetailAmbilMobil', {item: item});
+          Alert.alert(
+            'Konfirmasi Tugas',
+            'Apakah anda yakin ingin jalankan tugas?',
+            [
+              {
+                text: 'Tidak',
+              },
+              {
+                onPress: () =>
+                  navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
+                    item: item,
+                  }),
+                  text: 'Ya'
+              },
+            ],
+          );
         }}
         styleWrapper={{
           width: '95%',
@@ -100,7 +121,7 @@ const CardAmbilMobil = ({item}: {item: DataItemTask}) => {
   );
 };
 
-export default CardAmbilMobil;
+export default CardTakeFromGarage;
 
 const styles = StyleSheet.create({
   textName: {

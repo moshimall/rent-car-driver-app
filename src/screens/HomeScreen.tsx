@@ -1,6 +1,6 @@
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Button from 'components/Button';
-import CardAntarMobil from 'components/Cards/CardAntarMobil';
+import CardAntarMobil from 'components/Cards/WithoutDriver/CardAntarMobil';
 import CustomBackdrop from 'components/CustomBackdrop';
 import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
@@ -34,13 +34,13 @@ import {
   ic_with_driver,
   ic_without_driver,
 } from 'assets/icons';
-import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
-import CardParkirMobil from 'components/Cards/CardParkirMobil';
+import CardAmbilMobil from 'components/Cards/WithoutDriver/CardAmbilMobil';
+import CardParkirMobil from 'components/Cards/WithoutDriver/CardParkirMobil';
 import {useDataStore} from 'store/actions/dataStore';
 import {IDataStore} from 'types/data.types';
 import {OneSignal} from 'react-native-onesignal';
 import {getPlayerId} from 'store/effects/authStore';
-import {IStatusTask} from 'types/navigator';
+import {ITypeTask} from 'types/navigator';
 
 const HomeScreen = () => {
   const helpers = useHelperStore() as IHelpers;
@@ -150,7 +150,7 @@ const HomeScreen = () => {
     setRefresh(false);
   };
 
-  const MENU: {ic: any; name: IStatusTask}[] = [
+  const MENU: {ic: any; name: ITypeTask}[] = [
     {
       ic: ic_without_driver,
       name: 'Tanpa Supir',
@@ -189,7 +189,7 @@ const HomeScreen = () => {
             key={i}
             style={{alignItems: 'center'}}
             onPress={() => {
-              navigation.navigate('TaskListByStatus', {status: x?.name});
+              navigation.navigate('TaskListByType', {type: x?.name});
             }}>
             <View
               style={{
