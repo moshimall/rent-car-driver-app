@@ -1,6 +1,5 @@
 import Config from 'react-native-config';
 import {ApisauceConfig, create} from 'apisauce';
-import {showToast} from './Toast';
 import {useAuthStore} from 'store/actions/authStore';
 
 type ApiConfig = {

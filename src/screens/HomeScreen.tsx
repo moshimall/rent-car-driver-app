@@ -12,7 +12,7 @@ import {h1, h4} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {IHelpers} from 'types/store.types';
 import {useHelperStore} from 'store/actions/helpersStore';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {NavigationHelpers, ParamListBase, useFocusEffect, useNavigation} from '@react-navigation/native';
 import {
   FlatList,
   Image,
@@ -38,14 +38,11 @@ import CardAmbilMobil from 'components/Cards/WithoutDriver/CardAmbilMobil';
 import CardParkirMobil from 'components/Cards/WithoutDriver/CardParkirMobil';
 import {useDataStore} from 'store/actions/dataStore';
 import {IDataStore} from 'types/data.types';
-import {OneSignal} from 'react-native-onesignal';
 import {getPlayerId} from 'store/effects/authStore';
 import {ITypeTask} from 'types/navigator';
 
 const HomeScreen = () => {
-  const helpers = useHelperStore() as IHelpers;
-  const [selected, setSelected] = useState<number>(0);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationHelpers<ParamListBase>>();
   const [changebg, setChangebg] = useState(true);
   const [tasks, setTasks] = useState<DataItemTask[]>([]);
   const [loader, setLoader] = useState(false);

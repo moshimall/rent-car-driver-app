@@ -50,3 +50,5 @@ export const ic_car1 = require('./ic_car1.png');
 export const ic_no_task = require('./ic_no_task.png');
 export const ic_progress_clock = require('./ic_progress-clock.png');
 export const ic_plus = require('./ic_plus.png');
+export const ic_progress = require('./ic_progress.png');
+
