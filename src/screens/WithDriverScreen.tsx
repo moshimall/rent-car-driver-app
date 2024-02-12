@@ -45,7 +45,8 @@ const WithDriverScreen = () => {
 
   const renderItem = () => {
     return (
-      <TouchableWithoutFeedback>
+      <TouchableWithoutFeedback
+        onPress={() => navigation.navigate('WithDriverTaskScreen')}>
         <View style={styles.cardWrapper}>
           <View style={styles.cardHeader}>
             <View style={styles.taskWrapper}>

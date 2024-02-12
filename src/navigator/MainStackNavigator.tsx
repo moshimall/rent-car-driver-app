@@ -17,6 +17,7 @@ import SplashScreen from 'screens/SplashScreen';
 import TaskCompleteDetailScreen from 'screens/TaskCompleteDetailScreen';
 import {useAuthStore} from 'store/actions/authStore';
 import WithDriverScreen from 'screens/WithDriverScreen';
+import WithDriverTaskScreen from 'screens/WithDriverTaskScreen';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -98,6 +99,15 @@ const Main: React.FC = () => {
             <RootStack.Screen
               name="WithDriver"
               component={WithDriverScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: theme.colors.navy,
+                },
+              }}
+            />
+            <RootStack.Screen
+              name="WithDriverTaskScreen"
+              component={WithDriverTaskScreen}
               options={{
                 headerStyle: {
                   backgroundColor: theme.colors.navy,

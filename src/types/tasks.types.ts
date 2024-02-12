@@ -70,6 +70,7 @@ export interface Vehicle {
     image_captures: null | unknown;
     note: string;
     status: 'DELIVERY_PROCESS' | 'PICKUP_PROCESS' | 'DELIVERED' | 'PICKED' | 'RETURNED';
+    created_at: string;
   }
   
   export interface Pagination {

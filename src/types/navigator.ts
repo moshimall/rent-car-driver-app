@@ -27,6 +27,7 @@ type RootStackParamList = {
   };
   Splash: undefined;
   WithDriver: undefined;
+  WithDriverTaskScreen: undefined;
 };
 
 type RootTabParamList = {
