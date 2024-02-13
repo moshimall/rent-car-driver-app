@@ -18,7 +18,7 @@ const useAuthStore = create<any>(
             data: {
               email: username,
               password: password,
-              scope: "backoffice"
+              scope: "app"
             },
           });
           console.log('res login = ', response.data)

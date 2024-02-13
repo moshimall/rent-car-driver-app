@@ -26,9 +26,6 @@ interface IProps {
   errorMessage?: string;
   label?: string;
   containerStyle?: ViewStyle;
-  selectedImageLabel: string;
-  bulkImage: any[];
-  setBulkImage: any;
 }
 
 const UploadImageInput: React.FC<IProps> = ({
@@ -36,9 +33,6 @@ const UploadImageInput: React.FC<IProps> = ({
   label,
   containerStyle = {marginTop: 10},
   onCameraChange,
-  bulkImage,
-  selectedImageLabel,
-  setBulkImage,
 }) => {
   const [images, setImages] = useState<any[]>([]);
 

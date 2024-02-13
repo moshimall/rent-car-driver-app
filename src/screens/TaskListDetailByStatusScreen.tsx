@@ -1,3 +1,17 @@
+import appBar from 'components/AppBar/AppBar';
+import CardAmbilMobil from 'components/Cards/WithoutDriver/CardAmbilMobil';
+import CardAntarMobil from 'components/Cards/WithoutDriver/CardAntarMobil';
+import CardParkirMobil from 'components/Cards/WithoutDriver/CardParkirMobil';
+import CardTakeFromGarage from 'components/Cards/WithoutDriver/CardTakeFromGarage';
+import React, {useEffect, useState} from 'react';
+import {DataItemTask, Pagination} from 'types/tasks.types';
+import {getTasks} from 'store/effects/taskStore';
+import {h1} from 'utils/styles';
+import {ic_arrow_left_white, ic_no_task} from 'assets/icons';
+import {RootStackParamList} from 'types/navigator';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {rowCenter, WINDOW_WIDTH} from 'utils/mixins';
+import {theme} from 'utils';
 import {
   FlatList,
   Image,
@@ -6,18 +20,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {RootStackParamList} from 'types/navigator';
-import {ic_arrow_left_white} from 'assets/icons';
-import appBar from 'components/AppBar/AppBar';
-import {WINDOW_WIDTH, rowCenter} from 'utils/mixins';
-import {h1} from 'utils/styles';
-import {theme} from 'utils';
-import CardAmbilMobil from 'components/Cards/WithoutDriver/CardAmbilMobil';
-import CardAntarMobil from 'components/Cards/WithoutDriver/CardAntarMobil';
-import CardParkirMobil from 'components/Cards/WithoutDriver/CardParkirMobil';
-import CardTakeFromGarage from 'components/Cards/WithoutDriver/CardTakeFromGarage';
+import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListDetailByStatus'>;
 
@@ -37,6 +40,13 @@ const DATA_STATUS: IStatus[] = [
 const TaskListDetailByStatusScreen = () => {
   const navigation = useNavigation();
   const {type} = useRoute<ScreenRouteProp>().params;
+  const [tasks, setTasks] = useState<DataItemTask[]>([]);
+  const [loader, setLoader] = useState(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<Pagination>({
+    limit: 10,
+    page: 1,
+  });
 
   useEffect(() => {
     navigation.setOptions(
@@ -62,14 +72,67 @@ const TaskListDetailByStatusScreen = () => {
     );
   }, [navigation]);
 
-  const renderItem = () => <CardAmbilMobil item={{}} />;
+  const _getTasks = async () => {
+    setLoader(true);
+    let param = {
+      courier_id: 1,
+      limit: pagination?.limit || 0,
+      page: pagination?.page || 1,
+    } as any;
+    const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
+    let _: any = [];
+    param['task_status'] = _;
+
+    let res = await getTasks(param as any);
+    setTasks(res?.data);
+    setPagination(res?.pagination);
+    setLoader(false);
+  };
+
+  const handleMore = () => {
+    if (pagination?.page < (pagination?.total_page || 0) && !loader) {
+      setRefresh(true);
+      _getTasks();
+      setRefresh(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    setRefresh(true);
+    setPagination({
+      limit: 10,
+      page: 1,
+    });
+    _getTasks();
+    setRefresh(false);
+  };
+
+  const renderItem = ({item}: {item: DataItemTask}) => {
+    if (item?.status === 'DELIVERY_PROCESS') {
+      return <CardAntarMobil item={item} />;
+    }
+
+    if (item?.status === 'PICKUP_PROCESS') {
+      return <CardAmbilMobil item={item} />;
+    }
+
+    if (item?.status === 'RETURNED') {
+      return <CardParkirMobil item={item} />;
+    }
+
+    return <></>;
+  };
+
+  useEffect(() => {
+    _getTasks();
+  }, []);
 
   return (
     <View
       style={{
         flex: 1,
       }}>
-      <View style={{alignItems: 'center', marginTop: 20}}>
+      <View style={{alignItems: 'center', marginVertical: 20}}>
         <View
           style={[rowCenter, {paddingHorizontal: 30, alignItems: 'center'}]}>
           {DATA_STATUS.map((status, i) => (
@@ -93,9 +156,34 @@ const TaskListDetailByStatusScreen = () => {
           ))}
         </View>
       </View>
-        <FlatList style={{
-					margin: 20
-				}} data={[...Array(3)]} renderItem={renderItem} />
+      <FlatList
+        style={{
+          margin: 20,
+        }}
+        data={[...(tasks || [])]}
+        renderItem={renderItem}
+        keyExtractor={(x, i) => i.toString()}
+        ListFooterComponent={<LoadingNextPage loading={loader} />}
+        refreshing={refresh}
+        onRefresh={() => {
+          return handleRefresh();
+        }}
+        onEndReached={handleMore}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: '20%',
+            }}>
+            <Image
+              source={ic_no_task}
+              style={{width: 150, height: 150, marginBottom: 20}}
+            />
+            <Text>Belum Mengambil Tugas</Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
