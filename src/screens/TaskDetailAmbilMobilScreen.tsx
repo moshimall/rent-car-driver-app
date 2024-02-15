@@ -92,13 +92,13 @@ const TaskDetailAmbilMobilScreen = () => {
       return;
     }
     let res = await updateCourirTasks({
-      id: item?.id,
+      id: item?.task_id,
       image_captures: [...bulkImage],
-      status: 'RETURNED',
+      status: 'TAKE_CAR',
       note: note,
       violations: denda?.map(x => ({
         violation: x?.keterangan,
-        cost: JSON.parse(x?.jumlah || 0) as any,
+        cost: JSON.parse(x.jumlah || 0) as any,
       })),
     });
 
@@ -110,7 +110,7 @@ const TaskDetailAmbilMobilScreen = () => {
       });
       return;
     }
-    console.log('ress sukses anter = ', res);
+    console.log('ress sukses ambil = ', res);
     showToast({
       title: 'Berhasil',
       type: 'success',
@@ -316,7 +316,7 @@ const TaskDetailAmbilMobilScreen = () => {
             }}
             // bulkImage={bulkImage}
             // setBulkImage={setBulkImage}
-            selectedImageLabel=""
+            // selectedImageLabel=""
           />
 
           <Button

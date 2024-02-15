@@ -87,6 +87,7 @@ export interface WithDriverTaskDetail {
 
 export interface WithoutDriverTaskDetail {
   title: string;
+  task_id: number;
   status: TaskStatus; // available: 'DELIVERY_PROCESS' | 'TAKE_FROM_GARAGE' | 'DELIVERY_CAR' | 'TAKE_CAR' | 'RETURN_TO_GARAGE';
   order: {
     order_key: string;

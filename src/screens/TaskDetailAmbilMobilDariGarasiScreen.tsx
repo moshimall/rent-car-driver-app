@@ -1,22 +1,13 @@
 import appBar from 'components/AppBar/AppBar';
-import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
-import Button from 'components/Button';
-import CustomBackdrop from 'components/CustomBackdrop';
-import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
-import CustomTextInput from 'components/TextInput';
 import hoc from 'components/hoc';
-import moment from 'moment';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
-import {deepClone, theme} from 'utils';
 import {h1, h4} from 'utils/styles';
-import {ic_arrow_left_white} from 'assets/icons';
-import {RootStackParamList} from 'types/navigator';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {rowCenter, WINDOW_WIDTH} from 'utils/mixins';
-import {showToast} from 'utils/Toast';
-import {updateCourirTasks} from 'store/effects/taskStore';
-import {URL_IMAGE} from '@env';
+import {
+  ic_arrow_left_white,
+  ic_checkblue,
+  ic_close,
+  ic_pinpoin,
+} from 'assets/icons';
 import {
   Alert,
   Image,
@@ -27,12 +18,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {WINDOW_WIDTH, iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
+import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
+import Button from 'components/Button';
+import {showToast} from 'utils/Toast';
+import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
+import {deepClone, theme} from 'utils';
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
+import CustomTextInput from 'components/TextInput';
+import {currencyFormat} from 'utils/currencyFormat';
+import CustomBackdrop from 'components/CustomBackdrop';
+import {IParamUPdateCourirTasks, updateCourirTasks} from 'store/effects/taskStore';
+import {RootStackParamList} from 'types/navigator';
 
 interface Denda {
   keterangan: string;
   jumlah: string;
 }
-
 type ScreenRouteProp = RouteProp<
   RootStackParamList,
   'TaskDetailAmbilMobilDariGarasi'
@@ -40,7 +44,7 @@ type ScreenRouteProp = RouteProp<
 
 const TaskDetailAmbilMobilDariGarasiScreen = () => {
   const navigation = useNavigation();
-  const {id, item} = useRoute<ScreenRouteProp>().params;
+  const {item, task_id} = useRoute<ScreenRouteProp>().params;
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [bulkImage, setBulkImage] = useState([]);
@@ -86,19 +90,18 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
 
   const handleSubmit = async () => {
     if (bulkImage?.length <= 0) {
-      Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
+      Alert.alert('PERINGATAN', 'silahkan upload foto mobil');
       return;
     }
-    const res = await updateCourirTasks({
-      id,
+    const params: IParamUPdateCourirTasks = {
+      id: task_id,
       image_captures: [...bulkImage],
       status: 'TAKE_FROM_GARAGE',
       note: note,
-      violations: denda?.map(x => ({
-        violation: x?.keterangan,
-        cost: JSON.parse(x?.jumlah) as any,
-      })),
-    });
+    };
+
+    console.log('params', params);
+    let res = await updateCourirTasks(params);
 
     if (!res) {
       showToast({
@@ -108,7 +111,7 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
       });
       return;
     }
-    console.log('ress sukses anter = ', res);
+    console.log('ress sukses TAKE_FROM_GARAGE = ', res);
     showToast({
       title: 'Berhasil',
       type: 'success',
@@ -120,147 +123,21 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
   return (
     <View>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={{marginHorizontal: 20, paddingTop: 20}}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>Nama</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.customer_name}
-              </Text>
-            </View>
-
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>No Handphone</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.phone_number}
-              </Text>
-            </View>
-          </View>
-
-          <View>
-            <Text style={styles.unhighlightedText}>Jumlah Penumpang</Text>
-            <Text style={styles.highlightedText}>6</Text>
-          </View>
-
-          <View style={styles.solidLine} />
-
-          <View style={{flexDirection: 'row', marginTop: 20}}>
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>No. Order</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.order_key}
-              </Text>
-            </View>
-
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>Jumlah Kursi</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.vehicle?.max_suitcase} Kursi
-              </Text>
-            </View>
-          </View>
-
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>Mobil</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.vehicle?.name}
-              </Text>
-            </View>
-
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>Plat Nomor</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.vehicle?.plate_number}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.solidLine} />
-
-          <CustomCarousel
-            data={
-              item?.order?.vehicle?.photos?.map(data => ({
-                url: `${URL_IMAGE}${data.url}`,
-              })) || []
-            }
-            renderItem={({item, index}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}>
-                <Image
-                  source={{uri: item?.url}}
-                  style={{height: 280, width: WINDOW_WIDTH / 1.1}}
-                />
-              </View>
-            )}
-            containerStyle={{
-              width: '100%',
-              alignItems: 'center',
-              marginVertical: 20,
-            }}
-            paginationColor="#F1A33A"
-            paginationPosition={10}
-          />
-
-          <View style={styles.solidLine} />
-
-          <View style={{flexDirection: 'row', marginTop: 20}}>
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>Lokasi Pengantaran</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.delivery_location}
-              </Text>
-            </View>
-
-            <View style={{flexBasis: '50%'}}>
-              <Text style={styles.unhighlightedText}>Lokasi Penyewaan</Text>
-              <Text style={styles.highlightedText}>
-                {item?.order?.rental_location}
-              </Text>
-            </View>
-          </View>
-
-          <View>
-            <Text style={styles.unhighlightedText}>Lokasi Pengembalian</Text>
-            <Text style={styles.highlightedText}>
-              {item?.order?.return_location}
-            </Text>
-          </View>
-
-          <View style={styles.solidLine} />
-
-          <View style={{marginTop: 20}}>
-            <Text style={styles.unhighlightedText}>Tanggal Mulai</Text>
-            <Text style={styles.highlightedText}>
-              {moment(item?.order?.rental_start_date).format('DD MMM YYYY')} |{' '}
-              {moment(
-                `${item?.order?.rental_start_date} ${item?.order?.return_time}`,
-              ).format('HH:mm A')}
-            </Text>
-          </View>
-
-          <View>
-            <Text style={styles.unhighlightedText}>Tanggal Selesai</Text>
-            <Text style={styles.highlightedText}>
-              {moment(item?.order?.rental_end_date).format('DD MMM YYYY')} |{' '}
-              {moment(
-                `${item?.order?.rental_start_date} ${item?.order?.return_time}`,
-              ).format('HH:mm A')}
-            </Text>
-          </View>
-
-          <View style={styles.solidLine} />
-
+        <View style={{marginHorizontal: 20}}>
           <UploadImageInput
             label="Upload Foto Mobil"
             onCameraChange={res => {
+              // console.log('ress = ', res);
               let _: any = [];
               res?.map(x => {
                 _.push(`data:${x?.type};base64,${x?.base64}`);
               });
+              setBulkImage(_);
+              // showToast({
+              //   title: 'Berhasil',
+              //   type: 'success',
+              //   message: 'Berhasil Upload Foto',
+              // });
             }}
             onDelete={i => {
               console.log('x = ', i);
@@ -268,6 +145,9 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
               _.splice(i, 1);
               setBulkImage(_);
             }}
+            // bulkImage={bulkImage}
+            // setBulkImage={setBulkImage}
+            // selectedImageLabel=""
           />
 
           <Text style={[h4, styles.text, {marginVertical: 10}]}>
@@ -316,7 +196,14 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
         ref={bottomSheetRef}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
+        containerStyle={
+          {
+            // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          }
+        }
+        // in
         index={-1}
+        // backgroundStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', }}
         enablePanDownToClose={true}
         backdropComponent={backdropProps => (
           <CustomBackdrop
@@ -385,44 +272,72 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
   );
 };
 
-export default hoc(
-  TaskDetailAmbilMobilDariGarasiScreen,
-  theme.colors.navy,
-  false,
-  'light-content',
-);
+export default hoc(TaskDetailAmbilMobilDariGarasiScreen);
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: '#fff',
   },
+  descriptionContainer: {
+    padding: '5%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   text: {
     fontSize: 12,
     color: '#000000',
+  },
+  boldText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#000000',
+  },
+  dashedLine: {
+    borderColor: '#D3D3D3',
+    borderWidth: 1,
+    borderStyle: 'dashed',
   },
   solidLine: {
     borderColor: '#D3D3D3',
     borderWidth: 0.5,
   },
+  roundedImage: {
+    borderRadius: 100,
+    width: 48,
+    height: 48,
+    backgroundColor: 'red',
+    overflow: 'hidden',
+    marginRight: 10,
+  },
+  imgCar: {
+    width: 48,
+    height: 48,
+  },
+  profilePictureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  imageContainer: {
+    width: '100%',
+    height: 86,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
   image: {width: '100%', height: '100%', borderRadius: 5},
+  btnDenda: {
+    width: '100%',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: theme.colors.navy,
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
   contentContainer: {
     flex: 1,
     margin: 20,
-  },
-  highlightedText: {
-    flexBasis: '50%',
-    color: theme.colors.black,
-    fontSize: 14,
-    fontFamily: 'Inter-Medium',
-    fontWeight: '700',
-    marginBottom: 18,
-  },
-  unhighlightedText: {
-    flexBasis: '50%',
-    color: theme.colors.black,
-    fontSize: 12,
-    fontFamily: 'Inter-Regular',
-    marginBottom: 8,
+    // alignItems: 'center',
   },
 });

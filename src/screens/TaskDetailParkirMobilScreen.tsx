@@ -61,8 +61,8 @@ const TaskDetailAmbilMobilScreen = () => {
       Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
       return;
     }
-    const res = await updateCourirTasks({
-      id: item?.id,
+    let res = await updateCourirTasks({
+      id: item?.task_id,
       image_captures: [...bulkImage],
       status: 'RETURN_TO_GARAGE',
       note: note,
@@ -76,7 +76,7 @@ const TaskDetailAmbilMobilScreen = () => {
       return;
     }
     
-    console.log('ress sukses anter = ', res);
+    console.log('ress sukses RETURN_TO_GARAGE = ', res);
     showToast({
       title: 'Berhasil',
       type: 'success',
@@ -104,6 +104,9 @@ const TaskDetailAmbilMobilScreen = () => {
             _.splice(i, 1);
             setBulkImage(_);
           }}
+          // bulkImage={bulkImage}
+          // setBulkImage={setBulkImage}
+          // selectedImageLabel=""
         />
 
         <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>

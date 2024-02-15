@@ -1,7 +1,7 @@
 import {getTaskById} from 'store/effects/taskStore';
 import {TaskListDetailByStatusScreenRouteProp} from '../TaskListDetailByStatusScreen';
-import {useEffect, useMemo, useState} from 'react';
-import {useRoute} from '@react-navigation/native';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {WithDriverTaskDetail, WithoutDriverTaskDetail} from 'types/tasks.types';
 
 export type WithDriverTaskDetailData = WithDriverTaskDetail & {
@@ -45,20 +45,24 @@ const useTaskListDetailByStatus = () => {
     }
   };
 
-  useEffect(() => {
-    if (type === 'Tanpa Supir') {
-      getWithoutDriverTaskDetail();
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (type === 'Tanpa Supir') {
+        getWithoutDriverTaskDetail();
+      }
+  
+      if (type === 'Dengan Supir') {
+        getWithDriverTaskDetail();
+      }
+  
+      return () => {
+        setWithoutDriverData([]);
+        setWithDriverData([]);
+      };
+    }, []),
+  );
 
-    if (type === 'Dengan Supir') {
-      getWithDriverTaskDetail();
-    }
 
-    return () => {
-      setWithoutDriverData([]);
-      setWithDriverData([]);
-    };
-  }, []);
 
   const finalData = useMemo(() => {
     if (type === 'Tanpa Supir') {

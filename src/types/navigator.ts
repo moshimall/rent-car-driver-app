@@ -12,18 +12,18 @@ type RootStackParamList = {
   OtpVerification: undefined;
   Register: undefined;
   TaskDetailAntarMobil: {
-    item: DataItemTask;
-    vehicleId?: Vehicle;
+    item: WithoutDriverTaskDetail;
+    task_id?: number;
   };
   TaskCompleteDetail: {
     item: DataItemTask;
     vehicleId?: Vehicle;
   };
   TaskDetailAmbilMobil: {
-    item: DataItemTask;
+    item: WithoutDriverTaskDetail;
   };
   TaskDetailParkirMobil: {
-    item: DataItemTask;
+    item: WithoutDriverTaskDetail;
   };
   Splash: undefined;
   TaskListByType: {
@@ -39,7 +39,7 @@ type RootStackParamList = {
     type: ITypeTask;
   };
   TaskDetailAmbilMobilDariGarasi: {
-    id: number;
+    task_id: number;
     item: WithoutDriverTaskDetail | WithDriverTaskDetail;
   };
 };

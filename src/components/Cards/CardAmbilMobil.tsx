@@ -1,82 +1,42 @@
-import Button from 'components/Button';
-import React from 'react';
-import {h1} from 'utils/styles';
-import {ic_calendar, ic_park, ic_pinpoin} from 'assets/icons';
-import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {ic_car, ic_pinpoin, ic_calendar, ic_car_key} from 'assets/icons';
 import {theme} from 'utils';
+import {rowCenter, iconCustomSize} from 'utils/mixins';
+import {h1} from 'utils/styles';
+import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
-import {WithDriverTaskDetailData} from 'screens/TaskListDetailByStatusScreen/hooks/useTaskListDetailByStatus';
-import {ITypeTask} from 'types/navigator';
-import {WithoutDriverTaskDetail} from 'types/tasks.types';
+import {DataItemTask, WithoutDriverTaskDetail} from 'types/tasks.types';
+import {useDataStore} from 'store/actions/dataStore';
+import {IDataStore, Vehicle} from 'types/data.types';
 
-type TaskDetailByStatusCardProps = {
-  id: number;
-  item: WithDriverTaskDetailData;
-  type: ITypeTask;
-};
-
-const TaskDetailByStatusCard = ({
-  item,
-  id,
-  type,
-}: TaskDetailByStatusCardProps) => {
+const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
   const navigation = useNavigation();
-
-  const title =
-    type === 'Dengan Supir'
-      ? item.item_title
-      : type === 'Tanpa Supir'
-      ? item.title
-      : '-';
-
-  const handleTask = () => {
-    if (type === 'Dengan Supir') {
-      if (item.item_status === 'RETURN_TO_GARAGE') {
-        navigation.navigate('TaskDetailParkirMobil', {id, item});
-      }
-
-      if (item.item_status === 'TAKE_FROM_GARAGE') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {id, item});
-      }
-    }
-
-    if (type === 'Tanpa Supir') {
-      if (item.status === 'DELIVERY_PROCESS') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {id, item});
-      }
-      if (item.status === 'RETURN_TO_GARAGE') {
-        navigation.navigate('TaskDetailParkirMobil', {id, item});
-      }
-
-      if (item.status === 'TAKE_CAR') {
-        navigation.navigate('TaskDetailAmbilMobil', {id, item});
-      }
-
-      if (item.status === 'TAKE_CAR') {
-        navigation.navigate('TaskDetailAntarMobil', {id, item});
-      }
-
-      if (item.status === 'TAKE_FROM_GARAGE') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {id, item});
-      }
-    }
-  };
-
+  const getData = useDataStore() as IDataStore;
+  // console.log('getData?.vehicles = ', getData?.vehicles)
+  // const vehicleId = (
+  //   getData?.vehicles?.length > 0
+  //     ? getData?.vehicles?.find(
+  //         x => x?.id === item?.order?.order_detail?.vehicle_id,
+  //       )
+  //     : {}
+  // ) as Vehicle;
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
         <Image
-          source={ic_park}
+          source={ic_car_key}
           style={iconCustomSize(25)}
           resizeMode="stretch"
         />
         <Text style={[h1, {marginLeft: 5, color: theme.colors.navy}]}>
-          {title}
+          Ambil Mobil
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
-      <Text style={h1}>{item?.order?.customer_name}</Text>
+      <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>
+        {item?.order?.customer_name}
+      </Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
         <Text style={{fontWeight: '500'}}>
@@ -90,7 +50,7 @@ const TaskDetailByStatusCard = ({
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.delivery_location || '-'}
+              {item?.order?.rental_location}
             </Text>
           </View>
         </View>
@@ -107,27 +67,31 @@ const TaskDetailByStatusCard = ({
           </View>
         </View>
       </View>
-
       <View style={styles.lineHorizontal} />
 
       <View style={{marginTop: 0}}>
         <View style={rowCenter}>
           <Image source={ic_calendar} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
-            <Text style={styles.textTitle}>Tanggal Selesai</Text>
+            <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_date} | {item?.order?.return_time}
+              {item?.order?.return_date} |{' '}
+              {item?.order?.return_time}
             </Text>
           </View>
         </View>
       </View>
 
+      {/* <Text style={styles.textComment}>Comment : </Text> */}
+
       <Button
         _theme="navy"
-        title={title}
-        onPress={handleTask}
+        title="Ambil Mobil"
+        onPress={() => {
+          navigation.navigate('TaskDetailAmbilMobil', {item: item});
+        }}
         styleWrapper={{
-          width: '100%',
+          width: '95%',
           alignSelf: 'center',
           marginVertical: 20,
         }}
@@ -136,9 +100,51 @@ const TaskDetailByStatusCard = ({
   );
 };
 
-export default TaskDetailByStatusCard;
+export default CardAmbilMobil;
 
 const styles = StyleSheet.create({
+  textName: {
+    fontSize: 18,
+    color: theme.colors.navy,
+    fontWeight: '700',
+    marginLeft: 10,
+  },
+  rightIcon: {
+    height: 45,
+    width: 45,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 50,
+  },
+  container: {backgroundColor: '#F5F6FA', flex: 1},
+  activeButton: {
+    backgroundColor: theme.colors.white,
+    width: '33.3%',
+    padding: 12,
+    alignItems: 'center',
+    borderBottomColor: theme.colors.navy,
+    borderBottomWidth: 2,
+    // borderRadius: 20,
+  },
+  activeText: {
+    fontSize: 12,
+    color: theme.colors.navy,
+    fontWeight: 'bold',
+  },
+
+  inactiveButton: {
+    backgroundColor: theme.colors.white,
+    width: '33.3%',
+    padding: 12,
+    alignItems: 'center',
+    borderBottomColor: theme.colors.white,
+    borderBottomWidth: 2,
+    // borderRadius: 20,
+  },
+  inactiveText: {
+    fontSize: 12,
+    color: '#B5B5B5',
+    fontWeight: '500',
+  },
   textOrderId: {fontSize: 12, fontWeight: 'bold', color: theme.colors.black},
   textTitle: {
     fontSize: 12,
@@ -161,9 +167,10 @@ const styles = StyleSheet.create({
     borderStyle: 'dotted',
   },
   lineHorizontal: {
-    width: '100%',
+    // height: 1,
+    width: '95%',
     alignSelf: 'center',
-    marginVertical: 20,
+    marginVertical: 30,
     borderColor: '#D9D9D9',
     borderWidth: 1,
     borderStyle: 'dotted',
@@ -183,5 +190,21 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
     marginHorizontal: 5,
+  },
+  textComment: {
+    color: '#A8A8A8',
+    fontSize: 12,
+    fontWeight: '400',
+    marginVertical: 20,
+  },
+  container2: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: 'grey',
+  },
+  contentContainer: {
+    flex: 1,
+    margin: 20,
+    // alignItems: 'center',
   },
 });
