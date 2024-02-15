@@ -17,8 +17,9 @@ import SplashScreen from 'screens/SplashScreen';
 import TaskCompleteDetailScreen from 'screens/TaskCompleteDetailScreen';
 import {useAuthStore} from 'store/actions/authStore';
 import TaskListByTypeScreen from 'screens/TaskListByTypeScreen';
-import TaskListDetailByStatusScreen from 'screens/TaskListDetailByStatusScreen';
+import TaskListDetailByStatusScreen from 'screens/TaskListDetailByStatusScreen/TaskListDetailByStatusScreen';
 import TaskDetailAmbilMobilDariGarasiScreen from 'screens/TaskDetailAmbilMobilDariGarasiScreen';
+import TaskListDetailByDayScreen from 'screens/TaskListDetailByDayScreen';
 
 const RootStack = createStackNavigator<RootStackParamList>();
 
@@ -110,6 +111,15 @@ const Main: React.FC = () => {
             <RootStack.Screen
               name="TaskListDetailByStatus"
               component={TaskListDetailByStatusScreen}
+              options={{
+                headerStyle: {
+                  backgroundColor: theme.colors.navy,
+                },
+              }}
+            />
+            <RootStack.Screen
+              name="TaskListDetailByDay"
+              component={TaskListDetailByDayScreen}
               options={{
                 headerStyle: {
                   backgroundColor: theme.colors.navy,

@@ -61,10 +61,10 @@ const TaskDetailAmbilMobilScreen = () => {
       Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
       return;
     }
-    let res = await updateCourirTasks({
+    const res = await updateCourirTasks({
       id: item?.id,
       image_captures: [...bulkImage],
-      status: 'IN_GARAGE',
+      status: 'RETURN_TO_GARAGE',
       note: note,
     });
     if (!res) {
@@ -104,9 +104,6 @@ const TaskDetailAmbilMobilScreen = () => {
             _.splice(i, 1);
             setBulkImage(_);
           }}
-          bulkImage={bulkImage}
-          setBulkImage={setBulkImage}
-          selectedImageLabel=""
         />
 
         <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>

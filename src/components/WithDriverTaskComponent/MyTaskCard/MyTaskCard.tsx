@@ -1,11 +1,9 @@
 import Button from 'components/Button';
-import {DataItemTask, Vehicle} from 'types/tasks.types';
+import {DataItemTask} from 'types/tasks.types';
 import {ic_car, ic_pinpoin} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
-import {IDataStore} from 'types/data.types';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {theme} from 'utils';
-import {useDataStore} from 'store/actions/dataStore';
 import {useNavigation} from '@react-navigation/native';
 
 const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
@@ -13,14 +11,6 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
   item,
 }) => {
   const navigation = useNavigation();
-  const getData = useDataStore() as IDataStore;
-  const vehicleId = (
-    getData?.vehicles?.length > 0
-      ? getData?.vehicles?.find(
-          x => x?.id === item?.order?.order_detail?.vehicle_id,
-        )
-      : {}
-  ) as Vehicle;
 
   return (
     <View style={[styles.cardWrapper]}>
@@ -121,7 +111,7 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
         onPress={() => {
           navigation.navigate('TaskCompleteDetail', {
             item: item,
-            vehicleId: vehicleId,
+            // vehicleId: vehicleId,
           });
         }}
         styleWrapper={{

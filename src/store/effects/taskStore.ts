@@ -1,4 +1,5 @@
 import { Alert } from "react-native";
+import { TaskStatus } from "types/tasks.types";
 import { apiWithInterceptor } from "utils/interceptorV2";
 
 interface IParamsTasks {
@@ -9,13 +10,13 @@ interface IParamsTasks {
 }
 
 interface IParamUpdateOrder {
-    order_status: TASKSTATUS;
+    order_status: TaskStatus;
     courier_id: number;
 }
 
 interface IParamUPdateCourirTasks {
     id: number;
-    status: TASKSTATUS;
+    status: TaskStatus;
     note?: string;
     violations?: {
         violation: string;
@@ -27,7 +28,6 @@ interface IParamUPdateCourirTasks {
     image_captures: string[];
 }
 
-type TASKSTATUS = "DELIVERY_PROCESS" | "PICKUP_PROCESS" | "DELIVERED" | "PICKED" | "RETURNED";
 
 export const getTasks = async (paramsFilter: IParamsTasks) => {
     let _param = {
@@ -122,12 +122,7 @@ export const getTaskById = async (taskId: number) => {
             url: '/tasks/' + taskId,
         });
 
-        const responseOrder: any = await apiWithInterceptor({
-            method: 'get',
-            url: '/admin/orders/' + response?.data?.order?.transaction_key,
-        });
-
-        return responseOrder.data;
+        return response.data;
     } catch (error) {
         Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
     }

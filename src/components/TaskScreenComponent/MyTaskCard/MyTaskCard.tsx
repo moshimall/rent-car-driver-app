@@ -1,25 +1,19 @@
 import Button from 'components/Button';
+import moment from 'moment';
+import {DataItemTask} from 'types/tasks.types';
 import {h2} from 'utils/styles';
 import {ic_car, ic_check, ic_pinpoin} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import { DataItemTask, Vehicle } from 'types/tasks.types';
-import moment from 'moment';
-import { useDataStore } from 'store/actions/dataStore';
-import { IDataStore } from 'types/data.types';
 
-const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item}) => {
+const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
+  status,
+  item,
+}) => {
   const navigation = useNavigation();
-  const getData = useDataStore() as IDataStore;
-  const vehicleId = (
-    getData?.vehicles?.length > 0
-      ? getData?.vehicles?.find(
-          x => x?.id === item?.order?.order_detail?.vehicle_id,
-        )
-      : {}
-  ) as Vehicle;
+
   return (
     <View style={[styles.cardWrapper]}>
       <View
@@ -37,7 +31,11 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
             <Text style={styles.title}>Parkir ke Garasi</Text>
           </View>
 
-          <Text style={styles.time}>{moment(item?.created_at).add(7, 'hour').format('HH MMMM YYYY HH:mm')}</Text>
+          <Text style={styles.time}>
+            {moment(item?.created_at)
+              .add(7, 'hour')
+              .format('HH MMMM YYYY HH:mm')}
+          </Text>
         </View>
 
         <View style={[rowCenter, styles.taskDoneWrapper]}>
@@ -54,7 +52,10 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
 
       <View style={styles.lineHorizontal} />
       <Text style={styles.textOrderId}>
-        Order ID: <Text style={{ fontWeight: '500' }}>{item?.order?.order_key} | { vehicleId?.name || '-'}</Text>
+        Order ID:{' '}
+        <Text style={{fontWeight: '500'}}>
+          {item?.order?.order_key} | {'-'}
+        </Text>
       </Text>
 
       <View style={{marginTop: 20}}>
@@ -62,7 +63,9 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_delivery_location}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.rental_delivery_location}
+            </Text>
           </View>
         </View>
 
@@ -72,7 +75,9 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengambilan</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.rental_return_location}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.rental_return_location}
+            </Text>
           </View>
         </View>
       </View>
@@ -95,7 +100,10 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
-            <Text style={styles.textLocation}>{item?.order?.order_detail?.end_booking_date} | {item?.order?.order_detail?.end_booking_time}</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.order_detail?.end_booking_date} |{' '}
+              {item?.order?.order_detail?.end_booking_time}
+            </Text>
           </View>
         </View>
       </View>
@@ -106,7 +114,10 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({status, item
         _theme="navy"
         title="Detail Tugas"
         onPress={() => {
-          navigation.navigate('TaskCompleteDetail', {item: item, vehicleId: vehicleId});
+          navigation.navigate('TaskCompleteDetail', {
+            item: item,
+            // vehicleId: vehicleId,
+          });
         }}
         styleWrapper={{
           width: '95%',

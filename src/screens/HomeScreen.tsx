@@ -1,18 +1,22 @@
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Button from 'components/Button';
-import CardAntarMobil from 'components/Cards/WithoutDriver/CardAntarMobil';
 import CustomBackdrop from 'components/CustomBackdrop';
 import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {DataItemTask, Pagination} from 'types/tasks.types';
 import {deepClone, theme} from 'utils';
+import {getPlayerId} from 'store/effects/authStore';
 import {getTasks} from 'store/effects/taskStore';
 import {h1, h4} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {IHelpers} from 'types/store.types';
-import {useHelperStore} from 'store/actions/helpersStore';
-import {NavigationHelpers, ParamListBase, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {ITypeTask} from 'types/navigator';
+import {
+  NavigationHelpers,
+  ParamListBase,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   FlatList,
   Image,
@@ -24,7 +28,6 @@ import {
 import {
   ic_car1,
   ic_checkblue,
-  ic_filter,
   ic_main_icon,
   ic_no_task,
   ic_plane,
@@ -34,12 +37,6 @@ import {
   ic_with_driver,
   ic_without_driver,
 } from 'assets/icons';
-import CardAmbilMobil from 'components/Cards/WithoutDriver/CardAmbilMobil';
-import CardParkirMobil from 'components/Cards/WithoutDriver/CardParkirMobil';
-import {useDataStore} from 'store/actions/dataStore';
-import {IDataStore} from 'types/data.types';
-import {getPlayerId} from 'store/effects/authStore';
-import {ITypeTask} from 'types/navigator';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationHelpers<ParamListBase>>();
@@ -51,7 +48,6 @@ const HomeScreen = () => {
     limit: 10,
     page: 1,
   });
-  const getData = useDataStore() as IDataStore;
 
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
@@ -72,14 +68,9 @@ const HomeScreen = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   _getTasks();
-  //   return () => {};
-  // }, []);
   useFocusEffect(
     useCallback(() => {
       _getTasks();
-      getData?.getVehicles();
       getPlayerId();
     }, []),
   );
@@ -97,8 +88,6 @@ const HomeScreen = () => {
     });
 
     setTasks(_);
-
-    // console.log('_ = ', JSON.stringify(_));
 
     return () => {};
   }, [sorting]);
@@ -166,8 +155,6 @@ const HomeScreen = () => {
     },
   ];
 
-  if (getData?.loaderVehicle) return;
-
   return (
     <View style={styles.container}>
       <View style={{padding: 16, backgroundColor: '#fff'}}>
@@ -212,15 +199,6 @@ const HomeScreen = () => {
         <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
           Sedang Berjalan
         </Text>
-
-        {/* <TouchableOpacity
-          onPress={() => bottomSheetRef.current?.snapToIndex(0)}
-          style={[rowCenter, {justifyContent: 'space-between'}]}>
-          <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
-            Filter
-          </Text>
-          <Image source={ic_filter} style={iconCustomSize(14)} />
-        </TouchableOpacity> */}
       </View>
       <View style={{margin: 16}}>
         <FlatList
@@ -228,13 +206,13 @@ const HomeScreen = () => {
           // data={[...Array(5)]}
           renderItem={({item}) => (
             <>
-              {item?.status === 'DELIVERY_PROCESS' && (
+              {/* {item?.status === 'DELIVERY_PROCESS' && (
                 <CardAntarMobil item={item} />
               )}
               {item?.status === 'PICKUP_PROCESS' && (
                 <CardAmbilMobil item={item} />
               )}
-              {item?.status === 'RETURNED' && <CardParkirMobil item={item} />}
+              {item?.status === 'RETURNED' && <CardParkirMobil item={item} />} */}
             </>
           )}
           keyExtractor={(x, i) => i.toString()}

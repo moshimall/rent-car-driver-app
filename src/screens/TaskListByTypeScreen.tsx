@@ -1,4 +1,5 @@
 import appBar from 'components/AppBar/AppBar';
+import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import React, {useEffect, useState} from 'react';
 import {DataItemTask, Pagination} from 'types/tasks.types';
 import {getTasks} from 'store/effects/taskStore';
@@ -15,7 +16,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
+import hoc from 'components/hoc';
+import { theme } from 'utils';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListByType'>;
 
@@ -87,37 +89,48 @@ const TaskListByTypeScreen = () => {
     setRefresh(false);
   };
 
+  const handleNavigateTask = (item: DataItemTask) => {
+    if (type === 'Tanpa Supir') {
+      navigation.navigate('TaskListDetailByStatus', {
+        type: type,
+        id: item?.id,
+      });
+    }
+
+    if (type === 'Dengan Supir') {
+      navigation.navigate('TaskListDetailByDay', {
+        type: type,
+        id: item?.id,
+      });
+    }
+  };
+
   const renderItem = ({item}: {item: DataItemTask}) => {
     return (
       <TouchableOpacity
         style={[rowCenter, styles.cardItem]}
-        onPress={() =>
-          navigation.navigate('TaskListDetailByStatus', {
-            type: type,
-          })
-        }>
+        onPress={() => handleNavigateTask(item)}>
         <View>
           <Text
             style={{
               fontSize: 12,
             }}>
-            <Text style={{fontWeight: '700'}}>Task ID</Text>:{' '}
-            {item?.order?.order_key}
+            <Text style={{fontWeight: '700'}}>Task ID</Text>: {item?.task_key}
           </Text>
 
           <Text style={{fontSize: 14, marginVertical: 5}}>
-            {item?.order?.user_name} |{' '}
-            {item?.order?.order_detail?.vehicle?.name}
+            {item?.customer_name} | {item?.vehicle_name}
           </Text>
           <Text style={{fontSize: 12, color: '#666'}}>
-            {item?.order?.order_detail?.start_booking_date} -{' '}
-            {item?.order?.order_detail?.end_booking_date}
+            {item?.start_date} - {item?.end_date}
           </Text>
         </View>
 
         <View style={[rowCenter]}>
           <Image source={ic_progress_clock} style={iconCustomSize(15)} />
-          <Text style={{fontSize: 12, marginLeft: 5}}>3 of 4</Text>
+          <Text style={{fontSize: 12, marginLeft: 5}}>
+            {item?.process_of_done}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -158,7 +171,12 @@ const TaskListByTypeScreen = () => {
   );
 };
 
-export default TaskListByTypeScreen;
+export default hoc(
+  TaskListByTypeScreen,
+  theme.colors.navy,
+  false,
+  'light-content',
+);
 
 const styles = StyleSheet.create({
   cardItem: {

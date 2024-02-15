@@ -1,6 +1,7 @@
 import Config from 'react-native-config';
 import {ApisauceConfig, create} from 'apisauce';
 import {useAuthStore} from 'store/actions/authStore';
+import { showToast } from './Toast';
 
 type ApiConfig = {
   method: ApisauceConfig['method'];
@@ -21,10 +22,10 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
         request.timeout = 10000;
         request.headers.Authorization =
           'Bearer ' + state?.authToken?.access_token;
-        console.log(
-          'request.headers.Authorization = ',
-          request.headers.Authorization,
-        );
+        // console.log(
+        //   'request.headers.Authorization = ',
+        //   request.headers.Authorization,
+        // );
         return request;
       } catch (error) { }
     },
@@ -43,42 +44,24 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
         console.log(error.response);
         console.log('error.response.data=  ', error.response.data);
         const state: any = useAuthStore.getState();
-        // if (error.response.status === 401) {
-        //   const refresh_token = state?.authToken?.access_token;
-        //   state.logout()
-        //   showToast({
-        //     message: 'token expired',
-        //     title: 'error',
-        //     type: 'error'
-        //   })
-        //   // if (
-        //   //   refresh_token &&
-        //   //   error.response.data?.slug !== 'refresh-token-invalid'
-        //   // ) {
-        //   //   // store.dispatch(refreshToken(refresh_token as any));
-        //   //   return api.axiosInstance.request(error.config);
-        //   // } else {
-        //   //   // store.dispatch(logout());
-        //   // }
-        // }
-        // if (error.response.status === 401) {
-        //   // const refresh_token = store?.getState()?.auth?.auth.refresh_token;
-        //   state.logout();
-        //   showToast({
-        //     message: 'token expired',
-        //     title: 'error',
-        //     type: 'error',
-        //   });
-        //   // if (
-        //   //   refresh_token &&
-        //   //   error.response.data?.slug !== 'refresh-token-invalid'
-        //   // ) {
-        //   //   // store.dispatch(refreshToken(refresh_token as any));
-        //   //   return api.axiosInstance.request(error.config);
-        //   // } else {
-        //   //   // store.dispatch(logout());
-        //   // }
-        // }
+        if (error.response.status === 401) {
+          const refresh_token = state?.authToken?.access_token;
+          state.logout()
+          showToast({
+            message: 'token expired',
+            title: 'error',
+            type: 'error'
+          })
+          // if (
+          //   refresh_token &&
+          //   error.response.data?.slug !== 'refresh-token-invalid'
+          // ) {
+          //   // store.dispatch(refreshToken(refresh_token as any));
+          //   return api.axiosInstance.request(error.config);
+          // } else {
+          //   // store.dispatch(logout());
+          // }
+        }
         return Promise.reject(error);
       } catch (e) { }
     },

@@ -1,89 +1,134 @@
+export type TaskStatus = "DELIVERY_PROCESS" | "TAKE_FROM_GARAGE" | "DELIVERY_CAR" | "TAKE_CAR" | "RETURN_TO_GARAGE";
+
 export interface Vehicle {
-    id: number;
-    name: string;
-    year: number;
-    price: number;
-    max_passanger: number;
-    max_suitcase: number;
-    pet_allowed: boolean;
-    disability_allowed: boolean;
-    smoke_allowed: boolean;
-    slash_price: number;
-    price_with_driver: number;
-  }
-  
-  interface Identity {
-    ktp: string;
-    sim: string;
-  }
-  
-  interface OrderDetail {
-    vehicle_id: number;
-    vehicle: Vehicle;
-    rental_delivery_location: string;
-    rental_delivery_location_detail: string;
-    rental_return_location: string;
-    rental_return_location_detail: string;
-    start_booking_date: string;
-    start_booking_time: string;
-    end_booking_date: string;
-    end_booking_time: string;
-    without_driver: boolean;
-    identity: Identity;
-  }
-  
-  interface Order {
+  id: number;
+  name: string;
+  year: number;
+  price: number;
+  max_passanger: number;
+  max_suitcase: number;
+  pet_allowed: boolean;
+  disability_allowed: boolean;
+  smoke_allowed: boolean;
+  slash_price: number;
+  price_with_driver: number;
+}
+
+export interface BookingZone {
+  date: string;
+  pickup_zone_id: number;
+  detail_pickup_location: string;
+  pickup_zone_price: number;
+  drop_off_zone_id: number;
+  detail_drop_off_location: string;
+  drop_off_zone_price: number;
+  driving_zone_id: number;
+  detail_driving_location: string;
+  driving_zone_price: number;
+  total_price: number;
+  booking_start_time: string;
+  booking_end_time: string;
+  overtime_duration: number;
+  overtime_price: number;
+}
+
+export interface DataItemTask {
+  id: number;
+  task_key: string;
+  customer_name: string;
+  vehicle_name: string;
+  start_date: string;
+  end_date: string;
+  process_of_done: string;
+  created_at: string;
+}
+
+export interface WithDriverTaskDetail {
+  title: string;
+  date: string;
+  status: TaskStatus; // available: 'DELIVERY_PROCESS' | 'RETURN_TO_GARAGE' | 'TAKE_FROM_GARAGE';
+  is_processed: boolean;
+  order: {
     id: number;
     order_key: string;
-    order_status: string;
-    user_name: string;
+    delivery_location: string;
+    delivery_location_detail: string;
+    rental_start_date: string;
+    rental_start_time: string;
+    rental_end_date: string;
+    return_location: string;
+    return_location_detail: string;
+    rental_location: string;
+    rental_location_detail: string;
+    return_date: string;
+    return_time: string;
+    customer_name: string;
     phone_number: string;
-    phone_country_code: string;
-    wa_number: string;
-    down_payment: number;
-    deposit: number;
-    booking_price: number;
-    service_fee: number;
-    rental_delivery_fee: number;
-    rental_return_fee: number;
-    insurance_fee: number;
-    total_payment: number;
-    customer_id: string;
-    created_at: string;
-    updated_at: string;
-    expired_time: string;
-    refferal_code: string;
-    order_detail: OrderDetail;
-    order_cancelation: null | unknown;
-    is_extension: boolean;
-    is_order_extension_exists: boolean;
-    is_deposit_exists: boolean;
-    is_admin_creation: boolean;
-  }
-  
-  export interface DataItemTask {
-    customer_id: string;
-    id: number;
-    order: Order;
-    courier_id: number;
-    string: string;
-    image_captures: null | unknown;
-    note: string;
-    status: 'DELIVERY_PROCESS' | 'PICKUP_PROCESS' | 'DELIVERED' | 'PICKED' | 'RETURNED';
-    created_at: string;
-  }
-  
-  export interface Pagination {
-    limit: number;
-    page: number;
-    next_page?: number;
-    prev_page?: number;
-    total?: number;
-    total_page?: number;
-  }
-  
-  export interface ApiResponseTasks {
-    data: DataItemTask[];
-    pagination: Pagination;
-  }
-  
+    identity: {
+      ktp: string;
+      sim: string;
+    };
+    vehicle: {
+      name: string;
+      plate_number: string;
+      max_suitcase: number;
+      photos: Array<{
+        id: number;
+        url: string;
+      }>;
+    };
+  };
+  status_details: Array<{
+    title: string;
+    status: TaskStatus; // available: 'DELIVERY_PROCESS' | 'RETURN_TO_GARAGE' | 'TAKE_FROM_GARAGE';
+    is_processed: boolean;
+  }>;
+}
+
+export interface WithoutDriverTaskDetail {
+  title: string;
+  status: TaskStatus; // available: 'DELIVERY_PROCESS' | 'TAKE_FROM_GARAGE' | 'DELIVERY_CAR' | 'TAKE_CAR' | 'RETURN_TO_GARAGE';
+  order: {
+    order_key: string;
+    delivery_location: string;
+    delivery_location_detail: string;
+    rental_start_date: string;
+    rental_start_time: string;
+    rental_end_date: string;
+    return_location: string;
+    return_location_detail: string;
+    rental_location: string;
+    rental_location_detail: string;
+    return_date: string;
+    return_time: string;
+    customer_name: string;
+    phone_number: string;
+    identity: {
+      ktp: string;
+      sim: string;
+    };
+    vehicle: {
+      name: string;
+      plate_number: string;
+      max_suitcase: number;
+      photos: Array<{
+        id: number;
+        url: string;
+      }>;
+    };
+  };
+}
+
+export interface Pagination {
+  limit: number;
+  page: number;
+  next_page?: number;
+  prev_page?: number;
+  total?: number;
+  total_page?: number;
+}
+
+export interface ApiResponseTasks {
+  data: DataItemTask[];
+  pagination: Pagination;
+}

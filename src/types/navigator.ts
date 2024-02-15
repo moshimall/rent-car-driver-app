@@ -1,6 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {DataItemTask} from './tasks.types';
+import {DataItemTask, WithDriverTaskDetail, WithoutDriverTaskDetail} from './tasks.types';
 import {Vehicle} from './data.types';
 
 type RootStackParamList = {
@@ -30,10 +30,17 @@ type RootStackParamList = {
     type: ITypeTask;
   };
   TaskListDetailByStatus: {
+    id: number;
+    type: ITypeTask;
+    item?: WithDriverTaskDetail;
+  };
+  TaskListDetailByDay: {
+    id: number;
     type: ITypeTask;
   };
   TaskDetailAmbilMobilDariGarasi: {
-    item: DataItemTask;
+    id: number;
+    item: WithoutDriverTaskDetail | WithDriverTaskDetail;
   };
 };
 
