@@ -6,7 +6,7 @@ import {getTaskById} from 'store/effects/taskStore';
 import {h1} from 'utils/styles';
 import {ic_arrow_left_white} from 'assets/icons';
 import {RootStackParamList} from 'types/navigator';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import {rowCenter, WINDOW_WIDTH} from 'utils/mixins';
 import {theme} from 'utils';
 import {WithDriverTaskDetail} from 'types/tasks.types';
@@ -24,6 +24,7 @@ type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListDetailByDay'>;
 const TaskListDetailByDayScreen = () => {
   const navigation = useNavigation();
   const {type, id} = useRoute<ScreenRouteProp>().params;
+  const isFocused = useIsFocused();
   const [taskById, setTaskById] = useState([]);
 
   useEffect(() => {
@@ -64,8 +65,10 @@ const TaskListDetailByDayScreen = () => {
   };
 
   useEffect(() => {
-    _getTaskById();
-  }, []);
+    if (isFocused) {
+      _getTaskById();
+    }
+  }, [isFocused]);
 
   return (
     <View

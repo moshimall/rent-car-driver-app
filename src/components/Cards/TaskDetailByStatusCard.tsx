@@ -20,7 +20,7 @@ const TaskDetailByStatusCard = ({
   id,
   type,
 }: TaskDetailByStatusCardProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const title =
     type === 'Dengan Supir'
@@ -32,7 +32,7 @@ const TaskDetailByStatusCard = ({
   const handleTask = () => {
     if (type === 'Dengan Supir') {
       if (item.item_status === 'RETURN_TO_GARAGE') {
-        navigation.navigate('TaskDetailParkirMobil', {
+        navigation.replace('TaskDetailParkirMobil', {
           task_id: id,
           item,
           type,
@@ -40,7 +40,7 @@ const TaskDetailByStatusCard = ({
       }
 
       if (item.item_status === 'TAKE_FROM_GARAGE') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
+        navigation.replace('TaskDetailAmbilMobilDariGarasi', {
           task_id: id,
           item,
           type,

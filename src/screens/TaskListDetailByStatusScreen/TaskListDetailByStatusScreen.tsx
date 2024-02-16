@@ -1,13 +1,18 @@
 import appBar from 'components/AppBar/AppBar';
+import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
+import CardAntarMobil from 'components/Cards/CardAntarMobil';
+import CardParkirMobil from 'components/Cards/CardParkirMobil';
+import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
 import hoc from 'components/hoc';
 import React, {useEffect, useMemo} from 'react';
-import useTaskListDetailByStatus from './hooks/useTaskListDetailByStatus';
 import TaskDetailByStatusCard from '../../components/Cards/TaskDetailByStatusCard';
+import useTaskListDetailByStatus from './hooks/useTaskListDetailByStatus';
 import {h1} from 'utils/styles';
 import {ic_arrow_left_white, ic_check} from 'assets/icons';
+import {iconSize, rowCenter, WINDOW_WIDTH} from 'utils/mixins';
 import {RootStackParamList} from 'types/navigator';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {iconSize, rowCenter, WINDOW_WIDTH} from 'utils/mixins';
+import {TaskStatus} from 'types/tasks.types';
 import {theme} from 'utils';
 import {
   FlatList,
@@ -17,17 +22,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
-import CardAntarMobil from 'components/Cards/CardAntarMobil';
-import CardParkirMobil from 'components/Cards/CardParkirMobil';
-import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
-import {TaskStatus} from 'types/tasks.types';
 
 export type TaskListDetailByStatusScreenRouteProp = RouteProp<
   RootStackParamList,
   'TaskListDetailByStatus'
 >;
-type IPropsStatus = {title: IStatus; status: TaskStatus};
+type IPropsStatus = {title: IStatus; status: TaskStatus; is_prcessed?: boolean};
 type IStatus =
   | 'Ambil dari Garasi'
   | 'Antar Mobil'
@@ -112,32 +112,25 @@ const TaskListDetailByStatusScreen = () => {
 
   const findIndex = useMemo(() => {
     if (data.length) {
-      if (type === 'Tanpa Supir') {
-        return taskStatus.findIndex(x => x?.status === data[0]?.status);
-      }
-
-      if (type === 'Dengan Supir') {
-        if (
-          data.find(
-            x => x.item_status === 'RETURN_TO_GARAGE' && x.is_item_processed,
-          )
-        ) {
-          return 1;
-        }
-
-        if (
-          data.find(
-            x => x.item_status === 'TAKE_FROM_GARAGE' && x.is_item_processed,
-          )
-        ) {
-          return 0;
-        }
-
-        return -1;
-      }
+      return taskStatus.findIndex(x => x?.status === data?.[0]?.status);
     }
 
     return -1;
+  }, [data.length]);
+
+  const taskStep = useMemo(() => {
+    if (data.length) {
+      return taskStatus.map(task => {
+        return {
+          ...task,
+          is_prcessed: !!data.find(
+            x => x.item_status === task.status && x.is_item_processed,
+          )?.title,
+        };
+      });
+    }
+
+    return taskStatus;
   }, [data.length]);
 
   return (
@@ -148,7 +141,7 @@ const TaskListDetailByStatusScreen = () => {
       <View style={{alignItems: 'center', marginVertical: 20}}>
         <View
           style={[rowCenter, {paddingHorizontal: 30, alignItems: 'center'}]}>
-          {taskStatus.map((status, i) => (
+          {taskStep.map((status, i) => (
             <View key={i}>
               <View
                 style={[
@@ -158,17 +151,15 @@ const TaskListDetailByStatusScreen = () => {
                   },
                 ]}>
                 <View>
-                  {taskStatus[i]?.status === taskStatus[findIndex]?.status ? (
-                    <View style={styles.dot} />
-                  ) : findIndex < i || data?.length === 0 ? (
+                  {taskStep?.[i]?.is_prcessed ? (
+                    <Image source={ic_check} style={iconSize} />
+                  ) : (
                     <View
                       style={[
                         styles.dot,
                         {backgroundColor: theme.colors.grey6},
                       ]}
                     />
-                  ) : (
-                    <Image source={ic_check} style={iconSize} />
                   )}
                   <View style={styles.textDotWrapper}>
                     <Text style={styles.textStatus}>{status.title}</Text>

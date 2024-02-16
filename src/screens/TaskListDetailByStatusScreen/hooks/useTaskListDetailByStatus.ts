@@ -1,6 +1,6 @@
 import {getTaskById} from 'store/effects/taskStore';
 import {TaskListDetailByStatusScreenRouteProp} from '../TaskListDetailByStatusScreen';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {TaskStatus, WithDriverTaskDetail, WithoutDriverTaskDetail} from 'types/tasks.types';
 
@@ -20,28 +20,41 @@ const useTaskListDetailByStatus = () => {
   const [withDriverData, setWithDriverData] = useState<
     WithDriverTaskDetailData[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getWithoutDriverTaskDetail = async () => {
     try {
+      setIsLoading(true);
+
       const res = await getTaskById(id);
       setWithoutDriverData(res?.data || []);
     } catch (error) {
-      console.log('err = ', error);
+      console.log('err getWithoutDriverTaskDetail = ', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const getWithDriverTaskDetail = () => {
-    if (item) {
-      const res = item?.status_details?.map(data => ({
-        ...item,
-        item_title: data.title,
-        is_item_processed: data.is_processed,
-        item_status: data.status,
-      }));
+    try {
+      setIsLoading(true);
 
-      setWithDriverData(res || []);
-    } else {
-      setWithDriverData([]);
+      if (item) {
+        const res = item?.status_details?.map(data => ({
+          ...item,
+          item_title: data.title,
+          is_item_processed: data.is_processed,
+          item_status: data.status,
+        }));
+  
+        setWithDriverData(res || []);
+      } else {
+        setWithDriverData([]);
+      }
+    } catch (error) {
+      console.log('err getWithDriverTaskDetail = ', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,6 +89,7 @@ const useTaskListDetailByStatus = () => {
 
   return {
     data: finalData as (WithDriverTaskDetailData & WithoutDriverTaskDetail)[],
+    isLoading,
   };
 };
 

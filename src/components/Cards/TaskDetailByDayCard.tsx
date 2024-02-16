@@ -15,11 +15,7 @@ type TaskDetailByDayCardProps = {
   item: WithDriverTaskDetail;
 };
 
-const TaskDetailByDayCard = ({
-  type,
-  item,
-  id,
-}: TaskDetailByDayCardProps) => {
+const TaskDetailByDayCard = ({type, item, id}: TaskDetailByDayCardProps) => {
   const navigation = useNavigation();
 
   const handleTask = () => {
@@ -133,19 +129,14 @@ const TaskDetailByDayCard = ({
 
       <Button
         _theme="navy"
-        title={
-          item?.status === 'TAKE_FROM_GARAGE'
-            ? 'Ambil Dari Garasi'
-            : item?.status === 'RETURN_TO_GARAGE'
-            ? 'Parkir ke Garasi'
-            : 'Jalankan Tugas'
-        }
+        title="Jalankan Tugas"
         onPress={handleTask}
         styleWrapper={{
           width: '100%',
           alignSelf: 'center',
           marginVertical: 20,
         }}
+        disabled={item.is_processed}
       />
     </View>
   );
