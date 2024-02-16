@@ -4,10 +4,15 @@ import CustomBackdrop from 'components/CustomBackdrop';
 import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {DataItemTask, Pagination} from 'types/tasks.types';
+import {
+  DataItemTask,
+  Pagination,
+  WithDriverTaskDetail,
+  WithoutDriverTaskDetail,
+} from 'types/tasks.types';
 import {deepClone, theme} from 'utils';
 import {getPlayerId} from 'store/effects/authStore';
-import {getTasks} from 'store/effects/taskStore';
+import {getOngoingTasks, getTasks} from 'store/effects/taskStore';
 import {h1, h4} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
 import {ITypeTask} from 'types/navigator';
@@ -37,9 +42,17 @@ import {
   ic_with_driver,
   ic_without_driver,
 } from 'assets/icons';
+import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
+import CardAntarMobil from 'components/Cards/CardAntarMobil';
+import CardParkirMobil from 'components/Cards/CardParkirMobil';
+import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
+import TaskDetailByStatusCard from 'components/Cards/TaskDetailByStatusCard';
+import {useAuthStore} from 'store/actions/authStore';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationHelpers<ParamListBase>>();
+  const role_name = useAuthStore((state: any) => state.role_name);
+
   const [changebg, setChangebg] = useState(true);
   const [tasks, setTasks] = useState<DataItemTask[]>([]);
   const [loader, setLoader] = useState(false);
@@ -48,6 +61,10 @@ const HomeScreen = () => {
     limit: 10,
     page: 1,
   });
+
+  const [ongoingTask, setOngoingTask] = useState<
+    WithoutDriverTaskDetail[] | WithDriverTaskDetail[]
+  >([]);
 
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
@@ -71,6 +88,7 @@ const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       _getTasks();
+      _getOngoingTask();
       getPlayerId();
     }, []),
   );
@@ -114,6 +132,18 @@ const HomeScreen = () => {
     setLoader(false);
   };
 
+  const _getOngoingTask = async () => {
+    try {
+      const res = await getOngoingTasks();
+      if (!res || res?.id === 0) {
+        setOngoingTask([]);
+        return;
+      }
+      setOngoingTask([res]);
+      console.log('ongoing tasks = ', res);
+    } catch (error) {}
+  };
+
   const handleFilter = async () => {
     _getTasks();
   };
@@ -154,6 +184,38 @@ const HomeScreen = () => {
       name: 'Tour',
     },
   ];
+  console.log('role_name = ', role_name);
+  const renderItem = ({item}: {item: any}) => {
+    if (role_name === 'Courier') {
+      if (item?.status === 'DELIVERY_PROCESS') {
+        return <CardTakeFromGarage item={{...item, task_id: item?.id}} />;
+      }
+
+      if (item?.status === 'TAKE_FROM_GARAGE') {
+        return <CardAntarMobil item={{...item, task_id: item?.id}} />;
+      }
+
+      if (item?.status === 'DELIVERY_CAR') {
+        return <CardAmbilMobil item={{...item, task_id: item?.id}} />;
+      }
+
+      if (item?.status === 'TAKE_CAR') {
+        return <CardParkirMobil item={{...item, task_id: item?.id}} />;
+      }
+    }
+
+    if (role_name === 'Driver') {
+      return (
+        <TaskDetailByStatusCard
+          id={item?.id}
+          item={item}
+          type={'Dengan Supir'}
+        />
+      );
+    }
+
+    return <></>;
+  };
 
   return (
     <View style={styles.container}>
@@ -168,7 +230,7 @@ const HomeScreen = () => {
       </View>
 
       <View style={[rowCenter, styles.menuWrapper]}>
-        {MENU?.map((x, i) => (
+        {MENU.filter(x => x.name === role_name)?.map((x, i) => (
           <TouchableOpacity
             key={i}
             style={{alignItems: 'center'}}
@@ -202,19 +264,9 @@ const HomeScreen = () => {
       </View>
       <View style={{margin: 16}}>
         <FlatList
-          data={[...(tasks || [])]}
+          data={[...(ongoingTask || [])]}
           // data={[...Array(5)]}
-          renderItem={({item}) => (
-            <>
-              {/* {item?.status === 'DELIVERY_PROCESS' && (
-                <CardAntarMobil item={item} />
-              )}
-              {item?.status === 'PICKUP_PROCESS' && (
-                <CardAmbilMobil item={item} />
-              )}
-              {item?.status === 'RETURNED' && <CardParkirMobil item={item} />} */}
-            </>
-          )}
+          renderItem={renderItem}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
           refreshing={refresh}

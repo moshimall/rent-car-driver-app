@@ -12,7 +12,7 @@ const LoadingNextPage = ({loading}: {loading: boolean}) => {
     );
   }
 
-  return <View style={{marginBottom: 100}} />;
+  return <View style={{marginBottom: 200}} />;
 };
 
 export default LoadingNextPage;

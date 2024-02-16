@@ -34,9 +34,9 @@ const useTaskListDetailByStatus = () => {
     if (item) {
       const res = item?.status_details?.map(data => ({
         ...item,
-        item_title: data.title,
-        is_item_processed: data.is_processed,
-        item_status: data.status,
+        item_title: data?.title || '',
+        is_item_processed: data?.is_processed,
+        item_status: data?.status,
       }));
 
       setWithDriverData(res || []);

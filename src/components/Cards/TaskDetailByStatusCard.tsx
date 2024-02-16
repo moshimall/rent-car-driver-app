@@ -24,14 +24,14 @@ const TaskDetailByStatusCard = ({
 
   const title =
     type === 'Dengan Supir'
-      ? item.item_title
+      ? item?.item_title
       : type === 'Tanpa Supir'
-      ? item.title
+      ? item?.title
       : '-';
 
   const handleTask = () => {
     if (type === 'Dengan Supir') {
-      if (item.item_status === 'RETURN_TO_GARAGE') {
+      if (item?.item_status === 'RETURN_TO_GARAGE') {
         navigation.navigate('TaskDetailParkirMobil', {
           task_id: id,
           item,
@@ -39,7 +39,7 @@ const TaskDetailByStatusCard = ({
         } as any);
       }
 
-      if (item.item_status === 'TAKE_FROM_GARAGE') {
+      if (item?.item_status === 'TAKE_FROM_GARAGE') {
         navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
           task_id: id,
           item,
@@ -117,7 +117,7 @@ const TaskDetailByStatusCard = ({
           alignSelf: 'center',
           marginVertical: 20,
         }}
-        disabled={item.is_item_processed}
+        disabled={item?.is_item_processed}
       />
     </View>
   );

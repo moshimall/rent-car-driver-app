@@ -57,6 +57,20 @@ export const getTasks = async (paramsFilter: IParamsTasks) => {
   }
 };
 
+
+export const getOngoingTasks = async () => {
+
+  try {
+    const response: any = await apiWithInterceptor({
+      method: 'get',
+      url: '/tasks/ongoing',
+    });
+    return response.data;
+  } catch (error) {
+    // Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  }
+};
+
 export const updateOrder = async (params: IParamUpdateOrder) => {
   try {
     const response: any = await apiWithInterceptor({
