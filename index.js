@@ -11,6 +11,12 @@ console.log('Config.APP_ID = ', Config.APP_ID);
 // OneSignal.initialize('14935259-a535-428e-b10d-2b8f0d68a752');
 OneSignal.initialize(Config.APP_ID || '');
 
+import {decode, encode} from 'base-64'
+
+if (!global.btoa) {  global.btoa = encode }
+
+if (!global.atob) { global.atob = decode }
+
 import App from './src';
 import {name as appName} from './app.json';
 

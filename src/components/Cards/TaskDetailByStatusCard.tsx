@@ -24,9 +24,9 @@ const TaskDetailByStatusCard = ({
 
   const title =
     type === 'Dengan Supir'
-      ? item.item_title
+      ? item?.item_title
       : type === 'Tanpa Supir'
-      ? item.title
+      ? item?.title
       : '-';
 
   const handleTask = () => {
@@ -117,7 +117,7 @@ const TaskDetailByStatusCard = ({
           alignSelf: 'center',
           marginVertical: 20,
         }}
-        disabled={item.is_item_processed}
+        disabled={item?.is_item_processed}
       />
     </View>
   );
