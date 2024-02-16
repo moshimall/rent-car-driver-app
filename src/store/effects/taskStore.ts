@@ -26,6 +26,7 @@ export interface IParamUPdateCourirTasks {
    * diisi base64 exp: ["data:image/png;base64,iVBO"]
    */
   image_captures: string[];
+  date?: string;
 }
 
 export const getTasks = async (paramsFilter: IParamsTasks) => {

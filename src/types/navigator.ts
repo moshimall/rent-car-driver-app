@@ -23,7 +23,9 @@ type RootStackParamList = {
     item: WithoutDriverTaskDetail;
   };
   TaskDetailParkirMobil: {
-    item: WithoutDriverTaskDetail;
+    task_id: number;
+    item: WithoutDriverTaskDetail & WithDriverTaskDetail;
+    type: ITypeTask;
   };
   Splash: undefined;
   TaskListByType: {
@@ -40,7 +42,8 @@ type RootStackParamList = {
   };
   TaskDetailAmbilMobilDariGarasi: {
     task_id: number;
-    item: WithoutDriverTaskDetail | WithDriverTaskDetail;
+    item: WithoutDriverTaskDetail & WithDriverTaskDetail;
+    type: ITypeTask;
   };
 };
 

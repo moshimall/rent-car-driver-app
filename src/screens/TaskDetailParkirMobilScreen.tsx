@@ -1,8 +1,19 @@
 import appBar from 'components/AppBar/AppBar';
+import Button from 'components/Button';
 import hoc from 'components/hoc';
 import React, {useEffect, useState} from 'react';
+import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
+import {deepClone, theme} from 'utils';
 import {h1, h4} from 'utils/styles';
-import {ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
+import {ic_arrow_left_white} from 'assets/icons';
+import {
+  IParamUPdateCourirTasks,
+  updateCourirTasks,
+} from 'store/effects/taskStore';
+import {RootStackParamList} from 'types/navigator';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {rowCenter} from 'utils/mixins';
+import {showToast} from 'utils/Toast';
 import {
   Alert,
   Image,
@@ -13,22 +24,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WINDOW_WIDTH, iconSize, rowCenter} from 'utils/mixins';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
-import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
-import Button from 'components/Button';
-import {showToast} from 'utils/Toast';
-import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
-import {deepClone} from 'utils';
-import {updateCourirTasks} from 'store/effects/taskStore';
-import {RootStackParamList} from 'types/navigator';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailParkirMobil'>;
 
 const TaskDetailAmbilMobilScreen = () => {
-  const {item} = useRoute<ScreenRouteProp>().params;
   const navigation = useNavigation();
+  const {task_id, item, type} = useRoute<ScreenRouteProp>().params;
   const [bulkImage, setBulkImage] = useState([]);
   const [note, setNote] = useState('');
 
@@ -61,12 +62,19 @@ const TaskDetailAmbilMobilScreen = () => {
       Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
       return;
     }
-    let res = await updateCourirTasks({
-      id: item?.task_id,
+
+    const formData: IParamUPdateCourirTasks = {
+      id: task_id,
       image_captures: [...bulkImage],
       status: 'RETURN_TO_GARAGE',
       note: note,
-    });
+    };
+
+    if (type === 'Dengan Supir') {
+      formData['date'] = item.date;
+    }
+
+    const res = await updateCourirTasks(formData);
     if (!res) {
       showToast({
         title: 'Terjadi Kesalahan',
@@ -75,7 +83,7 @@ const TaskDetailAmbilMobilScreen = () => {
       });
       return;
     }
-    
+
     console.log('ress sukses RETURN_TO_GARAGE = ', res);
     showToast({
       title: 'Berhasil',
@@ -104,9 +112,6 @@ const TaskDetailAmbilMobilScreen = () => {
             _.splice(i, 1);
             setBulkImage(_);
           }}
-          // bulkImage={bulkImage}
-          // setBulkImage={setBulkImage}
-          // selectedImageLabel=""
         />
 
         <Text style={[h4, styles.text, {marginVertical: 10}]}>Keterangan</Text>
@@ -151,7 +156,12 @@ const TaskDetailAmbilMobilScreen = () => {
   );
 };
 
-export default hoc(TaskDetailAmbilMobilScreen);
+export default hoc(
+  TaskDetailAmbilMobilScreen,
+  theme.colors.navy,
+  false,
+  'light-content',
+);
 
 const styles = StyleSheet.create({
   container: {

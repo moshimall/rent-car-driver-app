@@ -96,7 +96,7 @@ const TaskDetailByDayCard = ({
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_location}
+              {item?.order?.return_location || '-'}
             </Text>
           </View>
         </View>

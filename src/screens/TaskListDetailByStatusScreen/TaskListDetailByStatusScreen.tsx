@@ -1,6 +1,6 @@
 import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import useTaskListDetailByStatus from './hooks/useTaskListDetailByStatus';
 import TaskDetailByStatusCard from '../../components/Cards/TaskDetailByStatusCard';
 import {h1} from 'utils/styles';
@@ -85,26 +85,61 @@ const TaskListDetailByStatusScreen = () => {
   }, [navigation]);
 
   const renderItem = ({item}: {item: any}) => {
-    if (item?.status === 'DELIVERY_PROCESS') {
-      return <CardTakeFromGarage item={{...item, task_id: id}} />;
+    if (type === 'Tanpa Supir') {
+      if (item?.status === 'DELIVERY_PROCESS') {
+        return <CardTakeFromGarage item={{...item, task_id: id}} />;
+      }
+
+      if (item?.status === 'TAKE_FROM_GARAGE') {
+        return <CardAntarMobil item={{...item, task_id: id}} />;
+      }
+
+      if (item?.status === 'DELIVERY_CAR') {
+        return <CardAmbilMobil item={{...item, task_id: id}} />;
+      }
+
+      if (item?.status === 'TAKE_CAR') {
+        return <CardParkirMobil item={{...item, task_id: id}} />;
+      }
     }
 
-    if (item?.status === 'TAKE_FROM_GARAGE') {
-      return <CardAntarMobil item={{...item, task_id: id}} />;
+    if (type === 'Dengan Supir') {
+      return <TaskDetailByStatusCard id={id} item={item} type={type} />;
     }
 
-    if (item?.status === 'DELIVERY_CAR') {
-      return <CardAmbilMobil item={{...item, task_id: id}} />;
-    }
-
-    if (item?.status === 'TAKE_CAR') {
-      return <CardParkirMobil item={{...item, task_id: id}} />;
-    }
-
-    return <TaskDetailByStatusCard id={id} item={item} type={type} />;
+    return <></>;
   };
 
-  const findIndex = taskStatus.findIndex(x => x?.status === data[0]?.status);
+  const findIndex = useMemo(() => {
+    if (data.length) {
+      if (type === 'Tanpa Supir') {
+        return taskStatus.findIndex(x => x?.status === data[0]?.status);
+      }
+
+      if (type === 'Dengan Supir') {
+        if (
+          data.find(
+            x => x.item_status === 'RETURN_TO_GARAGE' && x.is_item_processed,
+          )
+        ) {
+          return 1;
+        }
+
+        if (
+          data.find(
+            x => x.item_status === 'TAKE_FROM_GARAGE' && x.is_item_processed,
+          )
+        ) {
+          return 0;
+        }
+
+        return -1;
+      }
+    }
+
+    return -1;
+  }, [data.length]);
+
   return (
     <View
       style={{
@@ -123,8 +158,7 @@ const TaskListDetailByStatusScreen = () => {
                   },
                 ]}>
                 <View>
-                  {taskStatus[i]?.status ===
-                  taskStatus[findIndex + 1]?.status ? (
+                  {taskStatus[i]?.status === taskStatus[findIndex]?.status ? (
                     <View style={styles.dot} />
                   ) : findIndex < i || data?.length === 0 ? (
                     <View
@@ -152,92 +186,12 @@ const TaskListDetailByStatusScreen = () => {
           padding: 20,
         }}
         data={data}
-        // data={[...dummy]}
         renderItem={renderItem}
         keyExtractor={(x, i) => i.toString()}
       />
     </View>
   );
 };
-
-// "DELIVERY_PROCESS" | "TAKE_FROM_GARAGE" | "DELIVERY_CAR" | "TAKE_CAR" | "RETURN_TO_GARAGE";
-const data = [
-  {
-    task_key: 'T123456',
-    status: 'RETURN_TO_GARAGE',
-    customer_name: 'John Doe',
-    task_id: 987,
-    vehicle_name: 'Toyota Camry',
-    start_date: '2024-02-15T09:00:00',
-    end_date: '2024-02-15T18:00:00',
-    customer_id: 'C789',
-    id: 123,
-    order: {
-      identity: null,
-      rental_start_time: '2024-02-15T09:00:00',
-      return_location_detail: '123 Main St, Anytown, USA',
-      rental_location_detail: '456 Elm St, Anytown, USA',
-      rental_start_date: '2024-02-15',
-      start_time: '09:00 AM',
-      delivery_location: '123 Main St, Anytown, USA',
-      rental_end_date: '2024-02-15',
-      customer_name: 'John Doe',
-      vehicle: {
-        id: 456,
-        name: 'Toyota Camry',
-        year: 2022,
-        price: 50,
-        max_passanger: 5,
-        max_suitcase: 2,
-        plate_number: 'ABC 123 CBA',
-        pet_allowed: false,
-        disability_allowed: true,
-        smoke_allowed: false,
-        slash_price: 40,
-        price_with_driver: 100,
-      },
-      rental_location: '456 Elm St, Anytown, USA',
-      return_location: '123 Main St, Anytown, USA',
-      return_date: '2024-02-15',
-      return_time: '06:00 PM',
-      id: 789,
-      order_key: 'O987654',
-      order_status: 'CONFIRMED',
-      user_name: 'johndoe',
-      phone_number: '123-456-7890',
-      phone_country_code: '+1',
-      wa_number: '123-456-7890',
-      down_payment: 100,
-      deposit: 200,
-      booking_price: 50,
-      service_fee: 10,
-      rental_delivery_fee: 20,
-      rental_return_fee: 20,
-      insurance_fee: 30,
-      total_payment: 430,
-      customer_id: 'C789',
-      created_at: '2024-02-10T12:34:56',
-      updated_at: '2024-02-15T08:00:00',
-      expired_time: '2024-02-15T08:00:00',
-      refferal_code: 'REF123',
-      order_detail: {
-        details: 'Some details about the order',
-      },
-      order_cancelation: null,
-      is_extension: false,
-      is_order_extension_exists: false,
-      is_deposit_exists: true,
-      is_admin_creation: false,
-    },
-    courier_id: 789,
-    string: 'Some additional string data',
-    image_captures: null,
-    note: 'Some notes about the task',
-
-    title: 'Some,',
-    created_at: '2024-02-15T08:00:00',
-  },
-];
 
 export default hoc(
   TaskListDetailByStatusScreen,

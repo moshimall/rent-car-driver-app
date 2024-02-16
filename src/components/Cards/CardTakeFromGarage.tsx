@@ -46,7 +46,7 @@ const CardTakeFromGarage = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.rental_location}
+              {item?.order?.rental_location || '-'}
             </Text>
           </View>
         </View>
@@ -58,7 +58,7 @@ const CardTakeFromGarage = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_location}
+              {item?.order?.return_location || '-'}
             </Text>
           </View>
         </View>

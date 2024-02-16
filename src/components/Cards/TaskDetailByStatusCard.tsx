@@ -8,7 +8,6 @@ import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
 import {WithDriverTaskDetailData} from 'screens/TaskListDetailByStatusScreen/hooks/useTaskListDetailByStatus';
 import {ITypeTask} from 'types/navigator';
-import {WithoutDriverTaskDetail} from 'types/tasks.types';
 
 type TaskDetailByStatusCardProps = {
   id: number;
@@ -33,32 +32,19 @@ const TaskDetailByStatusCard = ({
   const handleTask = () => {
     if (type === 'Dengan Supir') {
       if (item.item_status === 'RETURN_TO_GARAGE') {
-        navigation.navigate('TaskDetailParkirMobil', {id, item});
+        navigation.navigate('TaskDetailParkirMobil', {
+          task_id: id,
+          item,
+          type,
+        } as any);
       }
 
       if (item.item_status === 'TAKE_FROM_GARAGE') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {id, item});
-      }
-    }
-
-    if (type === 'Tanpa Supir') {
-      if (item.status === 'DELIVERY_PROCESS') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {id, item});
-      }
-      if (item.status === 'RETURN_TO_GARAGE') {
-        navigation.navigate('TaskDetailParkirMobil', {id, item});
-      }
-
-      if (item.status === 'TAKE_CAR') {
-        navigation.navigate('TaskDetailAmbilMobil', {id, item});
-      }
-
-      if (item.status === 'TAKE_CAR') {
-        navigation.navigate('TaskDetailAntarMobil', {id, item});
-      }
-
-      if (item.status === 'TAKE_FROM_GARAGE') {
-        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {id, item});
+        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
+          task_id: id,
+          item,
+          type,
+        } as any);
       }
     }
   };
@@ -102,7 +88,7 @@ const TaskDetailByStatusCard = ({
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_location}
+              {item?.order?.return_location || '-'}
             </Text>
           </View>
         </View>
@@ -131,6 +117,7 @@ const TaskDetailByStatusCard = ({
           alignSelf: 'center',
           marginVertical: 20,
         }}
+        disabled={item.is_item_processed}
       />
     </View>
   );

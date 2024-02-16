@@ -2,12 +2,12 @@ import {getTaskById} from 'store/effects/taskStore';
 import {TaskListDetailByStatusScreenRouteProp} from '../TaskListDetailByStatusScreen';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {WithDriverTaskDetail, WithoutDriverTaskDetail} from 'types/tasks.types';
+import {TaskStatus, WithDriverTaskDetail, WithoutDriverTaskDetail} from 'types/tasks.types';
 
 export type WithDriverTaskDetailData = WithDriverTaskDetail & {
   item_title: string;
   is_item_processed: boolean;
-  item_status: 'DELIVERY_PROCESS' | 'RETURN_TO_GARAGE' | 'TAKE_FROM_GARAGE';
+  item_status: TaskStatus;
 };
 
 const useTaskListDetailByStatus = () => {
@@ -50,19 +50,17 @@ const useTaskListDetailByStatus = () => {
       if (type === 'Tanpa Supir') {
         getWithoutDriverTaskDetail();
       }
-  
+
       if (type === 'Dengan Supir') {
         getWithDriverTaskDetail();
       }
-  
+
       return () => {
         setWithoutDriverData([]);
         setWithDriverData([]);
       };
     }, []),
   );
-
-
 
   const finalData = useMemo(() => {
     if (type === 'Tanpa Supir') {
@@ -76,7 +74,9 @@ const useTaskListDetailByStatus = () => {
     return [];
   }, [withDriverData.length, withoutDriverData.length]);
 
-  return {data: finalData};
+  return {
+    data: finalData as (WithDriverTaskDetailData & WithoutDriverTaskDetail)[],
+  };
 };
 
 export default useTaskListDetailByStatus;
