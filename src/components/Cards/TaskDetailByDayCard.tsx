@@ -136,7 +136,7 @@ const TaskDetailByDayCard = ({type, item, id}: TaskDetailByDayCardProps) => {
           alignSelf: 'center',
           marginVertical: 20,
         }}
-        disabled={item.is_processed}
+        disabled={item.status === "RETURN_TO_GARAGE"}
       />
     </View>
   );
