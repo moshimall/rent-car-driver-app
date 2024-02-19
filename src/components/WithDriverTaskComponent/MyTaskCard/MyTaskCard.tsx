@@ -1,8 +1,6 @@
 import Button from 'components/Button';
-import moment from 'moment';
 import {DataItemTask} from 'types/tasks.types';
-import {h2} from 'utils/styles';
-import {ic_car, ic_check, ic_pinpoin} from 'assets/icons';
+import {ic_car, ic_pinpoin} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {theme} from 'utils';
@@ -28,33 +26,18 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
               style={iconCustomSize(20)}
               resizeMode="stretch"
             />
-            <Text style={styles.title}>Parkir ke Garasi</Text>
+            <Text style={styles.title}>Hari ke 1</Text>
           </View>
-
-          <Text style={styles.time}>
-            {moment(item?.created_at)
-              .add(7, 'hour')
-              .format('HH MMMM YYYY HH:mm')}
-          </Text>
-        </View>
-
-        <View style={[rowCenter, styles.taskDoneWrapper]}>
-          <Image source={ic_check} style={iconCustomSize(15)} />
-          <Text
-            style={[
-              h2,
-              {color: 'rgba(41, 155, 10, 1)', fontSize: 10, marginLeft: 5},
-            ]}>
-            Tugas Selesai
-          </Text>
         </View>
       </View>
 
       <View style={styles.lineHorizontal} />
+      <Text style={styles.username}>Kevin Sanjaya</Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
         <Text style={{fontWeight: '500'}}>
-          {item?.order?.order_key} | {'-'}
+          {/* {item?.order?.order_key} | {vehicleId?.name || '-'} */}
+          GR02547896450123 | Suzuki Ertiga
         </Text>
       </Text>
 
@@ -64,7 +47,21 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.order_detail?.rental_delivery_location}
+              {/* {item?.order?.order_detail?.rental_delivery_location} */}
+              Zona 0
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.lineVertical} />
+
+        <View style={rowCenter}>
+          <Image source={ic_pinpoin} style={iconCustomSize(45)} />
+          <View style={{marginLeft: 10}}>
+            <Text style={styles.textTitle}>Lokasi Penyewaan</Text>
+            <Text style={styles.textLocation}>
+              {/* {item?.order?.order_detail?.rental_delivery_location} */}
+              Zona 0
             </Text>
           </View>
         </View>
@@ -76,7 +73,8 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengambilan</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.order_detail?.rental_return_location}
+              {/* {item?.order?.order_detail?.rental_return_location} */}
+              Zona 0
             </Text>
           </View>
         </View>
@@ -84,35 +82,32 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
       <View style={styles.lineHorizontal} />
 
       <View style={{marginTop: 0}}>
-        {status === 0 && (
-          <View style={rowCenter}>
-            <Image source={ic_pinpoin} style={iconCustomSize(45)} />
-            <View style={{marginLeft: 10}}>
-              <Text style={styles.textTitle}>Mulai Sewa</Text>
-              <Text style={styles.textLocation}>01 Juli 2022 | 09:00 AM</Text>
-            </View>
+        <View style={rowCenter}>
+          <Image source={ic_pinpoin} style={iconCustomSize(45)} />
+          <View style={{marginLeft: 10}}>
+            <Text style={styles.textTitle}>Tanggal Mulai</Text>
+            <Text style={styles.textLocation}>01 Juli 2022 | 09:00 AM</Text>
           </View>
-        )}
+        </View>
 
-        {status === 0 && <View style={styles.lineVertical} />}
+        <View style={styles.lineVertical} />
 
         <View style={rowCenter}>
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
-            <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
+            <Text style={styles.textTitle}>Tanggal Selesai</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.order_detail?.end_booking_date} |{' '}
-              {item?.order?.order_detail?.end_booking_time}
+              {/* {item?.order?.order_detail?.end_booking_date} |{' '}
+              {item?.order?.order_detail?.end_booking_time} */}
+              01 Juli 2022 | 19:00 PM
             </Text>
           </View>
         </View>
       </View>
 
-      {/* <Text style={styles.textComment}>Comment : </Text> */}
-
       <Button
         _theme="navy"
-        title="Detail Tugas"
+        title="Jalankan Tugas"
         onPress={() => {
           navigation.navigate('TaskCompleteDetail', {
             item: item,
@@ -120,7 +115,7 @@ const MyTaskCard: React.FC<{status: 0 | 1; item: DataItemTask}> = ({
           });
         }}
         styleWrapper={{
-          width: '95%',
+          width: '98%',
           alignSelf: 'center',
           marginVertical: 20,
         }}
@@ -159,6 +154,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter',
     fontWeight: '400',
+  },
+  username: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: theme.colors.black,
+    marginBottom: 5,
   },
   textOrderId: {fontSize: 12, fontWeight: 'bold', color: theme.colors.black},
   textTitle: {

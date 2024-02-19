@@ -1,18 +1,27 @@
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Button from 'components/Button';
-import CardAntarMobil from 'components/Cards/CardAntarMobil';
 import CustomBackdrop from 'components/CustomBackdrop';
 import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {DataItemTask, Pagination} from 'types/tasks.types';
+import {
+  DataItemTask,
+  Pagination,
+  WithDriverTaskDetail,
+  WithoutDriverTaskDetail,
+} from 'types/tasks.types';
 import {deepClone, theme} from 'utils';
-import {getTasks} from 'store/effects/taskStore';
+import {getPlayerId} from 'store/effects/authStore';
+import {getOngoingTasks, getTasks} from 'store/effects/taskStore';
 import {h1, h4} from 'utils/styles';
 import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {IHelpers} from 'types/store.types';
-import {useHelperStore} from 'store/actions/helpersStore';
-import {NavigationHelpers, ParamListBase, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {ITypeTask} from 'types/navigator';
+import {
+  NavigationHelpers,
+  ParamListBase,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   FlatList,
   Image,
@@ -24,8 +33,8 @@ import {
 import {
   ic_car1,
   ic_checkblue,
-  ic_filter,
   ic_main_icon,
+  ic_no_task,
   ic_plane,
   ic_radio_button,
   ic_selected_radio_button,
@@ -34,13 +43,16 @@ import {
   ic_without_driver,
 } from 'assets/icons';
 import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
+import CardAntarMobil from 'components/Cards/CardAntarMobil';
 import CardParkirMobil from 'components/Cards/CardParkirMobil';
-import {useDataStore} from 'store/actions/dataStore';
-import {IDataStore} from 'types/data.types';
-import {getPlayerId} from 'store/effects/authStore';
+import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
+import TaskDetailByStatusCard from 'components/Cards/TaskDetailByStatusCard';
+import {useAuthStore} from 'store/actions/authStore';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationHelpers<ParamListBase>>();
+  const role_name = useAuthStore((state: any) => state.role_name);
+
   const [changebg, setChangebg] = useState(true);
   const [tasks, setTasks] = useState<DataItemTask[]>([]);
   const [loader, setLoader] = useState(false);
@@ -49,7 +61,10 @@ const HomeScreen = () => {
     limit: 10,
     page: 1,
   });
-  const getData = useDataStore() as IDataStore;
+
+  const [ongoingTask, setOngoingTask] = useState<
+    WithoutDriverTaskDetail[] | WithDriverTaskDetail[]
+  >([]);
 
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
@@ -70,14 +85,10 @@ const HomeScreen = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   _getTasks();
-  //   return () => {};
-  // }, []);
   useFocusEffect(
     useCallback(() => {
       _getTasks();
-      getData?.getVehicles();
+      _getOngoingTask();
       getPlayerId();
     }, []),
   );
@@ -95,8 +106,6 @@ const HomeScreen = () => {
     });
 
     setTasks(_);
-
-    // console.log('_ = ', JSON.stringify(_));
 
     return () => {};
   }, [sorting]);
@@ -123,6 +132,18 @@ const HomeScreen = () => {
     setLoader(false);
   };
 
+  const _getOngoingTask = async () => {
+    try {
+      const res = await getOngoingTasks();
+      if (!res || res?.id === 0) {
+        setOngoingTask([]);
+        return;
+      }
+      setOngoingTask([res]);
+      console.log('ongoing tasks = ', res);
+    } catch (error) {}
+  };
+
   const handleFilter = async () => {
     _getTasks();
   };
@@ -145,30 +166,56 @@ const HomeScreen = () => {
     setRefresh(false);
   };
 
-  const MENU = [
+  const MENU: {ic: any; name: ITypeTask}[] = [
     {
       ic: ic_without_driver,
       name: 'Tanpa Supir',
-      screen: '',
     },
     {
       ic: ic_with_driver,
       name: 'Dengan Supir',
-      screen: 'WithDriver',
     },
     {
       ic: ic_plane,
       name: 'Airport Transfer',
-      screen: '',
     },
     {
       ic: ic_car1,
       name: 'Tour',
-      screen: '',
     },
   ];
+  console.log('role_name = ', role_name);
+  const renderItem = ({item}: {item: any}) => {
+    if (role_name === 'Courier') {
+      if (item?.status === 'DELIVERY_PROCESS') {
+        return <CardTakeFromGarage item={{...item, task_id: item?.id}} />;
+      }
 
-  if (getData?.loaderVehicle) return;
+      if (item?.status === 'TAKE_FROM_GARAGE') {
+        return <CardAntarMobil item={{...item, task_id: item?.id}} />;
+      }
+
+      if (item?.status === 'DELIVERY_CAR') {
+        return <CardAmbilMobil item={{...item, task_id: item?.id}} />;
+      }
+
+      if (item?.status === 'TAKE_CAR') {
+        return <CardParkirMobil item={{...item, task_id: item?.id}} />;
+      }
+    }
+
+    if (role_name === 'Driver') {
+      return (
+        <TaskDetailByStatusCard
+          id={item?.id}
+          item={item}
+          type={'Dengan Supir'}
+        />
+      );
+    }
+
+    return <></>;
+  };
 
   return (
     <View style={styles.container}>
@@ -183,11 +230,13 @@ const HomeScreen = () => {
       </View>
 
       <View style={[rowCenter, styles.menuWrapper]}>
-        {MENU?.map((x, i) => (
+        {MENU.filter(x => x.name === role_name)?.map((x, i) => (
           <TouchableOpacity
             key={i}
             style={{alignItems: 'center'}}
-            onPress={() => navigation.navigate(x.screen)}>
+            onPress={() => {
+              navigation.navigate('TaskListByType', {type: x?.name});
+            }}>
             <View
               style={{
                 padding: 10,
@@ -210,33 +259,14 @@ const HomeScreen = () => {
           },
         ]}>
         <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
-          Tugas Driver
+          Sedang Berjalan
         </Text>
-
-        <TouchableOpacity
-          onPress={() => bottomSheetRef.current?.snapToIndex(0)}
-          style={[rowCenter, {justifyContent: 'space-between'}]}>
-          <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
-            Filter
-          </Text>
-          <Image source={ic_filter} style={iconCustomSize(14)} />
-        </TouchableOpacity>
       </View>
       <View style={{margin: 16}}>
         <FlatList
-          data={[...(tasks || [])]}
+          data={[...(ongoingTask || [])]}
           // data={[...Array(5)]}
-          renderItem={({item}) => (
-            <>
-              {item?.status === 'DELIVERY_PROCESS' && (
-                <CardAntarMobil item={item} />
-              )}
-              {item?.status === 'PICKUP_PROCESS' && (
-                <CardAmbilMobil item={item} />
-              )}
-              {item?.status === 'RETURNED' && <CardParkirMobil item={item} />}
-            </>
-          )}
+          renderItem={renderItem}
           keyExtractor={(x, i) => i.toString()}
           ListFooterComponent={<LoadingNextPage loading={loader} />}
           refreshing={refresh}
@@ -251,7 +281,11 @@ const HomeScreen = () => {
                 justifyContent: 'center',
                 marginTop: '20%',
               }}>
-              <Text>tidak ada tugas</Text>
+              <Image
+                source={ic_no_task}
+                style={{width: 150, height: 150, marginBottom: 20}}
+              />
+              <Text>Belum Mengambil Tugas</Text>
             </View>
           )}
         />

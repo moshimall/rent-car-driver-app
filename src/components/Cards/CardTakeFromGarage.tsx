@@ -1,36 +1,32 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {ic_car, ic_pinpoin, ic_calendar, ic_car_key} from 'assets/icons';
+import {
+  ic_car,
+  ic_pinpoin,
+  ic_calendar,
+  ic_car_key,
+  ic_park,
+} from 'assets/icons';
 import {theme} from 'utils';
 import {rowCenter, iconCustomSize} from 'utils/mixins';
 import {h1} from 'utils/styles';
 import Button from 'components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {DataItemTask, WithoutDriverTaskDetail} from 'types/tasks.types';
-import {useDataStore} from 'store/actions/dataStore';
-import {IDataStore, Vehicle} from 'types/data.types';
 
-const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
+const CardTakeFromGarage = ({item}: {item: WithoutDriverTaskDetail}) => {
   const navigation = useNavigation();
-  const getData = useDataStore() as IDataStore;
-  // console.log('getData?.vehicles = ', getData?.vehicles)
-  // const vehicleId = (
-  //   getData?.vehicles?.length > 0
-  //     ? getData?.vehicles?.find(
-  //         x => x?.id === item?.order?.order_detail?.vehicle_id,
-  //       )
-  //     : {}
-  // ) as Vehicle;
+
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
         <Image
-          source={ic_car_key}
+          source={ic_park}
           style={iconCustomSize(25)}
           resizeMode="stretch"
         />
         <Text style={[h1, {marginLeft: 5, color: theme.colors.navy}]}>
-          Ambil Mobil
+          Ambil Dari Garasi
         </Text>
       </View>
       <View style={styles.lineHorizontal} />
@@ -50,7 +46,7 @@ const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.rental_location}
+              {item?.order?.rental_location || '-'}
             </Text>
           </View>
         </View>
@@ -62,7 +58,7 @@ const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_location}
+              {item?.order?.return_location || '-'}
             </Text>
           </View>
         </View>
@@ -86,9 +82,25 @@ const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
 
       <Button
         _theme="navy"
-        title="Ambil Mobil"
+        title="Ambil Dari Garasi"
         onPress={() => {
-          navigation.navigate('TaskDetailAmbilMobil', {item: item});
+          Alert.alert(
+            'Konfirmasi Tugas',
+            'Apakah anda yakin ingin jalankan tugas?',
+            [
+              {
+                text: 'Tidak',
+              },
+              {
+                onPress: () =>
+                  navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
+                    item: item,
+                    task_id: item?.task_id,
+                  }),
+                  text: 'Ya'
+              },
+            ],
+          );
         }}
         styleWrapper={{
           width: '95%',
@@ -100,7 +112,7 @@ const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
   );
 };
 
-export default CardAmbilMobil;
+export default CardTakeFromGarage;
 
 const styles = StyleSheet.create({
   textName: {

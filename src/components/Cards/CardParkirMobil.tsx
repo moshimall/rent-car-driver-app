@@ -1,25 +1,16 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {ic_car, ic_pinpoin, ic_calendar, ic_park} from 'assets/icons';
-import {theme} from 'utils';
-import {rowCenter, iconCustomSize} from 'utils/mixins';
-import {h1} from 'utils/styles';
 import Button from 'components/Button';
+import React from 'react';
+import {h1} from 'utils/styles';
+import {ic_calendar, ic_park, ic_pinpoin} from 'assets/icons';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import {DataItemTask, Vehicle} from 'types/tasks.types';
-import { useDataStore } from 'store/actions/dataStore';
-import { IDataStore } from 'types/data.types';
+import {WithoutDriverTaskDetail} from 'types/tasks.types';
 
-const CardParkirMobil = ({item}: {item: DataItemTask}) => {
+const CardParkirMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
   const navigation = useNavigation();
-  const getData = useDataStore() as IDataStore;
-  const vehicleId = (
-    getData?.vehicles?.length > 0
-      ? getData?.vehicles?.find(
-          x => x?.id === item?.order?.order_detail?.vehicle_id,
-        )
-      : {}
-  ) as Vehicle;
+
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -34,13 +25,12 @@ const CardParkirMobil = ({item}: {item: DataItemTask}) => {
       </View>
       <View style={styles.lineHorizontal} />
       <Text style={[h1, {marginTop: -10, marginBottom: 10}]}>
-        {item?.order?.user_name}
+        {item?.order?.customer_name}
       </Text>
       <Text style={styles.textOrderId}>
         Order ID:{' '}
         <Text style={{fontWeight: '500'}}>
-          {item?.order?.order_key} |{' '}
-          {vehicleId?.name || '-'}
+          {item?.order?.order_key} | {item?.order?.vehicle?.name || '-'}
         </Text>
       </Text>
 
@@ -49,7 +39,9 @@ const CardParkirMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengantaran</Text>
-            <Text style={styles.textLocation}>Cafe Bali</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.rental_location}
+            </Text>
           </View>
         </View>
 
@@ -59,7 +51,9 @@ const CardParkirMobil = ({item}: {item: DataItemTask}) => {
           <Image source={ic_pinpoin} style={iconCustomSize(45)} />
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Lokasi Pengembalian</Text>
-            <Text style={styles.textLocation}>Cafe Bali</Text>
+            <Text style={styles.textLocation}>
+              {item?.order?.return_location}
+            </Text>
           </View>
         </View>
       </View>
@@ -81,7 +75,10 @@ const CardParkirMobil = ({item}: {item: DataItemTask}) => {
         _theme="navy"
         title="Kembalikan ke Garasi"
         onPress={() => {
-          navigation.navigate('TaskDetailParkirMobil', {item: item});
+          navigation.navigate('TaskDetailParkirMobil', {
+            task_id: item.task_id,
+            item,
+          } as any);
         }}
         styleWrapper={{
           width: '95%',

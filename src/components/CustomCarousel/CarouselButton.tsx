@@ -13,7 +13,7 @@ const CarouselButton: React.FC<IProps> = ({iconName, onPress}) => {
     <TouchableOpacity
       style={[
         styles.button,
-        iconName === 'arrowleft' ? {left: WINDOW_WIDTH/30} : {right: WINDOW_WIDTH/8},
+        iconName === 'arrowleft' ? {left: WINDOW_WIDTH/30} : {right: WINDOW_WIDTH/30},
       ]}
       onPress={onPress}>
       <Image

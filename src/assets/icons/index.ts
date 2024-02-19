@@ -47,5 +47,9 @@ export const ic_with_driver = require('./ic_with_driver.png');
 export const ic_plane = require('./ic_plane.png');
 export const ic_without_driver = require('./ic_without_driver.png');
 export const ic_car1 = require('./ic_car1.png');
+export const ic_no_task = require('./ic_no_task.png');
+export const ic_progress_clock = require('./ic_progress-clock.png');
+export const ic_plus = require('./ic_plus.png');
 export const ic_progress = require('./ic_progress.png');
+export const ic_logout = require('./ic_logout.png');
 

@@ -28,8 +28,8 @@ const LoginScreen: FC = () => {
   const navigation = useNavigation();
   const login = useAuthStore((state: any) => state.login);
   const [form, setForm] = useState<any>({
-    email: 'admin2@mail.com',
-    password: 'admindev2',
+    email: 'ferrytest@gmail.com',
+    password: 'password1',
   });
   const [formError, setFormError] = useState<IErrorMessage>({
     error_email: '',

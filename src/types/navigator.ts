@@ -1,7 +1,7 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import { DataItemTask } from './tasks.types';
-import { Vehicle } from './data.types';
+import {DataItemTask, WithDriverTaskDetail, WithoutDriverTaskDetail} from './tasks.types';
+import {Vehicle} from './data.types';
 
 type RootStackParamList = {
   ProductDetail: {productId: string};
@@ -12,22 +12,46 @@ type RootStackParamList = {
   OtpVerification: undefined;
   Register: undefined;
   TaskDetailAntarMobil: {
-    item: DataItemTask;
-    vehicleId?: Vehicle
+    item: WithoutDriverTaskDetail;
+    task_id?: number;
   };
   TaskCompleteDetail: {
     item: DataItemTask;
-    vehicleId?: Vehicle
+    vehicleId?: Vehicle;
   };
   TaskDetailAmbilMobil: {
-    item: DataItemTask
+    item: WithoutDriverTaskDetail;
   };
   TaskDetailParkirMobil: {
-    item: DataItemTask
+    task_id: number;
+    item: WithoutDriverTaskDetail & WithDriverTaskDetail;
+    type: ITypeTask;
   };
   Splash: undefined;
-  WithDriver: undefined;
+  TaskListByType: {
+    type: ITypeTask;
+  };
+  TaskListDetailByStatus: {
+    id: number;
+    type: ITypeTask;
+    item?: WithDriverTaskDetail;
+  };
+  TaskListDetailByDay: {
+    id: number;
+    type: ITypeTask;
+  };
+  TaskDetailAmbilMobilDariGarasi: {
+    task_id: number;
+    item: WithoutDriverTaskDetail & WithDriverTaskDetail;
+    type: ITypeTask;
+  };
 };
+
+export type ITypeTask =
+  | 'Tanpa Supir'
+  | 'Dengan Supir'
+  | 'Airport Transfer'
+  | 'Tour';
 
 type RootTabParamList = {
   Home: undefined;

@@ -1,12 +1,13 @@
 import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {h1, h4} from 'utils/styles';
+import {h1, h4, h5} from 'utils/styles';
 import {
   ic_arrow_left_white,
   ic_checkblue,
   ic_close,
   ic_pinpoin,
+  ic_plus,
 } from 'assets/icons';
 import {
   Alert,
@@ -91,13 +92,13 @@ const TaskDetailAmbilMobilScreen = () => {
       return;
     }
     let res = await updateCourirTasks({
-      id: item?.id,
+      id: item?.task_id,
       image_captures: [...bulkImage],
-      status: 'RETURNED',
+      status: 'TAKE_CAR',
       note: note,
       violations: denda?.map(x => ({
         violation: x?.keterangan,
-        cost: JSON.parse(x?.jumlah || 0) as any,
+        cost: JSON.parse(x.jumlah || 0) as any,
       })),
     });
 
@@ -109,7 +110,7 @@ const TaskDetailAmbilMobilScreen = () => {
       });
       return;
     }
-    console.log('ress sukses anter = ', res);
+    console.log('ress sukses ambil = ', res);
     showToast({
       title: 'Berhasil',
       type: 'success',
@@ -123,7 +124,7 @@ const TaskDetailAmbilMobilScreen = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={{marginHorizontal: 20}}>
           <UploadImageInput
-            label="Upload Foto"
+            label="Upload Foto Mobil"
             onCameraChange={res => {
               // console.log('ress = ', res);
               let _: any = [];
@@ -165,9 +166,37 @@ const TaskDetailAmbilMobilScreen = () => {
             onChangeText={v => setNote(v)}
           />
 
-          <Text style={[h4, styles.text, {marginVertical: 10}]}>
-            Detail Denda
-          </Text>
+          <View style={styles.infoWrapper}>
+            <Text style={[h1]}>Informasi Penting</Text>
+            <Text style={[h4, {lineHeight: 24, fontSize: 12}]}>
+              Jika customer memiliki denda lebih besar dari pada jumlah deposit
+              yang tercantum, maka customer wajib melunasi biaya tersebut ke
+              rekening{' '}
+              <Text style={[h1, {fontSize: 12}]}>
+                221134566788 a/n Get&Ride
+              </Text>{' '}
+              di sertakan bukti transfer
+            </Text>
+          </View>
+
+          <View
+            style={[
+              rowCenter,
+              {justifyContent: 'space-between', marginTop: 10},
+            ]}>
+            <Text style={[h4, styles.text, {marginVertical: 10}]}>
+              Detail Denda
+            </Text>
+
+            <TouchableOpacity
+              style={[rowCenter]}
+              onPress={() => bottomSheetRef.current?.snapToIndex(0)}>
+              <Image source={ic_plus} style={[iconCustomSize(15)]} />
+              <Text style={[h4, {fontSize: 12, marginLeft: 5}]}>
+                Tambah Denda
+              </Text>
+            </TouchableOpacity>
+          </View>
 
           {denda.length <= 0 ? (
             <View
@@ -241,13 +270,55 @@ const TaskDetailAmbilMobilScreen = () => {
             </View>
           )}
 
-          <TouchableOpacity
-            style={styles.btnDenda}
-            onPress={() => bottomSheetRef.current?.snapToIndex(0)}>
-            <Text style={{fontWeight: 'bold', color: theme.colors.navy}}>
-              Tambah Denda
-            </Text>
-          </TouchableOpacity>
+          <View style={[styles.solidLine, {marginTop: 20}]} />
+
+          <Text style={[h4, {fontSize: 12, marginVertical: 10}]}>
+            Keterangan Deposit
+          </Text>
+
+          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
+            <Text style={[h4, {fontSize: 12}]}>Deposit</Text>
+            <Text style={[h4, {fontSize: 12}]}>IDR 500.000</Text>
+          </View>
+
+          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
+            <Text style={[h4, {fontSize: 12}]}>Deposit e-toll</Text>
+            <Text style={[h4, {fontSize: 12}]}>IDR 175.000</Text>
+          </View>
+
+          <View style={[styles.solidLine, {marginVertical: 10}]} />
+          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
+            <Text style={[h4, {fontSize: 12}]}>Kurang Bayar</Text>
+            <Text style={[h4, {fontSize: 12}]}>IDR 0</Text>
+          </View>
+          <View style={[styles.solidLine, {marginVertical: 10}]} />
+
+          <UploadImageInput
+            label="Upload Bukti Transfer"
+            onCameraChange={res => {
+              // console.log('ress = ', res);
+              let _: any = [];
+              res?.map(x => {
+                _.push(`data:${x?.type};base64,${x?.base64}`);
+              });
+              // setBulkImage(_);
+              // showToast({
+              //   title: 'Berhasil',
+              //   type: 'success',
+              //   message: 'Berhasil Upload Foto',
+              // });
+            }}
+            onDelete={i => {
+              console.log('x = ', i);
+              let _ = deepClone(bulkImage);
+              _.splice(i, 1);
+              // setBulkImage(_);
+            }}
+            // bulkImage={bulkImage}
+            // setBulkImage={setBulkImage}
+            // selectedImageLabel=""
+          />
+
           <Button
             title="Selesaikan Tugas"
             onPress={() => {
@@ -420,5 +491,13 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 20,
     // alignItems: 'center',
+  },
+  infoWrapper: {
+    padding: 10,
+    borderRadius: 4,
+    backgroundColor: '#E7F3FF',
+    borderWidth: 1,
+    borderColor: theme.colors.navy,
+    marginTop: 20,
   },
 });

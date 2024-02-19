@@ -11,17 +11,20 @@ import {
   ic_arrow_left_white,
   ic_camera,
   ic_lock,
+  ic_logout,
   ic_notif,
   ic_profile,
   ic_question,
 } from 'assets/icons';
+import { useAuthStore } from 'store/actions/authStore';
 
 type TabState = 'Tugas Saya' | 'Tugas Selesai';
 
 const TaskScreen = () => {
   const navigation = useNavigation();
   const [tabState, setTabState] = useState<TabState>('Tugas Saya');
-
+  const logout = useAuthStore((state: any) => state.logout);
+  
   useEffect(() => {
     navigation.setOptions(
       appBar({
@@ -57,7 +60,12 @@ const TaskScreen = () => {
       </View>
 
       {DATA.map((x, i) => (
-        <View
+        <TouchableOpacity
+          onPress={()=> {
+            if(x.text === 'Keluar') {
+              logout();
+            }
+          }}
           key={`index_${i}`}
           style={[
             rowCenter,
@@ -67,9 +75,9 @@ const TaskScreen = () => {
               padding: 20,
             },
           ]}>
-          <Image source={x.ic} style={iconSize} />
+          <Image source={x.ic} style={[iconSize, {tintColor: theme.colors.navy}]} />
           <Text style={[h4, {marginLeft: 10}]}>{x.text}</Text>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );
@@ -80,6 +88,7 @@ const DATA = [
   {ic: ic_lock, text: 'Ubah Password', screen: ''},
   {ic: ic_notif, text: 'Notifikasi', screen: ''},
   {ic: ic_question, text: 'Pusat Bantuan', screen: ''},
+  {ic: ic_logout, text: 'Keluar', screen: ''},
 ];
 
 export default hoc(TaskScreen, theme.colors.navy, false, 'light-content');
