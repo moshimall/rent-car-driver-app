@@ -1,14 +1,11 @@
-import {getTaskById} from 'store/effects/taskStore';
+import {
+  getTaskById,
+  getWithDriverTaskDetailByDate,
+} from 'store/effects/taskStore';
 import {TaskListDetailByStatusScreenRouteProp} from '../TaskListDetailByStatusScreen';
 import {useCallback, useMemo, useState} from 'react';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {TaskStatus, WithDriverTaskDetail, WithoutDriverTaskDetail} from 'types/tasks.types';
-
-export type WithDriverTaskDetailData = WithDriverTaskDetail & {
-  item_title: string;
-  is_item_processed: boolean;
-  item_status: TaskStatus;
-};
+import {WithDriverTaskDetail, WithoutDriverTaskDetail} from 'types/tasks.types';
 
 const useTaskListDetailByStatus = () => {
   const {type, id, item} =
@@ -17,9 +14,9 @@ const useTaskListDetailByStatus = () => {
   const [withoutDriverData, setWithoutDriverData] = useState<
     WithoutDriverTaskDetail[]
   >([]);
-  const [withDriverData, setWithDriverData] = useState<
-    WithDriverTaskDetailData[]
-  >([]);
+  const [withDriverData, setWithDriverData] = useState<WithDriverTaskDetail[]>(
+    [],
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const getWithoutDriverTaskDetail = async () => {
@@ -35,19 +32,13 @@ const useTaskListDetailByStatus = () => {
     }
   };
 
-  const getWithDriverTaskDetail = () => {
+  const getWithDriverTaskDetail = async () => {
     try {
       setIsLoading(true);
 
       if (item) {
-        const res = item?.status_details?.map(data => ({
-          ...item,
-          item_title: data.title,
-          is_item_processed: data.is_processed,
-          item_status: data.status,
-        }));
-  
-        setWithDriverData(res || []);
+        const res = await getWithDriverTaskDetailByDate(id, item.date);
+        setWithDriverData(res?.data || []);
       } else {
         setWithDriverData([]);
       }
@@ -88,7 +79,7 @@ const useTaskListDetailByStatus = () => {
   }, [withDriverData.length, withoutDriverData.length]);
 
   return {
-    data: finalData as (WithDriverTaskDetailData & WithoutDriverTaskDetail)[],
+    data: finalData as (WithDriverTaskDetail & WithoutDriverTaskDetail)[],
     isLoading,
   };
 };

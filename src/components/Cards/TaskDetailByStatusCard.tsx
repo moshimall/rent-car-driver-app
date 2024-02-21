@@ -4,14 +4,14 @@ import {h1} from 'utils/styles';
 import {ic_calendar, ic_park, ic_pinpoin} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {ITypeTask} from 'types/navigator';
 import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import {WithDriverTaskDetailData} from 'screens/TaskListDetailByStatusScreen/hooks/useTaskListDetailByStatus';
-import {ITypeTask} from 'types/navigator';
+import {WithDriverTaskDetail} from 'types/tasks.types';
 
 type TaskDetailByStatusCardProps = {
   id: number;
-  item: WithDriverTaskDetailData;
+  item: WithDriverTaskDetail;
   type: ITypeTask;
 };
 
@@ -23,24 +23,24 @@ const TaskDetailByStatusCard = ({
   const navigation = useNavigation<any>();
 
   const title =
-    type === 'Dengan Supir'
-      ? item?.item_title
-      : type === 'Tanpa Supir'
-      ? item?.title
+    item?.title === 'TAKE_FROM_GARAGE'
+      ? 'Ambil ke Garasi'
+      : item?.title === 'RETURN_TO_GARAGE'
+      ? 'Parkir ke Garasi'
       : '-';
 
   const handleTask = () => {
     if (type === 'Dengan Supir') {
-      if (item.item_status === 'RETURN_TO_GARAGE') {
-        navigation.replace('TaskDetailParkirMobil', {
+      if (item.title === 'RETURN_TO_GARAGE') {
+        navigation.navigate('TaskDetailParkirMobil', {
           task_id: id,
           item,
           type,
         } as any);
       }
 
-      if (item.item_status === 'TAKE_FROM_GARAGE') {
-        navigation.replace('TaskDetailAmbilMobilDariGarasi', {
+      if (item.title === 'TAKE_FROM_GARAGE') {
+        navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
           task_id: id,
           item,
           type,
@@ -117,7 +117,7 @@ const TaskDetailByStatusCard = ({
           alignSelf: 'center',
           marginVertical: 20,
         }}
-        disabled={item?.is_item_processed}
+        disabled={item?.is_processed}
       />
     </View>
   );

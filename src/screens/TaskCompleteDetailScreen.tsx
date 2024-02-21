@@ -1,10 +1,16 @@
 import appBar from 'components/AppBar/AppBar';
+import CollapseItem from 'components/CollapseItem/CollapseItem';
 import hoc from 'components/hoc';
+import moment from 'moment';
 import React, {useEffect, useState} from 'react';
+import {getNotes, getTaskById} from 'store/effects/taskStore';
 import {h1, h4} from 'utils/styles';
-import {ic_arrow_down, ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
+import {ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
+import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
+import {RootStackParamList} from 'types/navigator';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {theme} from 'utils';
 import {
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -13,13 +19,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WINDOW_WIDTH, iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {deepClone, theme} from 'utils';
-import {RootStackParamList} from 'types/navigator';
-import moment from 'moment';
-import CollapseItem from 'components/CollapseItem/CollapseItem';
-import {getNotes, getTaskById, getTaskById2} from 'store/effects/taskStore';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskCompleteDetail'>;
 
@@ -70,7 +69,7 @@ const TaskCompleteDetailScreen = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const taskDetails = await getTaskById2(item?.id);
+      const taskDetails = await getTaskById(item?.id);
       setTaskId(taskDetails);
 
       const taskNotes = await getNotes(item?.id);

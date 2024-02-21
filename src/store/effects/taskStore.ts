@@ -138,11 +138,11 @@ export const getTaskById = async (taskId: number) => {
   }
 };
 
-export const getTaskById2 = async (taskId: number) => {
+export const getWithDriverTaskDetailByDate = async (taskId: number, date: string) => {
   try {
     const response: any = await apiWithInterceptor({
       method: 'get',
-      url: '/tasks/' + taskId,
+      url: '/tasks/' + taskId + '/details?date=' + date,
     });
 
     return response.data;

@@ -55,7 +55,7 @@ const WITH_DRIVER_STATUS: IPropsStatus[] = [
 const TaskListDetailByStatusScreen = () => {
   const navigation = useNavigation();
   const {type, id} = useRoute<TaskListDetailByStatusScreenRouteProp>().params;
-  const {data} = useTaskListDetailByStatus();
+  const {data, isLoading} = useTaskListDetailByStatus();
 
   const taskStatus =
     type === 'Dengan Supir' ? WITH_DRIVER_STATUS : WITHOUT_DRIVER_STATUS;
@@ -110,21 +110,13 @@ const TaskListDetailByStatusScreen = () => {
     return <></>;
   };
 
-  const findIndex = useMemo(() => {
-    if (data.length) {
-      return taskStatus.findIndex(x => x?.status === data?.[0]?.status);
-    }
-
-    return -1;
-  }, [data.length]);
-
   const taskStep = useMemo(() => {
     if (data.length) {
       return taskStatus.map(task => {
         return {
           ...task,
           is_prcessed: !!data.find(
-            x => x.item_status === task.status && x.is_item_processed,
+            x => x.status === task.status && x.is_processed,
           )?.title,
         };
       });
@@ -133,6 +125,10 @@ const TaskListDetailByStatusScreen = () => {
     return taskStatus;
   }, [data.length]);
 
+  if (isLoading) {
+    return null;
+  }
+  
   return (
     <View
       style={{
