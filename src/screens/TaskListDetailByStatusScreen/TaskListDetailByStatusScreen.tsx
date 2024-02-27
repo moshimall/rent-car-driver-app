@@ -54,7 +54,10 @@ const WITH_DRIVER_STATUS: IPropsStatus[] = [
 
 const TaskListDetailByStatusScreen = () => {
   const navigation = useNavigation();
-  const {type, id} = useRoute<TaskListDetailByStatusScreenRouteProp>().params;
+  const {type, id, item} =
+    useRoute<TaskListDetailByStatusScreenRouteProp>().params;
+  const routeItem = {...item};
+
   const {data, isLoading} = useTaskListDetailByStatus();
 
   const taskStatus =
@@ -104,7 +107,13 @@ const TaskListDetailByStatusScreen = () => {
     }
 
     if (type === 'Dengan Supir') {
-      return <TaskDetailByStatusCard id={id} item={item} type={type} />;
+      return (
+        <TaskDetailByStatusCard
+          id={id}
+          item={{...item, date: routeItem?.date}}
+          type={type}
+        />
+      );
     }
 
     return <></>;
@@ -112,12 +121,25 @@ const TaskListDetailByStatusScreen = () => {
 
   const taskStep = useMemo(() => {
     if (data.length) {
-      return taskStatus.map(task => {
+      const _ =
+        type === 'Dengan Supir' ? data.find(x => x.is_processed) : data[0];
+      let findIndex: any = -1;
+      if (type === 'Dengan Supir') {
+        const __ = data.filter(x => x.is_processed)[
+          data.filter(x => x.is_processed).length - 1
+        ];
+        findIndex = taskStatus.findIndex(x=> x.status === __?.title);
+      } else {
+        findIndex = taskStatus.findIndex(x => x.status === _?.status);
+      }
+
+      return taskStatus.map((task, index) => {
         return {
           ...task,
-          is_prcessed: !!data.find(
-            x => x.status === task.status && x.is_processed,
-          )?.title,
+          // is_prcessed: !!data.find(
+          //   x => x.status === task.status //&& x.is_processed,
+          // )?.title,
+          is_prcessed: findIndex >= index,
         };
       });
     }
@@ -128,7 +150,7 @@ const TaskListDetailByStatusScreen = () => {
   if (isLoading) {
     return null;
   }
-  
+
   return (
     <View
       style={{

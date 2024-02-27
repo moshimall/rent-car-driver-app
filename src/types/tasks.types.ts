@@ -90,6 +90,8 @@ export interface WithoutDriverTaskDetail {
   task_id: number;
   status: TaskStatus; // available: 'DELIVERY_PROCESS' | 'TAKE_FROM_GARAGE' | 'DELIVERY_CAR' | 'TAKE_CAR' | 'RETURN_TO_GARAGE';
   order: {
+    deposit: number;
+    deposit_e_toll: number;
     order_key: string;
     delivery_location: string;
     delivery_location_detail: string;

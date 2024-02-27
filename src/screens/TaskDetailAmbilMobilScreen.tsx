@@ -43,9 +43,11 @@ type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAmbilMobil'>;
 const TaskDetailAmbilMobilScreen = () => {
   const navigation = useNavigation();
   const {item} = useRoute<ScreenRouteProp>().params;
-
+  console.log(item);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [bulkImage, setBulkImage] = useState([]);
+  const [buktiTf, setBuktiTf] = useState([]);
+
   const [note, setNote] = useState('');
 
   const [denda, setDenda] = useState<Denda[]>([]);
@@ -91,7 +93,11 @@ const TaskDetailAmbilMobilScreen = () => {
       Alert.alert('PERINGATAN', 'silahkan upload foto pengantaran');
       return;
     }
-    let res = await updateCourirTasks({
+    if (denda?.length > 0 && buktiTf?.length <= 0) {
+      Alert.alert('PERINGATAN', 'silahkan upload bukti Pembayaran denda');
+      return;
+    }
+    const params = {
       id: item?.task_id,
       image_captures: [...bulkImage],
       status: 'TAKE_CAR',
@@ -100,7 +106,16 @@ const TaskDetailAmbilMobilScreen = () => {
         violation: x?.keterangan,
         cost: JSON.parse(x.jumlah || 0) as any,
       })),
-    });
+      violations_transfer: {
+        proof_of_bank_transfer: buktiTf?.[0],
+        amount: denda?.reduce((accumulator, currentValue) => {
+          return accumulator + JSON.parse(currentValue.jumlah);
+        }, 0),
+      },
+    };
+    console.log('parm = ', params);
+    // return;
+    let res = await updateCourirTasks(params);
 
     if (!res) {
       showToast({
@@ -144,9 +159,9 @@ const TaskDetailAmbilMobilScreen = () => {
               _.splice(i, 1);
               setBulkImage(_);
             }}
-            bulkImage={bulkImage}
-            setBulkImage={setBulkImage}
-            selectedImageLabel=""
+            // bulkImage={bulkImage}
+            // setBulkImage={setBulkImage}
+            // selectedImageLabel=""
           />
 
           <Text style={[h4, styles.text, {marginVertical: 10}]}>
@@ -278,46 +293,52 @@ const TaskDetailAmbilMobilScreen = () => {
 
           <View style={[rowCenter, {justifyContent: 'space-between'}]}>
             <Text style={[h4, {fontSize: 12}]}>Deposit</Text>
-            <Text style={[h4, {fontSize: 12}]}>IDR 500.000</Text>
+            <Text style={[h4, {fontSize: 12}]}>
+              {currencyFormat(item?.order?.deposit)}
+            </Text>
           </View>
 
           <View style={[rowCenter, {justifyContent: 'space-between'}]}>
             <Text style={[h4, {fontSize: 12}]}>Deposit e-toll</Text>
-            <Text style={[h4, {fontSize: 12}]}>IDR 175.000</Text>
+            <Text style={[h4, {fontSize: 12}]}>
+              {currencyFormat(item?.order?.deposit_e_toll)}
+            </Text>
           </View>
 
           <View style={[styles.solidLine, {marginVertical: 10}]} />
-          <View style={[rowCenter, {justifyContent: 'space-between'}]}>
+          {/* <View style={[rowCenter, {justifyContent: 'space-between'}]}>
             <Text style={[h4, {fontSize: 12}]}>Kurang Bayar</Text>
             <Text style={[h4, {fontSize: 12}]}>IDR 0</Text>
-          </View>
-          <View style={[styles.solidLine, {marginVertical: 10}]} />
+          </View> */}
+          {/* <View style={[styles.solidLine, {marginVertical: 10}]} /> */}
 
-          <UploadImageInput
-            label="Upload Bukti Transfer"
-            onCameraChange={res => {
-              // console.log('ress = ', res);
-              let _: any = [];
-              res?.map(x => {
-                _.push(`data:${x?.type};base64,${x?.base64}`);
-              });
-              // setBulkImage(_);
-              // showToast({
-              //   title: 'Berhasil',
-              //   type: 'success',
-              //   message: 'Berhasil Upload Foto',
-              // });
-            }}
-            onDelete={i => {
-              console.log('x = ', i);
-              let _ = deepClone(bulkImage);
-              _.splice(i, 1);
-              // setBulkImage(_);
-            }}
-            // bulkImage={bulkImage}
-            // setBulkImage={setBulkImage}
-            // selectedImageLabel=""
-          />
+          {denda?.length > 0 && (
+            <UploadImageInput
+              label="Upload Bukti Transfer"
+              onCameraChange={res => {
+                // console.log('ress = ', res);
+                let _: any = [];
+                res?.map(x => {
+                  _.push(`data:${x?.type};base64,${x?.base64}`);
+                });
+                setBuktiTf(_);
+                // showToast({
+                //   title: 'Berhasil',
+                //   type: 'success',
+                //   message: 'Berhasil Upload Foto',
+                // });
+              }}
+              onDelete={i => {
+                console.log('x = ', i);
+                let _ = deepClone(bulkImage);
+                _.splice(i, 1);
+                setBuktiTf(_);
+              }}
+              // bulkImage={bulkImage}
+              // setBulkImage={setBulkImage}
+              // selectedImageLabel=""
+            />
+          )}
 
           <Button
             title="Selesaikan Tugas"

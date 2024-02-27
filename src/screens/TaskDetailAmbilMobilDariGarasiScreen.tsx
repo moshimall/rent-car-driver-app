@@ -43,7 +43,7 @@ type ScreenRouteProp = RouteProp<
 const TaskDetailAmbilMobilDariGarasiScreen = () => {
   const navigation = useNavigation();
   const {item, task_id, type} = useRoute<ScreenRouteProp>().params;
-
+  console.log(item)
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [bulkImage, setBulkImage] = useState([]);
   const [note, setNote] = useState('');
