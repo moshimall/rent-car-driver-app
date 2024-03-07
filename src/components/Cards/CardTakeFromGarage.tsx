@@ -1,20 +1,19 @@
-import {Alert, Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {
-  ic_car,
-  ic_pinpoin,
-  ic_calendar,
-  ic_car_key,
-  ic_park,
-} from 'assets/icons';
-import {theme} from 'utils';
-import {rowCenter, iconCustomSize} from 'utils/mixins';
-import {h1} from 'utils/styles';
 import Button from 'components/Button';
+import React from 'react';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
+import {h1} from 'utils/styles';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import {DataItemTask, WithoutDriverTaskDetail} from 'types/tasks.types';
+import {WithoutDriverTaskDetail} from 'types/tasks.types';
+import {ic_pinpoin, ic_calendar, ic_park} from 'assets/icons';
 
-const CardTakeFromGarage = ({item}: {item: WithoutDriverTaskDetail}) => {
+type CardTakeFromGarageProps = {
+  item: WithoutDriverTaskDetail;
+  can_be_processed?: boolean;
+};
+
+const CardTakeFromGarage = ({item, can_be_processed}: CardTakeFromGarageProps) => {
   const navigation = useNavigation();
 
   return (
@@ -71,8 +70,7 @@ const CardTakeFromGarage = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_date} |{' '}
-              {item?.order?.return_time}
+              {item?.order?.return_date} | {item?.order?.return_time}
             </Text>
           </View>
         </View>
@@ -96,12 +94,13 @@ const CardTakeFromGarage = ({item}: {item: WithoutDriverTaskDetail}) => {
                   navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
                     item: item,
                     task_id: item?.task_id,
-                  }),
-                  text: 'Ya'
+                  } as any),
+                text: 'Ya',
               },
             ],
           );
         }}
+        disabled={!can_be_processed}
         styleWrapper={{
           width: '95%',
           alignSelf: 'center',

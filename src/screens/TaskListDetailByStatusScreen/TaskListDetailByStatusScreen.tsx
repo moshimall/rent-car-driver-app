@@ -54,7 +54,7 @@ const WITH_DRIVER_STATUS: IPropsStatus[] = [
 
 const TaskListDetailByStatusScreen = () => {
   const navigation = useNavigation();
-  const {type, id, item} =
+  const {type, id, item, can_be_processed} =
     useRoute<TaskListDetailByStatusScreenRouteProp>().params;
   const routeItem = {...item};
 
@@ -90,19 +90,39 @@ const TaskListDetailByStatusScreen = () => {
   const renderItem = ({item}: {item: any}) => {
     if (type === 'Tanpa Supir') {
       if (item?.status === 'DELIVERY_PROCESS') {
-        return <CardTakeFromGarage item={{...item, task_id: id}} />;
+        return (
+          <CardTakeFromGarage
+            item={{...item, task_id: id}}
+            can_be_processed={can_be_processed}
+          />
+        );
       }
 
       if (item?.status === 'TAKE_FROM_GARAGE') {
-        return <CardAntarMobil item={{...item, task_id: id}} />;
+        return (
+          <CardAntarMobil
+            item={{...item, task_id: id}}
+            can_be_processed={can_be_processed}
+          />
+        );
       }
 
       if (item?.status === 'DELIVERY_CAR') {
-        return <CardAmbilMobil item={{...item, task_id: id}} />;
+        return (
+          <CardAmbilMobil
+            item={{...item, task_id: id}}
+            can_be_processed={can_be_processed}
+          />
+        );
       }
 
       if (item?.status === 'TAKE_CAR') {
-        return <CardParkirMobil item={{...item, task_id: id}} />;
+        return (
+          <CardParkirMobil
+            item={{...item, task_id: id}}
+            can_be_processed={can_be_processed}
+          />
+        );
       }
     }
 
@@ -112,6 +132,7 @@ const TaskListDetailByStatusScreen = () => {
           id={id}
           item={{...item, date: routeItem?.date}}
           type={type}
+          can_be_processed={can_be_processed}
         />
       );
     }
@@ -128,7 +149,7 @@ const TaskListDetailByStatusScreen = () => {
         const __ = data.filter(x => x.is_processed)[
           data.filter(x => x.is_processed).length - 1
         ];
-        findIndex = taskStatus.findIndex(x=> x.status === __?.title);
+        findIndex = taskStatus.findIndex(x => x.status === __?.title);
       } else {
         findIndex = taskStatus.findIndex(x => x.status === _?.status);
       }
@@ -196,6 +217,7 @@ const TaskListDetailByStatusScreen = () => {
         }}
         data={data}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(x, i) => i.toString()}
       />
     </View>

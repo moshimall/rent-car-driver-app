@@ -7,7 +7,7 @@ const LoadingNextPage = ({loading}: {loading: boolean}) => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <Text style={[h1, styles.loading]}>loading ...</Text>
+        <Text style={[h1, styles.loading]}>Loading ...</Text>
       </View>
     );
   }

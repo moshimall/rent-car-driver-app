@@ -35,10 +35,12 @@ type RootStackParamList = {
     id: number;
     type: ITypeTask;
     item?: WithDriverTaskDetail;
+    can_be_processed?: boolean;
   };
   TaskListDetailByDay: {
     id: number;
     type: ITypeTask;
+    can_be_processed?: boolean;
   };
   TaskDetailAmbilMobilDariGarasi: {
     task_id: number;

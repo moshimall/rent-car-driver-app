@@ -1,6 +1,14 @@
-import {deepClone, theme} from 'utils';
-import {iconCustomSize, iconSize, rowCenter, WINDOW_WIDTH} from 'utils/mixins';
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
+import Button from 'components/Button';
+import CustomBackdrop from 'components/CustomBackdrop';
+import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import MyTaskCard from '../MyTaskCard/MyTaskCard';
+import {DataItemTask, Pagination} from 'types/tasks.types';
+import {deepClone, theme} from 'utils';
+import {getTasks} from 'store/effects/taskStore';
+import {h1} from 'utils/styles';
+import {iconSize, rowCenter, WINDOW_WIDTH} from 'utils/mixins';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -9,30 +17,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {h1} from 'utils/styles';
-import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {
   ic_checkblue,
-  ic_filter,
   ic_radio_button,
   ic_selected_radio_button,
   ic_uncheckblue,
 } from 'assets/icons';
-import Button from 'components/Button';
-import CustomBackdrop from 'components/CustomBackdrop';
-import {DataItemTask, Pagination} from 'types/tasks.types';
-import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
-import { getTasks } from 'store/effects/taskStore';
-
-type TaskState = 'Pengantaran' | 'Pengembalian';
-type TabList = {
-  id: number;
-  title: TaskState;
-};
 
 const MyTaskSection: React.FC = () => {
-  const [selected, setSelected] = useState<number>(0);
   const [sorting, setSorting] = useState(0);
   const [jobdesk, setJobdesk] = useState<number[]>([0, 1, 2]);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -51,7 +43,7 @@ const MyTaskSection: React.FC = () => {
     console.log('handleSheetChanges', index);
   }, []);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item}: {item: DataItemTask}) => {
     return <MyTaskCard status={1} item={item} />;
   };
 
@@ -62,7 +54,7 @@ const MyTaskSection: React.FC = () => {
 
   const _getTasks = async () => {
     setLoader(true);
-    let param = {
+    let param: any = {
       courier_id: 1,
       limit: pagination?.limit || 0,
       page: pagination.page,
@@ -118,6 +110,7 @@ const MyTaskSection: React.FC = () => {
         contentContainerStyle={styles.container}
         data={[...tasks]}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <Text style={{alignSelf: 'center', marginTop: '50%'}}>
             Belum ada tugas

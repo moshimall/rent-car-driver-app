@@ -8,7 +8,12 @@ import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
 import {WithoutDriverTaskDetail} from 'types/tasks.types';
 
-const CardParkirMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
+type CardParkirMobilProps = {
+  item: WithoutDriverTaskDetail;
+  can_be_processed?: boolean;
+};
+
+const CardParkirMobil = ({item, can_be_processed}: CardParkirMobilProps) => {
   const navigation = useNavigation();
 
   return (
@@ -80,6 +85,7 @@ const CardParkirMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
             item,
           } as any);
         }}
+        disabled={!can_be_processed}
         styleWrapper={{
           width: '95%',
           alignSelf: 'center',

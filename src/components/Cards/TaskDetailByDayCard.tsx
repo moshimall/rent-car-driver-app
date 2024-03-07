@@ -13,9 +13,10 @@ type TaskDetailByDayCardProps = {
   id: number;
   type: ITypeTask;
   item: WithDriverTaskDetail;
+  can_be_processed?: boolean;
 };
 
-const TaskDetailByDayCard = ({type, item, id}: TaskDetailByDayCardProps) => {
+const TaskDetailByDayCard = ({type, item, id, can_be_processed}: TaskDetailByDayCardProps) => {
   const navigation = useNavigation();
 
   const handleTask = () => {
@@ -136,7 +137,7 @@ const TaskDetailByDayCard = ({type, item, id}: TaskDetailByDayCardProps) => {
           alignSelf: 'center',
           marginVertical: 20,
         }}
-        disabled={item.status === "RETURN_TO_GARAGE"}
+        disabled={!can_be_processed || item.is_processed}
       />
     </View>
   );

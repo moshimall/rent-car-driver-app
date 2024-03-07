@@ -1,7 +1,7 @@
 import appBar from 'components/AppBar/AppBar';
 import hoc from 'components/hoc';
 import MyTaskSection from 'components/TaskScreenComponent/MyTaskSection/MyTaskSection';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {h1} from 'utils/styles';
 import {ic_arrow_left_white} from 'assets/icons';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -9,11 +9,8 @@ import {rowCenter} from 'utils/mixins';
 import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
 
-type TabState = 'Tugas Saya' | 'Tugas Selesai';
-
 const TaskScreen = () => {
   const navigation = useNavigation();
-  const [tabState, setTabState] = useState<TabState>('Tugas Saya');
 
   useEffect(() => {
     navigation.setOptions(
@@ -39,9 +36,7 @@ const TaskScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* <TopTabs onChangeTab={setTabState} /> */}
-
-      {<MyTaskSection />}
+      <MyTaskSection />
     </View>
   );
 };

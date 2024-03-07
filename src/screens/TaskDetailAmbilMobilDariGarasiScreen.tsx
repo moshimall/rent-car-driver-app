@@ -1,6 +1,7 @@
 import appBar from 'components/AppBar/AppBar';
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Button from 'components/Button';
+import Config from 'react-native-config';
 import CustomBackdrop from 'components/CustomBackdrop';
 import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 import CustomTextInput from 'components/TextInput';
@@ -15,7 +16,6 @@ import {RootStackParamList} from 'types/navigator';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {rowCenter, WINDOW_WIDTH} from 'utils/mixins';
 import {showToast} from 'utils/Toast';
-import {URL_IMAGE} from '@env';
 import {
   Alert,
   Image,
@@ -43,7 +43,6 @@ type ScreenRouteProp = RouteProp<
 const TaskDetailAmbilMobilDariGarasiScreen = () => {
   const navigation = useNavigation();
   const {item, task_id, type} = useRoute<ScreenRouteProp>().params;
-  console.log(item)
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [bulkImage, setBulkImage] = useState([]);
   const [note, setNote] = useState('');
@@ -98,27 +97,19 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
       note: note,
     };
 
-    if (type === "Dengan Supir") {
+    if (type === 'Dengan Supir') {
       params['date'] = item.date;
     }
-    console.log('params', params);
+    
     const res = await updateCourirTasks(params);
-
-    if (!res) {
+    if (res) {
       showToast({
-        title: 'Terjadi Kesalahan',
-        type: 'error',
-        message: 'Terjadi Kesalahan, silahkan hubungi Admin.',
+        title: 'Berhasil',
+        type: 'success',
+        message: 'Berhasil Menyelesaikan Tugas',
       });
-      return;
+      navigation.goBack();
     }
-
-    showToast({
-      title: 'Berhasil',
-      type: 'success',
-      message: 'Berhasil Menyelesaikan Tugas',
-    });
-    navigation.goBack();
   };
 
   return (
@@ -181,7 +172,7 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
               <CustomCarousel
                 data={
                   item?.order?.vehicle?.photos?.map(data => ({
-                    url: `${URL_IMAGE}${data.url}`,
+                    url: `${Config.URL_IMAGE}${data}`,
                   })) || []
                 }
                 renderItem={({item, index}) => (

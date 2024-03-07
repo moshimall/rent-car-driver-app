@@ -6,7 +6,12 @@ import {getTaskById} from 'store/effects/taskStore';
 import {h1} from 'utils/styles';
 import {ic_arrow_left_white} from 'assets/icons';
 import {RootStackParamList} from 'types/navigator';
-import {RouteProp, useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {rowCenter, WINDOW_WIDTH} from 'utils/mixins';
 import {theme} from 'utils';
 import {WithDriverTaskDetail} from 'types/tasks.types';
@@ -23,7 +28,7 @@ type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListDetailByDay'>;
 
 const TaskListDetailByDayScreen = () => {
   const navigation = useNavigation();
-  const {type, id} = useRoute<ScreenRouteProp>().params;
+  const {type, id, can_be_processed} = useRoute<ScreenRouteProp>().params;
   const isFocused = useIsFocused();
   const [taskById, setTaskById] = useState([]);
 
@@ -52,7 +57,14 @@ const TaskListDetailByDayScreen = () => {
   }, [navigation]);
 
   const renderItem = ({item}: {item: WithDriverTaskDetail}) => {
-    return <TaskDetailByDayCard type={type} id={id} item={item} />;
+    return (
+      <TaskDetailByDayCard
+        type={type}
+        id={id}
+        item={item}
+        can_be_processed={can_be_processed}
+      />
+    );
   };
 
   const _getTaskById = async () => {
@@ -81,6 +93,7 @@ const TaskListDetailByDayScreen = () => {
         }}
         data={taskById || []}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(x, i) => i.toString()}
       />
     </View>

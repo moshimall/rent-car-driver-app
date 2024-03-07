@@ -1,4 +1,5 @@
 import appBar from 'components/AppBar/AppBar';
+import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import React, {useEffect, useState} from 'react';
 import {DataItemTask, Pagination} from 'types/tasks.types';
@@ -8,6 +9,7 @@ import {ic_arrow_left_white, ic_no_task, ic_progress_clock} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {RootStackParamList} from 'types/navigator';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {theme} from 'utils';
 import {
   FlatList,
   Image,
@@ -16,8 +18,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import hoc from 'components/hoc';
-import { theme } from 'utils';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListByType'>;
 
@@ -54,19 +54,22 @@ const TaskListByTypeScreen = () => {
     );
   }, [navigation]);
 
-  const _getTasks = async () => {
+  const _getTasks = async (page = pagination?.page || 1) => {
     setLoader(true);
-    let param = {
+    const param = {
       courier_id: 1,
       limit: pagination?.limit || 0,
-      page: pagination?.page || 1,
+      page,
     } as any;
-    const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
-    let _: any = [];
+    const _: any = [];
     param['task_status'] = _;
 
-    let res = await getTasks(param as any);
-    setTasks(res?.data);
+    const res = await getTasks(param as any);
+    if (page > 1) {
+      setTasks(prev => [...prev, ...res?.data]);
+    } else {
+      setTasks(res?.data);
+    }
     setPagination(res?.pagination);
     setLoader(false);
   };
@@ -74,7 +77,7 @@ const TaskListByTypeScreen = () => {
   const handleMore = () => {
     if (pagination?.page < (pagination?.total_page || 0) && !loader) {
       setRefresh(true);
-      _getTasks();
+      _getTasks(pagination?.page + 1);
       setRefresh(false);
     }
   };
@@ -94,6 +97,7 @@ const TaskListByTypeScreen = () => {
       navigation.navigate('TaskListDetailByStatus', {
         type: type,
         id: item?.id,
+        can_be_processed: item?.can_be_processed,
       });
     }
 
@@ -101,6 +105,7 @@ const TaskListByTypeScreen = () => {
       navigation.navigate('TaskListDetailByDay', {
         type: type,
         id: item?.id,
+        can_be_processed: item?.can_be_processed,
       });
     }
   };
@@ -145,6 +150,7 @@ const TaskListByTypeScreen = () => {
       <FlatList
         data={[...(tasks || [])]}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(x, i) => i.toString()}
         ListFooterComponent={<LoadingNextPage loading={loader} />}
         refreshing={refresh}

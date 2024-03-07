@@ -41,8 +41,7 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
     async function (error) {
       try {
         console.log('error', error.config.url);
-        console.log(error.response);
-        console.log('error.response.data=  ', error.response.data);
+        console.log('error.response.data', error.response.data);
         const state: any = useAuthStore.getState();
         if (error.response.status === 401) {
           const refresh_token = state?.authToken?.access_token;

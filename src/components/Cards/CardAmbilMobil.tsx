@@ -1,26 +1,21 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {ic_car, ic_pinpoin, ic_calendar, ic_car_key} from 'assets/icons';
-import {theme} from 'utils';
-import {rowCenter, iconCustomSize} from 'utils/mixins';
-import {h1} from 'utils/styles';
 import Button from 'components/Button';
+import React from 'react';
+import {h1} from 'utils/styles';
+import {ic_calendar, ic_car_key, ic_pinpoin} from 'assets/icons';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import {DataItemTask, WithoutDriverTaskDetail} from 'types/tasks.types';
-import {useDataStore} from 'store/actions/dataStore';
-import {IDataStore, Vehicle} from 'types/data.types';
+import {WithoutDriverTaskDetail} from 'types/tasks.types';
 
-const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
+type CardAmbilMobilProps = {
+  item: WithoutDriverTaskDetail;
+  can_be_processed?: boolean;
+};
+
+const CardAmbilMobil = ({item, can_be_processed}: CardAmbilMobilProps) => {
   const navigation = useNavigation();
-  const getData = useDataStore() as IDataStore;
-  // console.log('getData?.vehicles = ', getData?.vehicles)
-  // const vehicleId = (
-  //   getData?.vehicles?.length > 0
-  //     ? getData?.vehicles?.find(
-  //         x => x?.id === item?.order?.order_detail?.vehicle_id,
-  //       )
-  //     : {}
-  // ) as Vehicle;
+
   return (
     <View style={[styles.cardWrapper]}>
       <View style={[rowCenter]}>
@@ -75,8 +70,7 @@ const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.return_date} |{' '}
-              {item?.order?.return_time}
+              {item?.order?.return_date} | {item?.order?.return_time}
             </Text>
           </View>
         </View>
@@ -90,6 +84,7 @@ const CardAmbilMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
         onPress={() => {
           navigation.navigate('TaskDetailAmbilMobil', {item: item});
         }}
+        disabled={!can_be_processed}
         styleWrapper={{
           width: '95%',
           alignSelf: 'center',

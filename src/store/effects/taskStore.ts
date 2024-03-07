@@ -43,31 +43,34 @@ export const getTasks = async (paramsFilter: IParamsTasks) => {
     });
   }
 
-  console.log('params = ', params);
-  // return;
-
   try {
     const response: any = await apiWithInterceptor({
       method: 'get',
       url: '/tasks' + params,
     });
     return response.data;
-  } catch (error) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
-
 export const getOngoingTasks = async () => {
-
   try {
     const response: any = await apiWithInterceptor({
       method: 'get',
       url: '/tasks/ongoing',
     });
     return response.data;
-  } catch (error) {
-    // Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
@@ -80,14 +83,17 @@ export const updateOrder = async (params: IParamUpdateOrder) => {
     });
 
     return response.data;
-  } catch (error) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
 export const updateCourirTasks = async (params: IParamUPdateCourirTasks) => {
   try {
-    // console.log('params = ', params?.image_captures)
     const response = await apiWithInterceptor({
       method: 'put',
       url: `/tasks/${params?.id}`,
@@ -97,8 +103,12 @@ export const updateCourirTasks = async (params: IParamUPdateCourirTasks) => {
       return true;
     }
     return false;
-  } catch (err) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
@@ -133,12 +143,19 @@ export const getTaskById = async (taskId: number) => {
     });
 
     return response.data;
-  } catch (error) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
-export const getWithDriverTaskDetailByDate = async (taskId: number, date: string) => {
+export const getWithDriverTaskDetailByDate = async (
+  taskId: number,
+  date: string,
+) => {
   try {
     const response: any = await apiWithInterceptor({
       method: 'get',
@@ -146,8 +163,12 @@ export const getWithDriverTaskDetailByDate = async (taskId: number, date: string
     });
 
     return response.data;
-  } catch (error) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
@@ -159,8 +180,12 @@ export const getNotes = async (taskId: number) => {
     });
     console.log('get nhotes = ', response?.data);
     return response.data;
-  } catch (error) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };
 
@@ -172,7 +197,11 @@ export const getVehicleById = async (id: number) => {
     });
     // console.log('id res = ', response?.data);
     return response.data;
-  } catch (error) {
-    Alert.alert('Peringatan', 'Terjadi kesalahan, silahkan hubungi admin.');
+  } catch (error: any) {
+    Alert.alert(
+      'Warning',
+      error?.response?.data?.message ||
+        'Terjadi kesalahan, silahkan hubungi admin.',
+    );
   }
 };

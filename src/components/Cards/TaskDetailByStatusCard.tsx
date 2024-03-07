@@ -13,12 +13,14 @@ type TaskDetailByStatusCardProps = {
   id: number;
   item: WithDriverTaskDetail;
   type: ITypeTask;
+  can_be_processed?: boolean;
 };
 
 const TaskDetailByStatusCard = ({
   item,
   id,
   type,
+  can_be_processed
 }: TaskDetailByStatusCardProps) => {
   const navigation = useNavigation<any>();
 
@@ -117,7 +119,7 @@ const TaskDetailByStatusCard = ({
           alignSelf: 'center',
           marginVertical: 20,
         }}
-        disabled={item?.is_processed}
+        disabled={!can_be_processed || item?.is_processed}
       />
     </View>
   );

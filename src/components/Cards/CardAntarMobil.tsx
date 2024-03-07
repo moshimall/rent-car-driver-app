@@ -1,17 +1,19 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {ic_car, ic_pinpoin, ic_calendar} from 'assets/icons';
-import {theme} from 'utils';
-import {rowCenter, iconCustomSize} from 'utils/mixins';
-import {h1} from 'utils/styles';
 import Button from 'components/Button';
+import React from 'react';
+import {h1} from 'utils/styles';
+import {ic_calendar, ic_car, ic_pinpoin} from 'assets/icons';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {theme} from 'utils';
 import {useNavigation} from '@react-navigation/native';
-import {DataItemTask, WithoutDriverTaskDetail} from 'types/tasks.types';
-import {useDataStore} from 'store/actions/dataStore';
-import {IDataStore, Vehicle} from 'types/data.types';
-import {getVehicleById} from 'store/effects/taskStore';
+import {WithoutDriverTaskDetail} from 'types/tasks.types';
 
-const CardAntarMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
+type CardAntarMobilProps = {
+  item: WithoutDriverTaskDetail;
+  can_be_processed?: boolean;
+};
+
+const CardAntarMobil = ({item, can_be_processed}: CardAntarMobilProps) => {
   const navigation = useNavigation();
 
   return (
@@ -81,8 +83,7 @@ const CardAntarMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
           <View style={{marginLeft: 10}}>
             <Text style={styles.textTitle}>Tanggal Pengembalian</Text>
             <Text style={styles.textLocation}>
-              {item?.order?.rental_end_date} |{' '}
-              {item?.order?.return_time}
+              {item?.order?.rental_end_date} | {item?.order?.return_time}
             </Text>
           </View>
         </View>
@@ -97,9 +98,10 @@ const CardAntarMobil = ({item}: {item: WithoutDriverTaskDetail}) => {
           console.log('vehicleId1 = ', item);
           navigation.navigate('TaskDetailAntarMobil', {
             item: item,
-            task_id: item?.task_id
+            task_id: item?.task_id,
           });
         }}
+        disabled={!can_be_processed}
         styleWrapper={{
           width: '95%',
           alignSelf: 'center',

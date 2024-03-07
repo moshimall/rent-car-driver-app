@@ -34,6 +34,7 @@ export interface BookingZone {
 
 export interface DataItemTask {
   id: number;
+  can_be_processed: boolean;
   task_key: string;
   customer_name: string;
   vehicle_name: string;
