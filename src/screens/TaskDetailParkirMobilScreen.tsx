@@ -99,7 +99,6 @@ const TaskDetailAmbilMobilScreen = () => {
         <UploadImageInput
           label="Upload Foto"
           onCameraChange={res => {
-            console.log('ress = ', res);
             let _: any = [];
             res?.map(x => {
               _.push(`data:${x?.type};base64,${x?.base64}`);

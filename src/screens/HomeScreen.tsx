@@ -112,21 +112,19 @@ const HomeScreen = () => {
 
   const _getTasks = async () => {
     setLoader(true);
-    let param = {
+    const param = {
       courier_id: 1,
       limit: pagination?.limit || 0,
       page: pagination?.page || 1,
     } as any;
     const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
-    let _: any = [];
+    const _: any = [];
     jobdesk?.map((x, i) => {
       _.push(VALUE[x]);
     });
     param['task_status'] = _;
 
-    console.log('jobdesk = ', param);
-    let res = await getTasks(param as any);
-    // console.log('res = ', JSON.stringify(res));
+    const res = await getTasks(param as any);
     setTasks(res?.data);
     setPagination(res?.pagination);
     setLoader(false);

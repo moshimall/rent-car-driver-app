@@ -54,21 +54,19 @@ const MyTaskSection: React.FC = () => {
 
   const _getTasks = async () => {
     setLoader(true);
-    let param: any = {
+    const param: any = {
       courier_id: 1,
       limit: pagination?.limit || 0,
       page: pagination.page,
     };
     const VALUE = ['IN_GARAGE'];
-    let _: any = [];
+    const _: any = [];
     jobdesk?.map((x, i) => {
       _.push(VALUE[x]);
     });
     param['task_status'] = _;
 
-    // console.log('jobdesk = ', param);
-    let res = await getTasks(param);
-    // console.log('res = ', res);
+    const res = await getTasks(param);
     setTasks(res?.data || []);
     setPagination(res?.pagination);
     setLoader(false);

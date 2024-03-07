@@ -1,12 +1,25 @@
-import {ic_not_found} from 'assets/icons';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {h1} from 'utils/styles';
+import {ic_no_task} from 'assets/icons';
+import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
+import {theme} from 'utils';
 
-const DataNotFound: React.FC = () => {
+type DataNotFoundProps = {
+  isLoading: boolean;
+};
+
+const DataNotFound = ({isLoading}: DataNotFoundProps) => {
   return (
     <View style={styles.container}>
-      <Text style={[h1, {marginBottom: 5}]}>Data Not Found</Text>
-      <Image source={ic_not_found} style={{width: '80%', height: 150}} />
+      {isLoading ? (
+        <ActivityIndicator color={theme.colors.navy} />
+      ) : (
+        <>
+          <Image
+            source={ic_no_task}
+            style={{width: 150, height: 150, marginBottom: 20}}
+          />
+          <Text>Belum ada tugas</Text>
+        </>
+      )}
     </View>
   );
 };

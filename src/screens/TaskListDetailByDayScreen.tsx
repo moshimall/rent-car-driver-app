@@ -16,6 +16,7 @@ import {rowCenter, WINDOW_WIDTH} from 'utils/mixins';
 import {theme} from 'utils';
 import {WithDriverTaskDetail} from 'types/tasks.types';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -23,6 +24,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DataNotFound from 'components/DataNotFound/DataNotFound';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskListDetailByDay'>;
 
@@ -31,6 +33,7 @@ const TaskListDetailByDayScreen = () => {
   const {type, id, can_be_processed} = useRoute<ScreenRouteProp>().params;
   const isFocused = useIsFocused();
   const [taskById, setTaskById] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     navigation.setOptions(
@@ -69,10 +72,14 @@ const TaskListDetailByDayScreen = () => {
 
   const _getTaskById = async () => {
     try {
+      setIsLoading(true);
+
       const res = await getTaskById(id);
       setTaskById(res?.data || []);
     } catch (error) {
       console.log('err = ', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,11 +97,13 @@ const TaskListDetailByDayScreen = () => {
       <FlatList
         contentContainerStyle={{
           padding: 20,
+          flexGrow: 1,
         }}
         data={taskById || []}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         keyExtractor={(x, i) => i.toString()}
+        ListEmptyComponent={<DataNotFound isLoading={isLoading} />}
       />
     </View>
   );

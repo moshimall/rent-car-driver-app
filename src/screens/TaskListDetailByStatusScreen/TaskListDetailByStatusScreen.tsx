@@ -22,6 +22,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DataNotFound from 'components/DataNotFound/DataNotFound';
 
 export type TaskListDetailByStatusScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -168,10 +169,6 @@ const TaskListDetailByStatusScreen = () => {
     return taskStatus;
   }, [data.length]);
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <View
       style={{
@@ -214,11 +211,13 @@ const TaskListDetailByStatusScreen = () => {
       <FlatList
         contentContainerStyle={{
           padding: 20,
+          flexGrow: 1,
         }}
         data={data}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         keyExtractor={(x, i) => i.toString()}
+        ListEmptyComponent={<DataNotFound isLoading={isLoading} />}
       />
     </View>
   );

@@ -1,11 +1,12 @@
 import appBar from 'components/AppBar/AppBar';
+import DataNotFound from 'components/DataNotFound/DataNotFound';
 import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import React, {useEffect, useState} from 'react';
 import {DataItemTask, Pagination} from 'types/tasks.types';
 import {getTasks} from 'store/effects/taskStore';
 import {h1} from 'utils/styles';
-import {ic_arrow_left_white, ic_no_task, ic_progress_clock} from 'assets/icons';
+import {ic_arrow_left_white, ic_progress_clock} from 'assets/icons';
 import {iconCustomSize, rowCenter} from 'utils/mixins';
 import {RootStackParamList} from 'types/navigator';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
@@ -148,30 +149,20 @@ const TaskListByTypeScreen = () => {
   return (
     <View style={{flex: 1, padding: 20}}>
       <FlatList
+        contentContainerStyle={{flexGrow: 1}}
         data={[...(tasks || [])]}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         keyExtractor={(x, i) => i.toString()}
-        ListFooterComponent={<LoadingNextPage loading={loader} />}
+        ListFooterComponent={
+          <LoadingNextPage loading={pagination?.page === 1 ? false : loader} />
+        }
         refreshing={refresh}
         onRefresh={() => {
           return handleRefresh();
         }}
         onEndReached={handleMore}
-        ListEmptyComponent={() => (
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: '20%',
-            }}>
-            <Image
-              source={ic_no_task}
-              style={{width: 150, height: 150, marginBottom: 20}}
-            />
-            <Text>Belum Mengambil Tugas</Text>
-          </View>
-        )}
+        ListEmptyComponent={<DataNotFound isLoading={loader} />}
       />
     </View>
   );

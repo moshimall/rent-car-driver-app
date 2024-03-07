@@ -34,16 +34,13 @@ export const createPlayer = async (body: any) => {
 export const getPlayerId = async () => {
   try {
     const subId = OneSignal.User.pushSubscription.getPushSubscriptionId();
-    const subToken = OneSignal.User.pushSubscription.getPushSubscriptionToken();
-
-    console.log('subId = ', subId);
-    console.log('subToken = ', subToken);
+    // const subToken = OneSignal.User.pushSubscription.getPushSubscriptionToken();
 
     try {
       const res = await createPlayer({
         player_id: subId,
       });
-      console.log('ress = ', res);
+      // console.log('ress = ', res);
     } catch (error) {
       console.log('err = ', error);
     }
