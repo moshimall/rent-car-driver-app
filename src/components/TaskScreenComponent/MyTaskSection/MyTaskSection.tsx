@@ -1,6 +1,7 @@
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Button from 'components/Button';
 import CustomBackdrop from 'components/CustomBackdrop';
+import DataNotFound from 'components/DataNotFound/DataNotFound';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
 import MyTaskCard from '../MyTaskCard/MyTaskCard';
 import {DataItemTask, Pagination} from 'types/tasks.types';
@@ -72,10 +73,6 @@ const MyTaskSection: React.FC = () => {
     setLoader(false);
   };
 
-  const handleFilter = async () => {
-    _getTasks();
-  };
-
   const handleMore = () => {
     if (pagination.page < (pagination?.total_page || 0) && !loader) {
       setRefresh(true);
@@ -95,30 +92,20 @@ const MyTaskSection: React.FC = () => {
 
   return (
     <>
-      {/* <TouchableOpacity
-        onPress={() => bottomSheetRef.current?.snapToIndex(0)}
-        style={[rowCenter, {marginLeft: 20, marginTop: 20}]}>
-        <Text style={[h1, {marginRight: 5, color: theme.colors.navy}]}>
-          Filter
-        </Text>
-        <Image source={ic_filter} style={iconCustomSize(14)} />
-      </TouchableOpacity> */}
-
       <FlatList
         contentContainerStyle={styles.container}
         data={[...tasks]}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => (
-          <Text style={{alignSelf: 'center', marginTop: '50%'}}>
-            Belum ada tugas
-          </Text>
-        )}
-        ListFooterComponent={<LoadingNextPage loading={loader} />}
         refreshing={refresh}
         onRefresh={() => {
           return handleRefresh();
         }}
+        onEndReached={handleMore}
+        ListFooterComponent={
+          <LoadingNextPage loading={pagination?.page === 1 ? false : loader} />
+        }
+        ListEmptyComponent={<DataNotFound isLoading={loader} />}
       />
 
       <BottomSheet

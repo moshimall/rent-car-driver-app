@@ -1,8 +1,19 @@
 import appBar from 'components/AppBar/AppBar';
+import Button from 'components/Button';
+import Config from 'react-native-config';
+import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
 import hoc from 'components/hoc';
+import moment from 'moment';
 import React, {useEffect, useState} from 'react';
+import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
+import {deepClone} from 'utils';
 import {h1, h4} from 'utils/styles';
 import {ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
+import {iconSize, rowCenter, WINDOW_WIDTH} from 'utils/mixins';
+import {RootStackParamList} from 'types/navigator';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {showToast} from 'utils/Toast';
+import {updateCourirTasks} from 'store/effects/taskStore';
 import {
   Alert,
   Image,
@@ -13,20 +24,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WINDOW_WIDTH, iconSize, rowCenter} from 'utils/mixins';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
-import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
-import Button from 'components/Button';
-import {showToast} from 'utils/Toast';
-import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
-import {deepClone} from 'utils';
-import {RootStackParamList} from 'types/navigator';
-import moment from 'moment';
-import {currencyFormat} from 'utils/currencyFormat';
-import {getTaskById, updateCourirTasks} from 'store/effects/taskStore';
-import {URL_IMAGE} from '@env';
-import {getUserById} from 'store/effects/authStore';
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAntarMobil'>;
 
@@ -35,7 +32,6 @@ const TaskDetailAntarMobil = () => {
 
   const navigation = useNavigation();
   const [bulkImage, setBulkImage] = useState([]);
-
 
   useEffect(() => {
     navigation.setOptions(
@@ -62,7 +58,6 @@ const TaskDetailAntarMobil = () => {
     // _getUser();
     // _getTaskById();
   }, [navigation]);
-
 
   const handleSubmit = async () => {
     if (bulkImage?.length <= 0) {
@@ -135,57 +130,33 @@ const TaskDetailAntarMobil = () => {
       </View>
       <View style={styles.dashedLine} />
 
-      <View style={styles.descriptionContainer}>
-        <View style={{}}>
-          <View style={{marginBottom: 10}} />
-          <CustomCarousel
-            data={[...((item?.order?.vehicle?.photos as any[]) || [])]}
-            paginationSize={7}
-            paginationPosition={-10}
-            // renderCarouselTitle={
-            //   <View style={styles.carouselTitleContainer}>
-            //     <Text style={{fontWeight: 'bold'}}>
-            //       {vehicleById.brand_name} {vehicleById.name}
-            //     </Text>
-            //   </View>
-            // }
-            renderItem={({item, index}: any) => (
-              <View
-                style={
-                  {
-                    // alignItems: 'center',
-                    // alignSelf: 'center',
-                  }
-                }>
-                <Image
-                  source={{uri: URL_IMAGE + item}}
-                  style={{height: 250, width: '90%'}}
-                />
-              </View>
-            )}
-            containerStyle={{
-              width: '100%',
+      <CustomCarousel
+        data={
+          item?.order?.vehicle?.photos?.map(data => ({
+            url: `${Config.URL_IMAGE}${data}`,
+          })) || []
+        }
+        renderItem={({item, index}) => (
+          <View
+            style={{
               alignItems: 'center',
-            }}
-          />
-        </View>
-      </View>
+              alignSelf: 'center',
+            }}>
+            <Image
+              source={{uri: item?.url}}
+              style={{height: 280, width: WINDOW_WIDTH / 1.1}}
+            />
+          </View>
+        )}
+        containerStyle={{
+          width: '100%',
+          alignItems: 'center',
+          marginVertical: 20,
+        }}
+        paginationColor="#F1A33A"
+        paginationPosition={10}
+      />
       <View style={styles.dashedLine} />
-
-      {/* <View style={styles.descriptionContainer}>
-        <View style={{flexBasis: '50%'}}>
-          <Text style={[h4, styles.text]}>Total Pembayaran</Text>
-          <Text style={styles.boldText}>
-            {currencyFormat(taskById?.total_payment)}
-          </Text>
-        </View>
-
-        <View style={{flexBasis: '50%'}}>
-          <Text style={[h4, styles.text]}>Status Pembayaran</Text>
-          <Text style={styles.boldText}>{item?.order?.order_status}</Text>
-        </View>
-      </View> */}
-      <View style={styles.solidLine} />
 
       <View style={{padding: '5%'}}>
         <Text style={[h4, styles.text]}>Lokasi Pengantaran</Text>
@@ -200,7 +171,6 @@ const TaskDetailAntarMobil = () => {
         <Text style={[h4, styles.text]}>Detail Lokasi</Text>
         <View
           style={{flexDirection: 'row', marginTop: 10, alignItems: 'center'}}>
-          {/* <Image source={ic_pinpoin} style={[iconSize, {marginRight: 10}]} /> */}
           <Text style={[h1, styles.text]}>
             {item?.order?.rental_location_detail}
           </Text>
@@ -257,7 +227,7 @@ const TaskDetailAntarMobil = () => {
             </Text>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri: URL_IMAGE + item?.order?.identity?.sim}}
+                source={{uri: item?.order?.identity?.sim}}
                 style={styles.image}
                 resizeMode="cover"
               />
@@ -270,7 +240,7 @@ const TaskDetailAntarMobil = () => {
             </Text>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri: URL_IMAGE + item?.order?.identity?.ktp}}
+                source={{uri: item?.order?.identity?.ktp}}
                 style={styles.image}
                 resizeMode="cover"
               />

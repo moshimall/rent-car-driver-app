@@ -48,12 +48,13 @@ import CardParkirMobil from 'components/Cards/CardParkirMobil';
 import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
 import TaskDetailByStatusCard from 'components/Cards/TaskDetailByStatusCard';
 import {useAuthStore} from 'store/actions/authStore';
+import DataNotFound from 'components/DataNotFound/DataNotFound';
+import OngoingTaskCard from 'components/Cards/OngoingTaskCard';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationHelpers<ParamListBase>>();
   const role_name = useAuthStore((state: any) => state.role_name);
 
-  const [changebg, setChangebg] = useState(true);
   const [tasks, setTasks] = useState<DataItemTask[]>([]);
   const [loader, setLoader] = useState(false);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -78,16 +79,10 @@ const HomeScreen = () => {
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
-    if (index === -1) {
-      setChangebg(true);
-    } else {
-      setChangebg(false);
-    }
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      _getTasks();
       _getOngoingTask();
       getPlayerId();
     }, []),
@@ -110,28 +105,10 @@ const HomeScreen = () => {
     return () => {};
   }, [sorting]);
 
-  const _getTasks = async () => {
-    setLoader(true);
-    const param = {
-      courier_id: 1,
-      limit: pagination?.limit || 0,
-      page: pagination?.page || 1,
-    } as any;
-    const VALUE = ['DELIVERY_PROCESS', 'PICKUP_PROCESS', 'RETURNED'];
-    const _: any = [];
-    jobdesk?.map((x, i) => {
-      _.push(VALUE[x]);
-    });
-    param['task_status'] = _;
-
-    const res = await getTasks(param as any);
-    setTasks(res?.data);
-    setPagination(res?.pagination);
-    setLoader(false);
-  };
-
   const _getOngoingTask = async () => {
     try {
+      setLoader(true);
+
       const res = await getOngoingTasks();
       if (!res || res?.id === 0) {
         setOngoingTask([]);
@@ -139,17 +116,20 @@ const HomeScreen = () => {
       }
       setOngoingTask([res]);
       console.log('ongoing tasks = ', res);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoader(false);
+    }
   };
 
   const handleFilter = async () => {
-    _getTasks();
+    _getOngoingTask();
   };
 
   const handleMore = () => {
     if (pagination?.page < (pagination?.total_page || 0) && !loader) {
       setRefresh(true);
-      _getTasks();
+      _getOngoingTask();
       setRefresh(false);
     }
   };
@@ -160,11 +140,11 @@ const HomeScreen = () => {
       limit: 10,
       page: 1,
     });
-    _getTasks();
+    _getOngoingTask();
     setRefresh(false);
   };
 
-  const MENU: {ic: any; name: ITypeTask, role: string[]}[] = [
+  const MENU: {ic: any; name: ITypeTask; role: string[]}[] = [
     {
       ic: ic_without_driver,
       name: 'Tanpa Supir',
@@ -173,7 +153,7 @@ const HomeScreen = () => {
     {
       ic: ic_with_driver,
       name: 'Dengan Supir',
-      role: ['Driver']
+      role: ['Driver'],
     },
     {
       ic: ic_plane,
@@ -208,7 +188,7 @@ const HomeScreen = () => {
 
     if (role_name === 'Driver') {
       return (
-        <TaskDetailByStatusCard
+        <OngoingTaskCard
           id={item?.id}
           item={item}
           type={'Dengan Supir'}
@@ -264,34 +244,23 @@ const HomeScreen = () => {
           Sedang Berjalan
         </Text>
       </View>
-      <View style={{margin: 16}}>
-        <FlatList
-          data={[...(ongoingTask || [])]}
-          // data={[...Array(5)]}
-          renderItem={renderItem}
-          keyExtractor={(x, i) => i.toString()}
-          ListFooterComponent={<LoadingNextPage loading={loader} />}
-          refreshing={refresh}
-          onRefresh={() => {
-            return handleRefresh();
-          }}
-          onEndReached={handleMore}
-          ListEmptyComponent={() => (
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: '20%',
-              }}>
-              <Image
-                source={ic_no_task}
-                style={{width: 150, height: 150, marginBottom: 20}}
-              />
-              <Text>Belum Mengambil Tugas</Text>
-            </View>
-          )}
-        />
-      </View>
+      <FlatList
+        contentContainerStyle={{flexGrow: 1, padding: 16}}
+        data={[...(ongoingTask || [])]}
+        renderItem={renderItem}
+        keyExtractor={(x, i) => i.toString()}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          <LoadingNextPage loading={pagination?.page === 1 ? false : loader} />
+        }
+        refreshing={refresh}
+        onRefresh={() => {
+          return handleRefresh();
+        }}
+        onEndReached={handleMore}
+        ListEmptyComponent={<DataNotFound isLoading={loader} />}
+      />
+
       <BottomSheet
         ref={bottomSheetRef}
         snapPoints={snapPoints}
