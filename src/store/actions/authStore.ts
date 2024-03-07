@@ -1,10 +1,9 @@
-// import { IHelpers, IToastParams } from 'types/store.types';
-import {apiWithInterceptor} from 'utils/interceptorV2';
-import {SetState, create} from 'zustand';
-import {Alert} from 'react-native';
-import {persist, createJSONStorage} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode';
+import {Alert} from 'react-native';
+import {apiWithInterceptor} from 'utils/interceptorV2';
+import {create, SetState} from 'zustand';
+import {createJSONStorage, persist} from 'zustand/middleware';
+import {jwtDecode} from 'jwt-decode';
 
 const useAuthStore = create<any>(
   persist(
@@ -23,21 +22,40 @@ const useAuthStore = create<any>(
               scope: 'app',
             },
           });
-          console.log('res login = ', response.data);
           const token = response?.data?.access_token;
-          const decoded = jwtDecode(token);
+          const decoded: any = jwtDecode(token);
 
-          console.log('decoded = ', decoded?.payload?.roles?.role_name);
+          console.log(decoded);
           set(() => ({
             isAuthenticated: true,
             authToken: {...response?.data},
-            role_name: decoded?.payload?.roles?.role_name === 'Courier' ? 'Tanpa Supir' : 'Dengan Supir',
+            id: decoded?.payload?.id,
+            role_name: decoded?.payload?.roles?.role_name,
           }));
-        } catch (error) {
-          console.log('err = ', error);
+        } catch (error: any) {
           Alert.alert(
-            'Peringatan',
-            'Terjadi kesalahan, silahkan hubungi admin.',
+            'Warning',
+            error?.response?.data?.message ||
+              'Terjadi kesalahan, silahkan hubungi admin.',
+          );
+        }
+      },
+      getUserDetails: async (id: number) => {
+        try {
+          const response: any = await apiWithInterceptor({
+            method: 'get',
+            url: `/users/${id}`,
+          });
+
+          set(() => ({
+            isAuthenticated: true,
+            userData: {...response?.data},
+          }));
+        } catch (error: any) {
+          Alert.alert(
+            'Warning',
+            error?.response?.data?.message ||
+              'Terjadi kesalahan, silahkan hubungi admin.',
           );
         }
       },
@@ -53,10 +71,11 @@ const useAuthStore = create<any>(
             isAuthenticated: true,
             authToken: {...response?.data},
           }));
-        } catch (error) {
+        } catch (error: any) {
           Alert.alert(
-            'Peringatan',
-            'Terjadi kesalahan, silahkan hubungi admin.',
+            'Warning',
+            error?.response?.data?.message ||
+              'Terjadi kesalahan, silahkan hubungi admin.',
           );
         }
       },

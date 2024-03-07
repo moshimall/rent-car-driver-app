@@ -34,6 +34,7 @@ const TaskDetailByDayCard = ({type, item, id, can_be_processed}: TaskDetailByDay
                 type,
                 id,
                 item,
+                can_be_processed,
               }),
             text: 'Ya',
           },

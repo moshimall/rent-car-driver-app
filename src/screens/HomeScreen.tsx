@@ -166,25 +166,29 @@ const HomeScreen = () => {
     setRefresh(false);
   };
 
-  const MENU: {ic: any; name: ITypeTask}[] = [
+  const MENU: {ic: any; name: ITypeTask, role: string[]}[] = [
     {
       ic: ic_without_driver,
       name: 'Tanpa Supir',
+      role: ['Courier'],
     },
     {
       ic: ic_with_driver,
       name: 'Dengan Supir',
+      role: ['Driver']
     },
     {
       ic: ic_plane,
       name: 'Airport Transfer',
+      role: [],
     },
     {
       ic: ic_car1,
       name: 'Tour',
+      role: [],
     },
   ];
-  console.log('role_name = ', role_name);
+
   const renderItem = ({item}: {item: any}) => {
     if (role_name === 'Courier') {
       if (item?.status === 'DELIVERY_PROCESS') {
@@ -230,7 +234,7 @@ const HomeScreen = () => {
       </View>
 
       <View style={[rowCenter, styles.menuWrapper]}>
-        {MENU.filter(x => x.name === role_name)?.map((x, i) => (
+        {MENU.filter(x => x.role?.includes(role_name))?.map((x, i) => (
           <TouchableOpacity
             key={i}
             style={{alignItems: 'center'}}

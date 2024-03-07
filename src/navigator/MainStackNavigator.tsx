@@ -1,7 +1,7 @@
 import CodePush from 'react-native-code-push';
 import CodepushUpdateManager from 'screens/CodepushUpdateManager';
 import MainTab from './MainTabNavigator';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {RootStackParamList} from '../types/navigator';
 import {theme} from 'utils';
@@ -24,7 +24,16 @@ import TaskListDetailByDayScreen from 'screens/TaskListDetailByDayScreen';
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const Main: React.FC = () => {
+  const userId = useAuthStore((state: any) => state.id);
   const isAuthenticated = useAuthStore((state: any) => state.isAuthenticated);
+  const getUserDetails = useAuthStore((state: any) => state.getUserDetails);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getUserDetails(userId);
+    }
+  }, [isAuthenticated]);
+
   return (
     <RootStack.Navigator
       screenOptions={{
