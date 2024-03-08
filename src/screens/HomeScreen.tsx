@@ -170,29 +170,45 @@ const HomeScreen = () => {
   const renderItem = ({item}: {item: any}) => {
     if (role_name === 'Courier') {
       if (item?.status === 'DELIVERY_PROCESS') {
-        return <CardTakeFromGarage item={{...item, task_id: item?.id}} />;
+        return (
+          <CardTakeFromGarage
+            item={{...item, task_id: item?.id}}
+            can_be_processed
+          />
+        );
       }
 
       if (item?.status === 'TAKE_FROM_GARAGE') {
-        return <CardAntarMobil item={{...item, task_id: item?.id}} />;
+        return (
+          <CardAntarMobil
+            item={{...item, task_id: item?.id}}
+            can_be_processed
+          />
+        );
       }
 
       if (item?.status === 'DELIVERY_CAR') {
-        return <CardAmbilMobil item={{...item, task_id: item?.id}} />;
+        return (
+          <CardAmbilMobil
+            item={{...item, task_id: item?.id}}
+            can_be_processed
+          />
+        );
       }
 
       if (item?.status === 'TAKE_CAR') {
-        return <CardParkirMobil item={{...item, task_id: item?.id}} />;
+        return (
+          <CardParkirMobil
+            item={{...item, task_id: item?.id}}
+            can_be_processed
+          />
+        );
       }
     }
 
     if (role_name === 'Driver') {
       return (
-        <OngoingTaskCard
-          id={item?.id}
-          item={item}
-          type={'Dengan Supir'}
-        />
+        <OngoingTaskCard id={item?.id} item={item} type={'Dengan Supir'} />
       );
     }
 

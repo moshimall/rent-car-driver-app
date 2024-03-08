@@ -6,7 +6,7 @@ import hoc from 'components/hoc';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
-import {deepClone} from 'utils';
+import {deepClone, theme} from 'utils';
 import {h1, h4} from 'utils/styles';
 import {ic_arrow_left_white, ic_pinpoin} from 'assets/icons';
 import {iconSize, rowCenter, WINDOW_WIDTH} from 'utils/mixins';
@@ -309,7 +309,12 @@ const TaskDetailAntarMobil = () => {
   );
 };
 
-export default hoc(TaskDetailAntarMobil);
+export default hoc(
+  TaskDetailAntarMobil,
+  theme.colors.navy,
+  false,
+  'light-content',
+);
 
 const styles = StyleSheet.create({
   container: {

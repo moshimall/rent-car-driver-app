@@ -16,16 +16,10 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
     (request: any) => {
       try {
         const state: any = useAuthStore.getState();
-        // request.baseURL = URL_API;
-        console.log(`URL API: ${Config.URL_API}${request.url}`);
         request.baseURL = Config.URL_API;
         request.timeout = 10000;
         request.headers.Authorization =
           'Bearer ' + state?.authToken?.access_token;
-        // console.log(
-        //   'request.headers.Authorization = ',
-        //   request.headers.Authorization,
-        // );
         return request;
       } catch (error) { }
     },
@@ -41,26 +35,25 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
     async function (error) {
       try {
         console.log('error', error.config.url);
+        console.log('error.response.status', error.response.status);
         console.log('error.response.data', error.response.data);
+
         const state: any = useAuthStore.getState();
         if (error.response.status === 401) {
-          const refresh_token = state?.authToken?.access_token;
+          // const refresh_token = state?.authToken?.access_token;
           state.logout()
           showToast({
             message: 'token expired',
             title: 'error',
             type: 'error'
           })
-          // if (
-          //   refresh_token &&
-          //   error.response.data?.slug !== 'refresh-token-invalid'
-          // ) {
-          //   // store.dispatch(refreshToken(refresh_token as any));
-          //   return api.axiosInstance.request(error.config);
-          // } else {
-          //   // store.dispatch(logout());
-          // }
+          return;
         }
+
+        if (error.response.status === 404) {
+          return [];
+        }
+
         return Promise.reject(error);
       } catch (e) { }
     },

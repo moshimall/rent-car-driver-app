@@ -1,12 +1,22 @@
 import appBar from 'components/AppBar/AppBar';
+import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
+import Button from 'components/Button';
+import CustomBackdrop from 'components/CustomBackdrop';
+import CustomTextInput from 'components/TextInput';
 import hoc from 'components/hoc';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {h1, h4, h5} from 'utils/styles';
+import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
+import {currencyFormat} from 'utils/currencyFormat';
+import {deepClone, theme} from 'utils';
+import {h1, h4} from 'utils/styles';
+import {iconCustomSize, rowCenter} from 'utils/mixins';
+import {RootStackParamList} from 'types/navigator';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {showToast} from 'utils/Toast';
+import {updateCourirTasks} from 'store/effects/taskStore';
 import {
   ic_arrow_left_white,
-  ic_checkblue,
   ic_close,
-  ic_pinpoin,
   ic_plus,
 } from 'assets/icons';
 import {
@@ -19,20 +29,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {WINDOW_WIDTH, iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import {img_car_1, img_car_2, img_ktp, img_license} from 'assets/images';
-import UploadImageInput from 'components/TaskScreenComponent/UploadImageInput/UploadImageInput';
-import Button from 'components/Button';
-import {showToast} from 'utils/Toast';
-import CustomCarousel from 'components/CustomCarousel/CustomCarousel';
-import {deepClone, theme} from 'utils';
-import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
-import CustomTextInput from 'components/TextInput';
-import {currencyFormat} from 'utils/currencyFormat';
-import CustomBackdrop from 'components/CustomBackdrop';
-import {updateCourirTasks} from 'store/effects/taskStore';
-import {RootStackParamList} from 'types/navigator';
 
 interface Denda {
   keterangan: string;
@@ -445,7 +441,12 @@ const TaskDetailAmbilMobilScreen = () => {
   );
 };
 
-export default hoc(TaskDetailAmbilMobilScreen);
+export default hoc(
+  TaskDetailAmbilMobilScreen,
+  theme.colors.navy,
+  false,
+  'light-content',
+);
 
 const styles = StyleSheet.create({
   container: {
