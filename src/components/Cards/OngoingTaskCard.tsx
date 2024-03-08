@@ -23,23 +23,12 @@ const OngoingTaskCard = ({
   const navigation = useNavigation<any>();
 
   const handleTask = () => {
-    if (type === 'Dengan Supir') {
-      // if (item.status === 'RETURN_TO_GARAGE') {
-      //   navigation.navigate('TaskDetailParkirMobil', {
-      //     task_id: id,
-      //     item,
-      //     type,
-      //   } as any);
-      // }
-
-      // if (item.status === 'TAKE_FROM_GARAGE') {
-      //   navigation.navigate('TaskDetailAmbilMobilDariGarasi', {
-      //     task_id: id,
-      //     item,
-      //     type,
-      //   } as any);
-      // }
-    }
+    navigation.navigate('TaskListDetailByStatus', {
+      type,
+      id,
+      item,
+      can_be_processed: true,
+    })
   };
 
   return (
@@ -106,7 +95,7 @@ const OngoingTaskCard = ({
         <View style={{marginLeft: 10}}>
           <Text style={styles.textTitle}>Tanggal Mulai</Text>
           <Text style={styles.textLocation}>
-            {item?.order?.return_date} | {item?.order?.rental_start_time}
+            {item?.order?.rental_start_date} | {item?.order?.rental_start_time}
           </Text>
         </View>
       </View>
