@@ -228,7 +228,7 @@ const TaskDetailAmbilMobilDariGarasiScreen = () => {
                   {moment(item?.order?.rental_start_date).format('DD MMM YYYY')}{' '}
                   |{' '}
                   {moment(
-                    `${item?.order?.rental_start_date} ${item?.order?.return_time}`,
+                    `${item?.order?.rental_start_date} ${item?.order?.rental_start_time}`,
                   ).format('HH:mm A')}
                 </Text>
               </View>
