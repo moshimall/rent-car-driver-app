@@ -29,6 +29,7 @@ const Main: React.FC = () => {
   const getUserDetails = useAuthStore((state: any) => state.getUserDetails);
 
   useEffect(() => {
+    console.log('isAuthenticated', isAuthenticated)
     if (isAuthenticated) {
       getUserDetails(userId);
     }

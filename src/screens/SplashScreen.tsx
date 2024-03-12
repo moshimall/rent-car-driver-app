@@ -23,11 +23,11 @@ const SplashScreen = () => {
           });
         } else {
           navigation.replace('Login');
-
         }
       })
       .catch(err => {
         console.log(err);
+        navigation.replace('Login');
       });
   };
 

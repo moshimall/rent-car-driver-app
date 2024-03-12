@@ -14,14 +14,11 @@ import {RootStackParamList} from 'types/navigator';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {showToast} from 'utils/Toast';
 import {updateCourirTasks} from 'store/effects/taskStore';
-import {
-  ic_arrow_left_white,
-  ic_close,
-  ic_plus,
-} from 'assets/icons';
+import {ic_arrow_left_white, ic_close, ic_plus} from 'assets/icons';
 import {
   Alert,
   Image,
+  Keyboard,
   ScrollView,
   StyleSheet,
   Text,
@@ -39,7 +36,6 @@ type ScreenRouteProp = RouteProp<RootStackParamList, 'TaskDetailAmbilMobil'>;
 const TaskDetailAmbilMobilScreen = () => {
   const navigation = useNavigation();
   const {item} = useRoute<ScreenRouteProp>().params;
-  console.log(item);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [bulkImage, setBulkImage] = useState([]);
   const [buktiTf, setBuktiTf] = useState([]);
@@ -93,25 +89,27 @@ const TaskDetailAmbilMobilScreen = () => {
       Alert.alert('PERINGATAN', 'silahkan upload bukti Pembayaran denda');
       return;
     }
-    const params = {
+    const params: any = {
       id: item?.task_id,
       image_captures: [...bulkImage],
       status: 'TAKE_CAR',
       note: note,
-      violations: denda?.map(x => ({
+    };
+
+    if (denda?.length > 0) {
+      params['violations'] = denda?.map(x => ({
         violation: x?.keterangan,
-        cost: JSON.parse(x.jumlah || 0) as any,
-      })),
-      violations_transfer: {
-        proof_of_bank_transfer: buktiTf?.[0],
+        cost: (JSON.parse(x.jumlah) as any) || 0,
+      }))
+      params['violations_transfer'] = {
+        proof_of_bank_transfer: buktiTf?.[0] || "",
         amount: denda?.reduce((accumulator, currentValue) => {
           return accumulator + JSON.parse(currentValue.jumlah);
-        }, 0),
-      },
-    };
-    console.log('parm = ', params);
-    // return;
-    let res = await updateCourirTasks(params);
+        }, 0)
+      }
+    }
+
+    const res = await updateCourirTasks(params);
 
     if (!res) {
       showToast({
@@ -121,7 +119,6 @@ const TaskDetailAmbilMobilScreen = () => {
       });
       return;
     }
-    console.log('ress sukses ambil = ', res);
     showToast({
       title: 'Berhasil',
       type: 'success',
@@ -137,17 +134,11 @@ const TaskDetailAmbilMobilScreen = () => {
           <UploadImageInput
             label="Upload Foto Mobil"
             onCameraChange={res => {
-              // console.log('ress = ', res);
               let _: any = [];
               res?.map(x => {
                 _.push(`data:${x?.type};base64,${x?.base64}`);
               });
               setBulkImage(_);
-              // showToast({
-              //   title: 'Berhasil',
-              //   type: 'success',
-              //   message: 'Berhasil Upload Foto',
-              // });
             }}
             onDelete={i => {
               console.log('x = ', i);
@@ -155,9 +146,6 @@ const TaskDetailAmbilMobilScreen = () => {
               _.splice(i, 1);
               setBulkImage(_);
             }}
-            // bulkImage={bulkImage}
-            // setBulkImage={setBulkImage}
-            // selectedImageLabel=""
           />
 
           <Text style={[h4, styles.text, {marginVertical: 10}]}>
@@ -202,7 +190,11 @@ const TaskDetailAmbilMobilScreen = () => {
             <TouchableOpacity
               style={[rowCenter]}
               onPress={() => bottomSheetRef.current?.snapToIndex(0)}>
-              <Image source={ic_plus} style={[iconCustomSize(15)]} />
+              <Image
+                source={ic_plus}
+                style={[iconCustomSize(15)]}
+                resizeMode="contain"
+              />
               <Text style={[h4, {fontSize: 12, marginLeft: 5}]}>
                 Tambah Denda
               </Text>
@@ -302,27 +294,15 @@ const TaskDetailAmbilMobilScreen = () => {
           </View>
 
           <View style={[styles.solidLine, {marginVertical: 10}]} />
-          {/* <View style={[rowCenter, {justifyContent: 'space-between'}]}>
-            <Text style={[h4, {fontSize: 12}]}>Kurang Bayar</Text>
-            <Text style={[h4, {fontSize: 12}]}>IDR 0</Text>
-          </View> */}
-          {/* <View style={[styles.solidLine, {marginVertical: 10}]} /> */}
-
           {denda?.length > 0 && (
             <UploadImageInput
               label="Upload Bukti Transfer"
               onCameraChange={res => {
-                // console.log('ress = ', res);
                 let _: any = [];
                 res?.map(x => {
                   _.push(`data:${x?.type};base64,${x?.base64}`);
                 });
                 setBuktiTf(_);
-                // showToast({
-                //   title: 'Berhasil',
-                //   type: 'success',
-                //   message: 'Berhasil Upload Foto',
-                // });
               }}
               onDelete={i => {
                 console.log('x = ', i);
@@ -330,9 +310,6 @@ const TaskDetailAmbilMobilScreen = () => {
                 _.splice(i, 1);
                 setBuktiTf(_);
               }}
-              // bulkImage={bulkImage}
-              // setBulkImage={setBulkImage}
-              // selectedImageLabel=""
             />
           )}
 
@@ -433,6 +410,7 @@ const TaskDetailAmbilMobilScreen = () => {
                 keterangan: '',
                 jumlah: '',
               });
+              Keyboard.dismiss();
             }}
           />
         </View>
@@ -453,61 +431,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#fff',
   },
-  descriptionContainer: {
-    padding: '5%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   text: {
     fontSize: 12,
     color: '#000000',
   },
-  boldText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  dashedLine: {
-    borderColor: '#D3D3D3',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-  },
   solidLine: {
     borderColor: '#D3D3D3',
     borderWidth: 0.5,
-  },
-  roundedImage: {
-    borderRadius: 100,
-    width: 48,
-    height: 48,
-    backgroundColor: 'red',
-    overflow: 'hidden',
-    marginRight: 10,
-  },
-  imgCar: {
-    width: 48,
-    height: 48,
-  },
-  profilePictureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  imageContainer: {
-    width: '100%',
-    height: 86,
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  image: {width: '100%', height: '100%', borderRadius: 5},
-  btnDenda: {
-    width: '100%',
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: theme.colors.navy,
-    padding: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
   },
   contentContainer: {
     flex: 1,

@@ -344,18 +344,6 @@ const styles = StyleSheet.create({
     borderColor: '#D3D3D3',
     borderWidth: 0.5,
   },
-  roundedImage: {
-    borderRadius: 100,
-    width: 48,
-    height: 48,
-    backgroundColor: 'red',
-    overflow: 'hidden',
-    marginRight: 10,
-  },
-  imgCar: {
-    width: 48,
-    height: 48,
-  },
   profilePictureContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

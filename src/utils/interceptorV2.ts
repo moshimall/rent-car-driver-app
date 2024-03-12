@@ -47,7 +47,7 @@ export const apiWithInterceptor = async (config: ApiConfig) => {
             title: 'error',
             type: 'error'
           })
-          return;
+          return Promise.reject(error);
         }
 
         if (error.response.status === 404) {

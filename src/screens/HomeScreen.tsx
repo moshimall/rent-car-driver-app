@@ -1,21 +1,28 @@
 import BottomSheet, {BottomSheetModal} from '@gorhom/bottom-sheet';
 import Button from 'components/Button';
+import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
+import CardAntarMobil from 'components/Cards/CardAntarMobil';
+import CardParkirMobil from 'components/Cards/CardParkirMobil';
+import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
 import CustomBackdrop from 'components/CustomBackdrop';
+import DataNotFound from 'components/DataNotFound/DataNotFound';
 import hoc from 'components/hoc';
 import LoadingNextPage from 'components/LoadingNextPage/LoadingNextPage';
+import OngoingTaskCard from 'components/Cards/OngoingTaskCard';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {deepClone, theme} from 'utils';
+import {getOngoingTasks} from 'store/effects/taskStore';
+import {getPlayerId} from 'store/effects/authStore';
+import {h1, h4} from 'utils/styles';
+import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
+import {ITypeTask} from 'types/navigator';
+import {useAuthStore} from 'store/actions/authStore';
 import {
   DataItemTask,
   Pagination,
   WithDriverTaskDetail,
   WithoutDriverTaskDetail,
 } from 'types/tasks.types';
-import {deepClone, theme} from 'utils';
-import {getPlayerId} from 'store/effects/authStore';
-import {getOngoingTasks, getTasks} from 'store/effects/taskStore';
-import {h1, h4} from 'utils/styles';
-import {iconCustomSize, iconSize, rowCenter} from 'utils/mixins';
-import {ITypeTask} from 'types/navigator';
 import {
   NavigationHelpers,
   ParamListBase,
@@ -34,7 +41,6 @@ import {
   ic_car1,
   ic_checkblue,
   ic_main_icon,
-  ic_no_task,
   ic_plane,
   ic_radio_button,
   ic_selected_radio_button,
@@ -42,14 +48,6 @@ import {
   ic_with_driver,
   ic_without_driver,
 } from 'assets/icons';
-import CardAmbilMobil from 'components/Cards/CardAmbilMobil';
-import CardAntarMobil from 'components/Cards/CardAntarMobil';
-import CardParkirMobil from 'components/Cards/CardParkirMobil';
-import CardTakeFromGarage from 'components/Cards/CardTakeFromGarage';
-import TaskDetailByStatusCard from 'components/Cards/TaskDetailByStatusCard';
-import {useAuthStore} from 'store/actions/authStore';
-import DataNotFound from 'components/DataNotFound/DataNotFound';
-import OngoingTaskCard from 'components/Cards/OngoingTaskCard';
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationHelpers<ParamListBase>>();

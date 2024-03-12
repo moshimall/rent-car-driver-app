@@ -115,27 +115,3 @@ export default hoc(
   false,
   'light-content',
 );
-
-const styles = StyleSheet.create({
-  dot: {
-    height: 20,
-    width: 20,
-    backgroundColor: theme.colors.navy,
-    borderRadius: WINDOW_WIDTH / 2,
-  },
-  line: {
-    borderBottomWidth: 1.5,
-    borderBottomColor: theme.colors.grey5,
-    width: WINDOW_WIDTH / 5,
-  },
-  textDotWrapper: {
-    position: 'absolute',
-    width: WINDOW_WIDTH / 3.5,
-    top: 25,
-    alignSelf: 'center',
-  },
-  textStatus: {
-    fontSize: 12,
-    textAlign: 'center',
-  },
-});

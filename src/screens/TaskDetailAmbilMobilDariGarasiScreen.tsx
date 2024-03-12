@@ -386,61 +386,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#fff',
   },
-  descriptionContainer: {
-    padding: '5%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   text: {
     fontSize: 12,
     color: '#000000',
   },
-  boldText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  dashedLine: {
-    borderColor: '#D3D3D3',
-    borderWidth: 1,
-    borderStyle: 'dashed',
-  },
   solidLine: {
     borderColor: '#D3D3D3',
     borderWidth: 0.5,
-  },
-  roundedImage: {
-    borderRadius: 100,
-    width: 48,
-    height: 48,
-    backgroundColor: 'red',
-    overflow: 'hidden',
-    marginRight: 10,
-  },
-  imgCar: {
-    width: 48,
-    height: 48,
-  },
-  profilePictureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  imageContainer: {
-    width: '100%',
-    height: 86,
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  image: {width: '100%', height: '100%', borderRadius: 5},
-  btnDenda: {
-    width: '100%',
-    borderWidth: 2,
-    borderRadius: 10,
-    borderColor: theme.colors.navy,
-    padding: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
   },
   contentContainer: {
     flex: 1,
